@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ned's Bayou Streaming</title>
+</head>
+<body>
+
+<header>
+    <h1><a href="{% url 'home' %}">Ned's Bayou</a></h1>
+
+    {% if user.is_authenticated %}
+        <div>
+            <p>Benvenuto, {{ user.username }}</p>
+            <img src="{{ user.profile_picture.url }}" alt="Immagine profilo" width="40" height="40"
+                 style="border-radius: 50%;">
+            <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                {% csrf_token %}
+                <button type="submit">Logout</button>
+            </form>
+        </div>
+    {% else %}
+        <a href="{% url 'login' %}">Login</a>
+        <a href="{% url 'register' %}">Registrati</a>
+    {% endif %}
+
+</header>
+
+<hr>
+
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+</body>
+</html>

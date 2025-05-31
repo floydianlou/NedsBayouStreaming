@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Login - NedsBayouStreaming</title>
+</head>
+<body>
+
+  <h2>Accedi al tuo account</h2>
+
+  <form method="post">
+    {% csrf_token %}
+    {{ form.non_field_errors }}
+
+    <div>
+      <label for="id_username">Username:</label>
+      {{ form.username }}
+      {{ form.username.errors }}
+    </div>
+
+    <div>
+      <label for="id_password">Password:</label>
+      {{ form.password }}
+      {{ form.password.errors }}
+    </div>
+
+    <button type="submit">Login</button>
+  </form>
+
+  <p>Non hai un account? <a href="{% url 'register' %}">Registrati qui</a></p>
+
+</body>
+</html>
