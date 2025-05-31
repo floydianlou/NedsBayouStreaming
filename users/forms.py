@@ -3,11 +3,15 @@ from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
 from .models import BayouUser
 
+
 class BayouUserCreationForm(UserCreationForm):
+    email = forms.EmailField(required=True)
+
     class Meta:
         model = BayouUser
         fields = (
-            "username", "password1", "password2",
+            "username", "email",
+            "password1", "password2",
             "first_name", "last_name",
             "profile_picture", "short_bio",
             "phone_number", "favorite_band"

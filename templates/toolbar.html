@@ -11,9 +11,11 @@
 
     {% if user.is_authenticated %}
         <div>
-            <p>Benvenuto, {{ user.username }}</p>
-            <img src="{{ user.profile_picture.url }}" alt="Immagine profilo" width="40" height="40"
-                 style="border-radius: 50%;">
+            <a href="{% url 'profile' user.username %}" style="text-decoration: none; color: inherit;">
+                <p>Benvenuto, {{ user.username }}</p>
+                <img src="{{ user.profile_picture.url }}" alt="Immagine profilo" width="40" height="40"
+                     style="border-radius: 50%; vertical-align: middle;">
+            </a>
             <form action="{% url 'logout' %}" method="post" style="display: inline;">
                 {% csrf_token %}
                 <button type="submit">Logout</button>

@@ -1,7 +1,8 @@
 from django.contrib.auth import login
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from django.shortcuts import render, redirect
 from .forms import BayouUserCreationForm, CustomLoginForm
+from .models import BayouUser
 
 
 def home(request):
@@ -30,3 +31,11 @@ def loginView(request):
         form = CustomLoginForm()
 
     return render(request, 'login.html', {'form': form})
+
+def profileView(request, username):
+    user_profile = get_object_or_404(BayouUser, username=username)
+    is_owner = request.user.is_authenticated and request.user.username == username
+    return render(request, 'profile.html', {
+        'user_profile': user_profile,
+        'is_owner': is_owner
+    })
