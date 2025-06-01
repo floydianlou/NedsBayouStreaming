@@ -1,22 +1,56 @@
 {% extends 'toolbar.html' %}
 
 {% block content %}
-<h2>🎧 Profilo di {{ user_profile.username }}</h2>
+<h2>{{ user_profile.username }}'s profile</h2>
 
-<img src="{{ user_profile.profile_picture.url }}" width="150" style="border-radius: 50%;" alt="Profile Picture"><br><br>
+<img src="{% if user_profile.profile_picture %}{{ user_profile.profile_picture.url }}{% else %}/media/profile_pics/defaultPicture.png{% endif %}"
+     alt="Profile Picture" width="150" style="border-radius: 50%;"><br><br>
 
-<p><strong>Nome:</strong> {{ user_profile.first_name }}</p>
-<p><strong>Cognome:</strong> {{ user_profile.last_name }}</p>
-<p><strong>Email:</strong> {{ user_profile.email }}</p>
+<div id="profile-info">
+    <p><strong>Username:</strong> {{ user_profile.username }}</p>
+    <p><strong>Email:</strong> {{ user_profile.email }}</p>
+    <p><strong>Nome:</strong> {{ user_profile.first_name }}</p>
+    <p><strong>Cognome:</strong> {{ user_profile.last_name }}</p>
+    <p><strong>Email:</strong> {{ user_profile.email }}</p>
 
-{% if user_profile.short_bio %}
-    <p><strong>Biografia:</strong> {{ user_profile.short_bio }}</p>
-{% endif %}
-{% if user_profile.phone_number %}
-    <p><strong>Telefono:</strong> {{ user_profile.phone_number }}</p>
-{% endif %}
-{% if user_profile.favorite_band %}
-    <p><strong>Band preferita:</strong> {{ user_profile.favorite_band }}</p>
+    {% if user_profile.short_bio %}
+        <p><strong>Biografia:</strong> {{ user_profile.short_bio }}</p>
+    {% endif %}
+    {% if user_profile.phone_number %}
+        <p><strong>Telefono:</strong> {{ user_profile.phone_number }}</p>
+    {% endif %}
+    {% if user_profile.favorite_band %}
+        <p><strong>Band preferita:</strong> {{ user_profile.favorite_band }}</p>
+    {% endif %}
+</div>
+
+{% if is_owner %}
+    <br>
+    <button id="edit-button" onclick="toggleEdit()" class="btn">✏️ Modifica profilo</button>
+
+    <div id="edit-form" style="display: none; margin-top: 20px;">
+        <form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ form.username.label_tag }} {{ form.username }}<br>
+    {{ form.email.label_tag }} {{ form.email }}<br>
+    {{ form.first_name.label_tag }} {{ form.first_name }}<br>
+    {{ form.last_name.label_tag }} {{ form.last_name }}<br>
+
+    {% if user_profile.profile_picture.name != "profile_pics/defaultPicture.png" %}
+        {{ form.profile_picture.label_tag }} {{ form.profile_picture }}<br>
+    {% else %}
+        <label for="{{ form.profile_picture.id_for_label }}">Carica nuova foto profilo:</label>
+        <input type="file" name="{{ form.profile_picture.name }}" id="{{ form.profile_picture.id_for_label }}"><br>
+    {% endif %}
+
+    {{ form.short_bio.label_tag }} {{ form.short_bio }}<br>
+    {{ form.phone_number.label_tag }} {{ form.phone_number }}<br>
+    {{ form.favorite_band.label_tag }} {{ form.favorite_band }}<br>
+
+    <button type="submit">💾 Salva modifiche</button>
+</form>
+    </div>
 {% endif %}
 
 <hr>
@@ -24,8 +58,11 @@
 <h3>🎵 Le mie playlist</h3>
 <p>[Qui metteremo l’elenco quando creiamo la seconda app!]</p>
 
-{% if is_owner %}
-    <br>
-    <a href="#" class="btn">✏️ Modifica profilo</a>
-{% endif %}
+<script>
+    function toggleEdit() {
+        document.getElementById('edit-form').style.display = 'block';
+        document.getElementById('profile-info').style.display = 'none';
+        document.getElementById('edit-button').style.display = 'none'; // Nasconde il bottone
+    }
+</script>
 {% endblock %}

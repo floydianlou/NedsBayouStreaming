@@ -10,22 +10,22 @@
     <h1><a href="{% url 'home' %}">Ned's Bayou</a></h1>
 
     {% if user.is_authenticated %}
-        <div>
-            <a href="{% url 'profile' user.username %}" style="text-decoration: none; color: inherit;">
-                <p>Benvenuto, {{ user.username }}</p>
-                <img src="{{ user.profile_picture.url }}" alt="Immagine profilo" width="40" height="40"
-                     style="border-radius: 50%; vertical-align: middle;">
-            </a>
-            <form action="{% url 'logout' %}" method="post" style="display: inline;">
-                {% csrf_token %}
-                <button type="submit">Logout</button>
-            </form>
-        </div>
-    {% else %}
-        <a href="{% url 'login' %}">Login</a>
-        <a href="{% url 'register' %}">Registrati</a>
-    {% endif %}
-
+    <div style="display: flex; align-items: center; gap: 4px;">
+        <p>Welcome,</p>
+        <a href="{% url 'profile' user.username %}" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 5px;">
+            {{ user.username }}
+            <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}/media/profile_pics/defaultPicture.png{% endif %}"
+                alt="Profile Picture" width="50" style="border-radius: 50%;">
+        </a>
+        <form action="{% url 'logout' %}" method="post" style="display: inline; margin-left: 10px;">
+            {% csrf_token %}
+            <button type="submit">Logout</button>
+        </form>
+    </div>
+{% else %}
+    <a href="{% url 'login' %}">Login</a>
+    <a href="{% url 'register' %}">Registrati</a>
+{% endif %}
 </header>
 
 <hr>
