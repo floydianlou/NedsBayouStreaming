@@ -1,0 +1,30 @@
+{% extends 'toolbar.html' %}
+{% load static %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/playlist.css' %}">
+{% endblock %}
+
+{% block content %}
+<h2>Crea una nuova playlist 🎵</h2>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    <label for="{{ form.name.id_for_label }}">Nome Playlist:</label>
+    {{ form.name }}
+
+    <label for="{{ form.description.id_for_label }}">Descrizione (opzionale):</label>
+    {{ form.description }}
+
+    <label for="{{ form.cover.id_for_label }}">Copertina (opzionale):</label>
+    {{ form.cover }}
+
+    <label for="{{ form.songs.id_for_label }}">Scegli le canzoni da aggiungere:</label>
+    <div class="song-checkboxes">
+        {{ form.songs }}
+    </div>
+
+    <button type="submit" class="btn ned">💾 Crea Playlist</button>
+</form>
+{% endblock %}

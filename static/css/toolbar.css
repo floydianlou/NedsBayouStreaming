@@ -93,3 +93,17 @@ body {
     background-color: #c0e5e1;
     margin: 0;
 }
+
+.toolbar-btn {
+    padding: 6px 10px;
+    background-color: #62b9af;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+.toolbar-btn:hover {
+    background-color: #4a958d;
+}

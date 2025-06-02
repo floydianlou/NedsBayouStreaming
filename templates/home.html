@@ -1,6 +1,26 @@
 {% extends 'toolbar.html' %}
+{% load static %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/home.css' %}">
+{% endblock %}
 
 {% block content %}
 <h2>Welcome to Ned's Bayou</h2>
-<p>Questa è la homepage del tuo fantastico sito musicale 🎶</p>
+
+<h3>🎧 Catalogo Canzoni</h3>
+<div class="song-grid">
+    {% for song in songs %}
+        <div class="song-card">
+            <img src="{{ song.cover.url }}" alt="Copertina di {{ song.title }}">
+            <div class="song-info">
+                <h4>{{ song.title }}</h4>
+                <p>{{ song.artist.name }}</p>
+                <p>{{ song.duration }}</p>
+            </div>
+        </div>
+    {% empty %}
+        <p>Non ci sono ancora canzoni!</p>
+    {% endfor %}
+</div>
 {% endblock %}

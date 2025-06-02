@@ -1,13 +1,15 @@
 from django.contrib.auth import login
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import render, redirect
+from music.models import Song
 from .forms import BayouUserCreationForm, CustomLoginForm, BayouUserUpdateForm
 from .models import BayouUser
 from django.contrib.auth.models import Group
 
 
 def home(request):
-    return render(request, 'home.html')
+    songs = Song.objects.all()
+    return render(request, 'home.html', {'songs': songs})
 
 
 def register(request):
