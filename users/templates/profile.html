@@ -1,5 +1,8 @@
 {% extends 'toolbar.html' %}
-
+{% load static %}
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+{% endblock %}
 {% block content %}
 <h2>{{ user_profile.username }}'s profile</h2>
 
@@ -11,8 +14,6 @@
     <p><strong>Email:</strong> {{ user_profile.email }}</p>
     <p><strong>Nome:</strong> {{ user_profile.first_name }}</p>
     <p><strong>Cognome:</strong> {{ user_profile.last_name }}</p>
-    <p><strong>Email:</strong> {{ user_profile.email }}</p>
-
     {% if user_profile.short_bio %}
         <p><strong>Biografia:</strong> {{ user_profile.short_bio }}</p>
     {% endif %}

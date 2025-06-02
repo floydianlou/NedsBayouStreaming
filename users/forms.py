@@ -46,11 +46,11 @@ class BayouUserUpdateForm(forms.ModelForm):
         ]
         widgets = {
             'username': forms.TextInput(attrs={
-                'disabled': 'disabled',
+                'readonly': 'readonly',
                 'class': 'readonly-field'
             }),
             'email': forms.EmailInput(attrs={
-                'disabled': 'disabled',
+                'readonly': 'readonly',
                 'class': 'readonly-field'
             }),
             'short_bio': forms.Textarea(attrs={'rows': 3}),

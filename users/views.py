@@ -3,6 +3,7 @@ from django.shortcuts import render, get_object_or_404
 from django.shortcuts import render, redirect
 from .forms import BayouUserCreationForm, CustomLoginForm, BayouUserUpdateForm
 from .models import BayouUser
+from django.contrib.auth.models import Group
 
 
 def home(request):
@@ -13,7 +14,11 @@ def register(request):
     if request.method == 'POST':
         form = BayouUserCreationForm(request.POST, request.FILES)
         if form.is_valid():
-            form.save()
+            user = form.save()
+
+            listener_group = Group.objects.get(name='Listener')
+            user.groups.add(listener_group)
+
             return redirect('home')
     else:
         form = BayouUserCreationForm()

@@ -1,0 +1,95 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f0fbf9;
+    color: #333;
+}
+
+.toolbar-header {
+    background-color: #62b9af;
+    padding: 15px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.site-title a {
+    text-decoration: none;
+    color: white;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.toolbar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.welcome-text {
+    margin: 0;
+    font-weight: 500;
+}
+
+.user-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.profile-pic {
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 0 4px rgba(0,0,0,0.2);
+}
+
+.logout-form {
+    display: inline;
+    margin-left: 10px;
+}
+
+.logout-btn {
+    background-color: white;
+    color: #62b9af;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.logout-btn:hover {
+    background-color: #e4f4f2;
+}
+
+.toolbar-auth {
+    display: flex;
+    gap: 10px;
+}
+
+.auth-link {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.auth-link:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.divider {
+    border: none;
+    height: 2px;
+    background-color: #c0e5e1;
+    margin: 0;
+}

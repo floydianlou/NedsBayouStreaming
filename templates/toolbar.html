@@ -1,34 +1,42 @@
 <!DOCTYPE html>
 <html lang="en">
+{% block extrahead %}{% endblock %}
 <head>
     <meta charset="UTF-8">
     <title>Ned's Bayou Streaming</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/toolbar.css' %}">
 </head>
 <body>
 
-<header>
-    <h1><a href="{% url 'home' %}">Ned's Bayou</a></h1>
+<header class="toolbar-header">
+    <h1 class="site-title"><a href="{% url 'home' %}">Ned's Bayou</a></h1>
 
     {% if user.is_authenticated %}
-    <div style="display: flex; align-items: center; gap: 4px;">
-        <p>Welcome,</p>
-        <a href="{% url 'profile' user.username %}" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 5px;">
+    <div class="toolbar-user">
+        <p class="welcome-text">Welcome,</p>
+        <a href="{% url 'profile' user.username %}" class="user-link">
             {{ user.username }}
+            {% if req_user_is_curator %}
+                <img src="{% static 'icons/curatorIcon.png' %}" alt="Curator" width="20">
+            {% endif %}
             <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}/media/profile_pics/defaultPicture.png{% endif %}"
-                alt="Profile Picture" width="50" style="border-radius: 50%;">
+                 alt="Profile Picture" width="50" class="profile-pic">
         </a>
-        <form action="{% url 'logout' %}" method="post" style="display: inline; margin-left: 10px;">
+        <form action="{% url 'logout' %}" method="post" class="logout-form">
             {% csrf_token %}
-            <button type="submit">Logout</button>
+            <button type="submit" class="logout-btn">Logout</button>
         </form>
     </div>
-{% else %}
-    <a href="{% url 'login' %}">Login</a>
-    <a href="{% url 'register' %}">Registrati</a>
-{% endif %}
+    {% else %}
+    <div class="toolbar-auth">
+        <a href="{% url 'login' %}" class="auth-link">Login</a>
+        <a href="{% url 'register' %}" class="auth-link">Registrati</a>
+    </div>
+    {% endif %}
 </header>
 
-<hr>
+<hr class="divider">
 
 <main>
     {% block content %}
