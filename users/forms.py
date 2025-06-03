@@ -1,6 +1,8 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.forms import AuthenticationForm
+
+from music.models import Artist
 from .models import BayouUser
 
 
@@ -14,7 +16,7 @@ class BayouUserCreationForm(UserCreationForm):
             "password1", "password2",
             "first_name", "last_name",
             "profile_picture", "short_bio",
-            "phone_number", "favorite_band"
+            "phone_number", "favorite_artist"
         )
 
     def __init__(self, *args, **kwargs):
@@ -24,6 +26,15 @@ class BayouUserCreationForm(UserCreationForm):
             'id': 'phoneInput',
             'placeholder': 'Your phone number',
         })
+
+        self.fields['favorite_artist'].queryset = Artist.objects.all()
+        self.fields['favorite_artist'].empty_label = "Select your favorite artist"
+
+    def clean_email(self):
+        email = self.cleaned_data.get('email')
+        if BayouUser.objects.filter(email=email).exists():
+            raise forms.ValidationError("An account with this email already exists.")
+        return email
 
 class CustomLoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
@@ -42,7 +53,7 @@ class BayouUserUpdateForm(forms.ModelForm):
             'username', 'email',
             'first_name', 'last_name',
             'profile_picture', 'short_bio',
-            'phone_number', 'favorite_band'
+            'phone_number', 'favorite_artist'
         ]
         widgets = {
             'username': forms.TextInput(attrs={
@@ -55,3 +66,13 @@ class BayouUserUpdateForm(forms.ModelForm):
             }),
             'short_bio': forms.Textarea(attrs={'rows': 3}),
         }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.fields['favorite_artist'].queryset = Artist.objects.all()
+        self.fields['favorite_artist'].empty_label = "Select your favorite artist"
+        self.fields['phone_number'].widget.attrs.update({
+            'id': 'phoneInput',
+            'placeholder': 'Your phone number',
+        })

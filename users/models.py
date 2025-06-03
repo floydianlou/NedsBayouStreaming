@@ -1,28 +1,22 @@
 import os
 from PIL import Image
 from django.contrib.auth.models import AbstractUser
-from django.core.validators import RegexValidator
+from phonenumber_field.modelfields import PhoneNumberField
 from django.db import models
 
 def default_profile_pic():
     return 'profile_pics/defaultPicture.png'
 
 class BayouUser(AbstractUser):
+    email = models.EmailField(unique=True)
     profile_picture = models.ImageField(
         upload_to='profile_pics/',
         default=default_profile_pic,
         blank=True
     )
     short_bio = models.TextField(blank=True)
-    phone_number = models.CharField(
-        max_length=10,
-        blank=True,
-        unique=True,
-        validators=[
-            RegexValidator(regex=r'^\d+$', message='Your phone number must be numbers only.')
-        ]
-    )
-    favorite_band = models.CharField(max_length=100, blank=True)
+    phone_number = PhoneNumberField(blank=True, unique=True, region="IT")
+    favorite_artist = models.ForeignKey('music.Artist', on_delete=models.SET_NULL, null=True, blank=True)
 
     def __str__(self):
         return self.username

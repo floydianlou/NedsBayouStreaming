@@ -6,10 +6,10 @@ from PIL import Image
 from django.db import models
 
 def default_cover():
-    return 'song_covers/default_cover.png'
+    return 'song_covers/defaultPlaylistCover.png'
 
 def default_playlist_cover():
-    return 'playlist_covers/default_cover.png'
+    return 'playlist_covers/defaultPlaylistCover.png'
 
 class Genre(models.Model):
     name = models.CharField(max_length=50, unique=True)
@@ -41,7 +41,7 @@ class Song(models.Model):
             self.cover = default_cover()
 
         super().save(*args, **kwargs)
-        crop_image_to_square(self.cover, skip_filename='default_cover.png')
+        crop_image_to_square(self.cover, skip_filename='defaultPlaylistCover.png')
 
 class Playlist(models.Model):
     name = models.CharField(max_length=100)
@@ -62,4 +62,4 @@ class Playlist(models.Model):
             self.cover = default_playlist_cover()
 
         super().save(*args, **kwargs)
-        crop_image_to_square(self.cover, skip_filename='default_cover.png')
+        crop_image_to_square(self.cover, skip_filename='defaultPlaylistCover.png')

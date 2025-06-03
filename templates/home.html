@@ -6,21 +6,65 @@
 {% endblock %}
 
 {% block content %}
-<h2>Welcome to Ned's Bayou</h2>
+    <div class="home-wrapper">
 
-<h3>🎧 Catalogo Canzoni</h3>
-<div class="song-grid">
-    {% for song in songs %}
-        <div class="song-card">
-            <img src="{{ song.cover.url }}" alt="Copertina di {{ song.title }}">
-            <div class="song-info">
-                <h4>{{ song.title }}</h4>
-                <p>{{ song.artist.name }}</p>
-                <p>{{ song.duration }}</p>
+        <div class="home-sidebar">
+            <section class="latest-playlists">
+                <h3>🎶 Latest Playlists Created</h3>
+                {% for playlist in latest_playlists %}
+                    <div class="playlist-snippet">
+                        <div class="playlist-cover-info">
+                            <a href="{% url 'playlist_detail' playlist.id %}">
+                                <img class="playlist-cover" src="{{ playlist.cover.url }}"
+                                     alt="Cover {{ playlist.name }}">
+                            </a>
+                            <div>
+                                <strong>
+                                    <a href="{% url 'playlist_detail' playlist.id %}" class="playlist-link">
+                                        {{ playlist.name }}
+                                    </a>
+                                </strong><br>
+                                by <a href="{% url 'profile' playlist.created_by.username %}" class="user-link">
+                                {{ playlist.created_by.username }}
+                            </a>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </section>
+
+            <section class="top-songs">
+                <h3>🔥 Top Songs in Playlists</h3>
+                <ol class="top-songs-list">
+                    {% for song in top_songs %}
+                        <li>
+                            <span class="song-title">{{ song.title }}</span> – <span
+                                class="song-artist">{{ song.artist.name }}</span>
+                        </li>
+                    {% empty %}
+                        <p>There currently are no top songs.</p>
+                    {% endfor %}
+                </ol>
+            </section>
+        </div>
+
+        <div class="home-main-content">
+            <h2>Welcome to Ned's Bayou</h2>
+            <h3>🎧 Catalogo Canzoni</h3>
+            <div class="song-grid">
+                {% for song in songs %}
+                    <div class="song-card">
+                        <img src="{{ song.cover.url }}" alt="Copertina di {{ song.title }}">
+                        <div class="song-info">
+                            <h4>{{ song.title }}</h4>
+                            <p>{{ song.artist.name }}</p>
+                            <p>{{ song.duration }}</p>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>Non ci sono ancora canzoni!</p>
+                {% endfor %}
             </div>
         </div>
-    {% empty %}
-        <p>Non ci sono ancora canzoni!</p>
-    {% endfor %}
-</div>
+    </div>
 {% endblock %}

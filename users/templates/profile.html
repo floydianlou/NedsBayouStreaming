@@ -1,10 +1,11 @@
 {% extends 'toolbar.html' %}
 {% load static %}
 {% block extrahead %}
-<link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@17/build/css/intlTelInput.min.css">
 {% endblock %}
 {% block content %}
-<h2>{{ user_profile.username }}'s profile</h2>
+    <h2>{{ user_profile.username }}'s profile</h2>
 
 <img src="{% if user_profile.profile_picture %}{{ user_profile.profile_picture.url }}{% else %}/media/profile_pics/defaultPicture.png{% endif %}"
      alt="Profile Picture" width="150" style="border-radius: 50%;"><br><br>
@@ -12,16 +13,16 @@
 <div id="profile-info">
     <p><strong>Username:</strong> {{ user_profile.username }}</p>
     <p><strong>Email:</strong> {{ user_profile.email }}</p>
-    <p><strong>Nome:</strong> {{ user_profile.first_name }}</p>
-    <p><strong>Cognome:</strong> {{ user_profile.last_name }}</p>
+    <p><strong>Name:</strong> {{ user_profile.first_name }}</p>
+    <p><strong>Surname:</strong> {{ user_profile.last_name }}</p>
     {% if user_profile.short_bio %}
-        <p><strong>Biografia:</strong> {{ user_profile.short_bio }}</p>
+        <p><strong>Profile bio:</strong> {{ user_profile.short_bio }}</p>
     {% endif %}
     {% if user_profile.phone_number %}
-        <p><strong>Telefono:</strong> {{ user_profile.phone_number }}</p>
+        <p><strong>Phone:</strong> {{ user_profile.phone_number }}</p>
     {% endif %}
-    {% if user_profile.favorite_band %}
-        <p><strong>Band preferita:</strong> {{ user_profile.favorite_band }}</p>
+    {% if user_profile.favorite_artist %}
+        <p><strong>Favourite Artist:</strong> {{ user_profile.favorite_artist }}</p>
     {% endif %}
 </div>
 
@@ -47,7 +48,7 @@
 
     {{ form.short_bio.label_tag }} {{ form.short_bio }}<br>
     {{ form.phone_number.label_tag }} {{ form.phone_number }}<br>
-    {{ form.favorite_band.label_tag }} {{ form.favorite_band }}<br>
+    {{ form.favorite_artist.label_tag }} {{ form.favorite_artist }}<br>
 
     <button type="submit">💾 Salva modifiche</button>
 </form>
@@ -83,6 +84,20 @@
         document.getElementById('edit-form').style.display = 'block';
         document.getElementById('profile-info').style.display = 'none';
         document.getElementById('edit-button').style.display = 'none'; // Nasconde il bottone
+    }
+
+    const input = document.querySelector("#phoneInput");
+    if (input) {
+        window.intlTelInput(input, {
+            initialCountry: "auto",
+            geoIpLookup: callback => {
+                fetch('https://ipapi.co/json')
+                    .then(res => res.json())
+                    .then(data => callback(data.country_code))
+                    .catch(() => callback("IT"));
+            },
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@17/build/js/utils.js"
+        });
     }
 </script>
 {% endblock %}

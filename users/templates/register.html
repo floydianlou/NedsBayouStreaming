@@ -3,14 +3,37 @@
 <head>
     <meta charset="UTF-8">
     <title>Registrati su NedsBayouStreaming</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@17/build/css/intlTelInput.min.css">
+    <style>
+        label { font-weight: bold; }
+        input, select, textarea { margin-bottom: 10px; width: 300px; }
+    </style>
 </head>
 <body>
-    <h1>🎵 Crea il tuo account nel bayou musicale</h1>
-    <form method="POST" enctype="multipart/form-data">
-        {% csrf_token %}
-        {{ form.as_p }}
-        <button type="submit">Registrati</button>
-    </form>
+<h1>🎵 Crea il tuo account nel bayou musicale</h1>
+
+<form method="POST" enctype="multipart/form-data">
+    {% csrf_token %}
+
+    {{ form.username.label_tag }} {{ form.username }}<br>
+    {{ form.email.label_tag }} {{ form.email }}<br>
+    {{ form.first_name.label_tag }} {{ form.first_name }}<br>
+    {{ form.last_name.label_tag }} {{ form.last_name }}<br>
+    {{ form.profile_picture.label_tag }} {{ form.profile_picture }}<br>
+    {{ form.short_bio.label_tag }} {{ form.short_bio }}<br>
+
+    <label for="phoneInput">Numero di telefono:</label><br>
+    <input id="phoneInput" type="tel" name="phone_number"><br>
+
+    {{ form.favorite_artist.label_tag }} {{ form.favorite_artist }}<br>
+
+    {{ form.password1.label_tag }} {{ form.password1 }}<br>
+    {{ form.password2.label_tag }} {{ form.password2 }}<br>
+
+    <button type="submit">Registrati</button>
+</form>
+
+<!-- Script: pulizia input (solo numeri) -->
 <script>
   document.addEventListener('DOMContentLoaded', () => {
     const input = document.getElementById('phoneInput');
@@ -20,6 +43,24 @@
       });
     }
   });
+</script>
+
+<!-- Script: intl-tel-input -->
+<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@17/build/js/intlTelInput.min.js"></script>
+<script>
+  const input = document.querySelector("#phoneInput");
+  if (input) {
+    window.intlTelInput(input, {
+      initialCountry: "auto",
+      geoIpLookup: callback => {
+        fetch('https://ipapi.co/json')
+          .then(res => res.json())
+          .then(data => callback(data.country_code))
+          .catch(() => callback("IT"));
+      },
+      utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@17/build/js/utils.js"
+    });
+  }
 </script>
 </body>
 </html>

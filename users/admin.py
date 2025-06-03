@@ -12,7 +12,7 @@ class BayouUserAdmin(UserAdmin):
                 "profile_picture",
                 "short_bio",
                 "phone_number",
-                "favorite_band",
+                "favorite_artist",
             )
         }),
     )
@@ -23,7 +23,7 @@ class BayouUserAdmin(UserAdmin):
                 "profile_picture",
                 "short_bio",
                 "phone_number",
-                "favorite_band",
+                "favorite_artist",
             )
         }),
     )

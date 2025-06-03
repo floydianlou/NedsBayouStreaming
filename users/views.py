@@ -1,15 +1,30 @@
 from django.contrib.auth import login
+from django.db.models import Count
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import render, redirect
-from music.models import Song
+from music.models import Song, Playlist
 from .forms import BayouUserCreationForm, CustomLoginForm, BayouUserUpdateForm
 from .models import BayouUser
 from django.contrib.auth.models import Group
 
 
 def home(request):
+    # all songs
     songs = Song.objects.all()
-    return render(request, 'home.html', {'songs': songs})
+
+    # latest playlists created
+    latest_playlists = Playlist.objects.order_by('-id')[:5]
+
+    # top songs at the moment
+    top_songs = Song.objects.annotate(
+        times_added=Count('playlists')
+    ).order_by('-times_added')[:5]
+
+    return render(request, 'home.html', {
+        'songs': songs,
+        'latest_playlists': latest_playlists,
+        'top_songs': top_songs,
+    })
 
 
 def register(request):
