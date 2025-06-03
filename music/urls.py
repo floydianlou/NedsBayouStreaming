@@ -3,4 +3,6 @@ from . import views
 
 urlpatterns = [
     path('create-playlist/', views.create_playlist, name='create_playlist'),
+    path('playlist/<int:playlist_id>/', views.playlist_detail, name='playlist_detail'),
+    path('playlist/<int:pk>/delete/', views.delete_playlist, name='delete_playlist'),
 ]

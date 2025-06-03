@@ -57,7 +57,26 @@
 <hr>
 
 <h3>🎵 Le mie playlist</h3>
-<p>[Qui metteremo l’elenco quando creiamo la seconda app!]</p>
+{% if playlists %}
+    <div class="song-grid">
+    {% for playlist in playlists %}
+        <a href="{% url 'playlist_detail' playlist.id %}" class="song-card-link">
+            <div class="song-card">
+                <img src="{% if playlist.cover %}{{ playlist.cover.url }}{% else %}/media/playlist_covers/default_cover.png{% endif %}"
+                     alt="Copertina di {{ playlist.name }}">
+                <div class="song-info">
+                    <h4>{{ playlist.name }}</h4>
+                    {% if playlist.description %}
+                        <p>{{ playlist.description }}</p>
+                    {% endif %}
+                </div>
+            </div>
+        </a>
+    {% endfor %}
+</div>
+{% else %}
+    <p>Non hai ancora creato nessuna playlist! 🌱</p>
+{% endif %}
 
 <script>
     function toggleEdit() {

@@ -1,0 +1,81 @@
+{% extends 'toolbar.html' %}
+{% load static %}
+
+{% block extrahead %}
+<link rel="stylesheet" href="{% static 'css/playlist_detail.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="playlist-header">
+    <img src="{% if playlist.cover %}{{ playlist.cover.url }}{% else %}/media/playlist_covers/default_cover.png{% endif %}"
+         alt="Copertina di {{ playlist.name }}">
+    <div class="playlist-header-info">
+        <h2>{{ playlist.name }}</h2>
+        {% if playlist.description %}
+            <p>{{ playlist.description }}</p>
+        {% else %}
+            <p><em>Nessuna descrizione fornita.</em></p>
+        {% endif %}
+        {% if is_owner %}
+            <form method="post" action="{% url 'delete_playlist' playlist.id %}" style="margin-top: 10px;">
+                {% csrf_token %}
+                <button type="submit" class="delete-btn">🗑️ Elimina Playlist</button>
+            </form>
+            <button id="edit-button" onclick="toggleEdit()" class="btn">✏️ Modifica playlist</button>
+        {% endif %}
+    </div>
+</div>
+
+<hr>
+
+<h3>🎵 Canzoni nella playlist</h3>
+{% if playlist.songs.exists %}
+  <div class="song-grid">
+    {% for song in playlist.songs.all %}
+      <div class="song-card">
+        <img src="{{ song.cover.url }}" alt="Copertina di {{ song.title }}">
+        <div class="song-info">
+          <h4>{{ song.title }}</h4>
+          <p>{{ song.artist.name }}</p>
+          <p>{{ song.duration }}</p>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <p>Questa playlist non contiene ancora canzoni! 🎶</p>
+{% endif %}
+
+{% if is_owner %}
+    <div id="edit-form" style="display: none; margin-top: 20px;">
+    <form method="POST" enctype="multipart/form-data">
+      {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <label for="{{ form.name.id_for_label }}">Nome:</label>
+            {{ form.name }}
+
+            <label for="{{ form.description.id_for_label }}">Descrizione:</label>
+            {{ form.description }}
+
+            <label for="{{ form.cover.id_for_label }}">Copertina:</label>
+            {{ form.cover }}
+
+            <label for="{{ form.songs.id_for_label }}">Canzoni:</label>
+            {{ form.songs }}
+
+            <button type="submit" class="btn">💾 Salva modifiche</button>
+        </form>
+    </div>
+{% endif %}
+
+<script>
+    function toggleEdit() {
+        const form = document.getElementById('edit-form');
+        const button = document.getElementById('edit-button');
+        form.style.display = form.style.display === 'none' ? 'block' : 'none';
+        button.innerText = form.style.display === 'block' ? '❌ Annulla' : '✏️ Modifica playlist';
+    }
+</script>
+{% endblock %}
+

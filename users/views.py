@@ -44,6 +44,8 @@ def profileView(request, username):
     user_profile = get_object_or_404(BayouUser, username=username)
     is_owner = request.user.is_authenticated and request.user.username == username
 
+    playlists = user_profile.playlists.all()
+
     if is_owner:
         if request.method == 'POST':
             form = BayouUserUpdateForm(request.POST, request.FILES, instance=user_profile)
@@ -58,5 +60,6 @@ def profileView(request, username):
     return render(request, 'profile.html', {
         'user_profile': user_profile,
         'is_owner': is_owner,
-        'form': form
+        'form': form,
+        'playlists': playlists,
     })
