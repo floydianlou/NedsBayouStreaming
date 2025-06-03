@@ -29,6 +29,7 @@
 <hr>
 
 <h3>🎵 Canzoni nella playlist</h3>
+<div id="song-list">
 {% if playlist.songs.exists %}
   <div class="song-grid">
     {% for song in playlist.songs.all %}
@@ -45,6 +46,7 @@
 {% else %}
   <p>Questa playlist non contiene ancora canzoni! 🎶</p>
 {% endif %}
+</div>
 
 {% if is_owner %}
     <div id="edit-form" style="display: none; margin-top: 20px;">
@@ -73,8 +75,13 @@
     function toggleEdit() {
         const form = document.getElementById('edit-form');
         const button = document.getElementById('edit-button');
-        form.style.display = form.style.display === 'none' ? 'block' : 'none';
-        button.innerText = form.style.display === 'block' ? '❌ Annulla' : '✏️ Modifica playlist';
+        const songList = document.getElementById('song-list');
+
+        const showing = form.style.display === 'block';
+
+        form.style.display = showing ? 'none' : 'block';
+        songList.style.display = showing ? 'block' : 'none';
+        button.innerText = showing ? '✏️ Modifica playlist' : '❌ Annulla';
     }
 </script>
 {% endblock %}
