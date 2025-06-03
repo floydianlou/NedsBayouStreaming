@@ -10,7 +10,7 @@
 
         <div class="home-sidebar">
             <section class="latest-playlists">
-                <h3>🎶 Latest Playlists Created</h3>
+                <h3>Latest Playlists Created</h3>
                 {% for playlist in latest_playlists %}
                     <div class="playlist-snippet">
                         <div class="playlist-cover-info">
@@ -34,7 +34,7 @@
             </section>
 
             <section class="top-songs">
-                <h3>🔥 Top Songs in Playlists</h3>
+                <h3>Top songs right now</h3>
                 <ol class="top-songs-list">
                     {% for song in top_songs %}
                         <li>
@@ -50,7 +50,7 @@
 
         <div class="home-main-content">
             <h2>Welcome to Ned's Bayou</h2>
-            <h3>🎧 Catalogo Canzoni</h3>
+            <h3>FULL SONGS CATALOGUE</h3>
             <div class="song-grid">
                 {% for song in songs %}
                     <div class="song-card">
@@ -59,12 +59,29 @@
                             <h4>{{ song.title }}</h4>
                             <p>{{ song.artist.name }}</p>
                             <p>{{ song.duration }}</p>
+
+                            {% if user.is_authenticated %}
+                                <button class="quickAddBtn" data-song-id="{{ song.id }}">➕ Quick Add</button>
+                            {% endif %}
                         </div>
                     </div>
                 {% empty %}
-                    <p>Non ci sono ancora canzoni!</p>
+                    <p>No songs added to the website yet! Come back later.</p>
                 {% endfor %}
             </div>
         </div>
     </div>
+
+    <div id="quickAddModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Add this song to one of your playlists</h3>
+            <ul id="playlistList">
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/quickadd.js' %}"></script>
 {% endblock %}

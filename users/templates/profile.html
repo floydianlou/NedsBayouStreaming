@@ -2,25 +2,31 @@
 {% load static %}
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@17/build/css/intlTelInput.min.css">
 {% endblock %}
 {% block content %}
-    <h2>{{ user_profile.username }}'s profile</h2>
+<h2>{{ user_profile.username }}'s profile</h2>
 
 <img src="{% if user_profile.profile_picture %}{{ user_profile.profile_picture.url }}{% else %}/media/profile_pics/defaultPicture.png{% endif %}"
      alt="Profile Picture" width="150" style="border-radius: 50%;"><br><br>
 
 <div id="profile-info">
     <p><strong>Username:</strong> {{ user_profile.username }}</p>
-    <p><strong>Email:</strong> {{ user_profile.email }}</p>
+
+    {% if is_owner %}
+        <p><strong>Email:</strong> {{ user_profile.email }}</p>
+    {% endif %}
+
     <p><strong>Name:</strong> {{ user_profile.first_name }}</p>
     <p><strong>Surname:</strong> {{ user_profile.last_name }}</p>
+
     {% if user_profile.short_bio %}
         <p><strong>Profile bio:</strong> {{ user_profile.short_bio }}</p>
     {% endif %}
-    {% if user_profile.phone_number %}
+
+    {% if is_owner and user_profile.phone_number %}
         <p><strong>Phone:</strong> {{ user_profile.phone_number }}</p>
     {% endif %}
+
     {% if user_profile.favorite_artist %}
         <p><strong>Favourite Artist:</strong> {{ user_profile.favorite_artist }}</p>
     {% endif %}
@@ -32,26 +38,26 @@
 
     <div id="edit-form" style="display: none; margin-top: 20px;">
         <form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+            {% csrf_token %}
 
-    {{ form.username.label_tag }} {{ form.username }}<br>
-    {{ form.email.label_tag }} {{ form.email }}<br>
-    {{ form.first_name.label_tag }} {{ form.first_name }}<br>
-    {{ form.last_name.label_tag }} {{ form.last_name }}<br>
+            {{ form.username.label_tag }} {{ form.username }}<br>
+            {{ form.email.label_tag }} {{ form.email }}<br>
+            {{ form.first_name.label_tag }} {{ form.first_name }}<br>
+            {{ form.last_name.label_tag }} {{ form.last_name }}<br>
 
-    {% if user_profile.profile_picture.name != "profile_pics/defaultPicture.png" %}
-        {{ form.profile_picture.label_tag }} {{ form.profile_picture }}<br>
-    {% else %}
-        <label for="{{ form.profile_picture.id_for_label }}">Carica nuova foto profilo:</label>
-        <input type="file" name="{{ form.profile_picture.name }}" id="{{ form.profile_picture.id_for_label }}"><br>
-    {% endif %}
+            {% if user_profile.profile_picture.name != "profile_pics/defaultPicture.png" %}
+                {{ form.profile_picture.label_tag }} {{ form.profile_picture }}<br>
+            {% else %}
+                <label for="{{ form.profile_picture.id_for_label }}">Carica nuova foto profilo:</label>
+                <input type="file" name="{{ form.profile_picture.name }}" id="{{ form.profile_picture.id_for_label }}"><br>
+            {% endif %}
 
-    {{ form.short_bio.label_tag }} {{ form.short_bio }}<br>
-    {{ form.phone_number.label_tag }} {{ form.phone_number }}<br>
-    {{ form.favorite_artist.label_tag }} {{ form.favorite_artist }}<br>
+            {{ form.short_bio.label_tag }} {{ form.short_bio }}<br>
+            {{ form.phone_number.label_tag }} {{ form.phone_number }}<br>
+            {{ form.favorite_artist.label_tag }} {{ form.favorite_artist }}<br>
 
-    <button type="submit">💾 Salva modifiche</button>
-</form>
+            <button type="submit">💾 Salva modifiche</button>
+        </form>
     </div>
 {% endif %}
 
@@ -74,7 +80,7 @@
             </div>
         </a>
     {% endfor %}
-</div>
+    </div>
 {% else %}
     <p>Non hai ancora creato nessuna playlist! 🌱</p>
 {% endif %}
@@ -83,21 +89,7 @@
     function toggleEdit() {
         document.getElementById('edit-form').style.display = 'block';
         document.getElementById('profile-info').style.display = 'none';
-        document.getElementById('edit-button').style.display = 'none'; // Nasconde il bottone
-    }
-
-    const input = document.querySelector("#phoneInput");
-    if (input) {
-        window.intlTelInput(input, {
-            initialCountry: "auto",
-            geoIpLookup: callback => {
-                fetch('https://ipapi.co/json')
-                    .then(res => res.json())
-                    .then(data => callback(data.country_code))
-                    .catch(() => callback("IT"));
-            },
-            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@17/build/js/utils.js"
-        });
+        document.getElementById('edit-button').style.display = 'none';
     }
 </script>
 {% endblock %}

@@ -64,6 +64,10 @@ class BayouUserUpdateForm(forms.ModelForm):
                 'readonly': 'readonly',
                 'class': 'readonly-field'
             }),
+            'phone_number': forms.TextInput(attrs={
+                'readonly': 'readonly',
+                'class': 'readonly-field'
+            }),
             'short_bio': forms.Textarea(attrs={'rows': 3}),
         }
 
