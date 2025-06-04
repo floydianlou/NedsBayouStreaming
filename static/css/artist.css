@@ -1,0 +1,101 @@
+.artist-banner {
+  position: relative;
+  height: 500px;
+  overflow: hidden;
+}
+
+.artist-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center; /* puoi cambiare: 'top', 'center', 'bottom' */
+}
+
+.banner-overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  padding: 20px;
+}
+
+.banner-overlay h1 {
+  color: white;
+  font-size: 3em;
+  margin: 0;
+}
+
+
+.artist-content {
+  display: flex;
+  padding: 30px 20px;
+  background-color: #e0f7ff;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.left-column, .right-column {
+  flex: 1;
+  min-width: 300px;
+}
+
+.left-column h2, .right-column h2 {
+  color: #003344;
+  margin-bottom: 10px;
+}
+
+.left-column ul, .all-songs ul {
+  list-style-type: none;
+  padding: 0;
+}
+
+.left-column li, .all-songs li {
+  padding: 6px 0;
+  border-bottom: 1px solid #ccc;
+}
+
+.highlight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.highlight-item {
+  display: flex;
+  align-items: center;
+  background-color: #f9f9ff;
+  border: 1px solid #ccc;
+  border-radius: 12px;
+  padding: 10px;
+  gap: 10px;
+  box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
+}
+
+.highlight-cover {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid #aaa;
+}
+
+.highlight-info {
+  flex-grow: 1;
+  font-size: 0.9em;
+  color: #333;
+}
+
+.highlight-add {
+  padding: 6px 10px;
+  font-size: 0.9em;
+  border-radius: 8px;
+  border: none;
+  background-color: #d9b3ff;
+  color: #2d004d;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.highlight-add:hover {
+  background-color: #c08aff;
+}

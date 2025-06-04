@@ -5,12 +5,14 @@ from users.models import BayouUser
 from PIL import Image
 from django.db import models
 
+# DEFAULT COVERS FOR SONG, PLAYLIST AND TODO ARTIST
 def default_cover():
-    return 'song_covers/defaultPlaylistCover.png'
+    return 'song_covers/default_cover.png'
 
 def default_playlist_cover():
     return 'playlist_covers/defaultPlaylistCover.png'
 
+# GENRE MODEL
 class Genre(models.Model):
     name = models.CharField(max_length=50, unique=True)
     description = models.TextField(blank=True)
@@ -18,14 +20,17 @@ class Genre(models.Model):
     def __str__(self):
         return self.name
 
+# ARTIST MODEL TODO add image cropping for artist page
 class Artist(models.Model):
     name = models.CharField(max_length=100, unique=True)
     bio = models.TextField(blank=True)
     photo = models.ImageField(upload_to='artist_photos/', blank=True, null=True)
+    genres = models.ManyToManyField('Genre', related_name='artists')
 
     def __str__(self):
         return self.name
 
+# SONG MODEL (WITH IMAGE CROPPING)
 class Song(models.Model):
     title = models.CharField(max_length=100)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='songs')
@@ -43,6 +48,7 @@ class Song(models.Model):
         super().save(*args, **kwargs)
         crop_image_to_square(self.cover, skip_filename='defaultPlaylistCover.png')
 
+# PLAYLIST MODEL (WITH IMAGE CROPPING)
 class Playlist(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
@@ -63,3 +69,5 @@ class Playlist(models.Model):
 
         super().save(*args, **kwargs)
         crop_image_to_square(self.cover, skip_filename='defaultPlaylistCover.png')
+
+# RECOMMENDATION MODEL

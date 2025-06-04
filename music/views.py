@@ -1,3 +1,5 @@
+import random
+
 from django.contrib.auth.decorators import login_required
 import json
 from django.http import JsonResponse
@@ -6,7 +8,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from music.forms import PlaylistForm, PlaylistUpdateForm
-from music.models import Song, Playlist
+from music.models import Song, Playlist, Artist
 
 
 def song_catalogue_snippet(request):
@@ -123,3 +125,15 @@ def add_song_to_playlist(request):
 
     except Exception as e:
         return JsonResponse({"success": False, "error": str(e)})
+
+
+def artist_detail(request, artist_id):
+    artist = get_object_or_404(Artist, id=artist_id)
+    all_songs = artist.songs.all()
+    highlights = random.sample(list(all_songs), min(len(all_songs), 5))
+
+    return render(request, 'artist_detail.html', {
+        'artist': artist,
+        'highlights': highlights,
+        'all_songs': all_songs,
+    })

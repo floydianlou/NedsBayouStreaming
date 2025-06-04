@@ -1,5 +1,5 @@
 from django import forms
-from .models import Playlist, Song
+from .models import Playlist, Song, Artist
 
 from django import forms
 
@@ -45,3 +45,17 @@ class PlaylistUpdateForm(forms.ModelForm):
         self.fields['songs'].queryset = Song.objects.all()
         if self.instance:
             self.fields['songs'].initial = self.instance.songs.all()
+
+
+class ArtistAdminForm(forms.ModelForm):
+    class Meta:
+        model = Artist
+        fields = '__all__'
+
+    def clean_genres(self):
+        genres = self.cleaned_data.get('genres')
+        if genres.count() < 1:
+            raise forms.ValidationError("Seleziona almeno un genere.")
+        if genres.count() > 3:
+            raise forms.ValidationError("Puoi selezionare al massimo 3 generi.")
+        return genres

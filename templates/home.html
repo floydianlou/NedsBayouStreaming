@@ -57,7 +57,9 @@
                         <img src="{{ song.cover.url }}" alt="Copertina di {{ song.title }}">
                         <div class="song-info">
                             <h4>{{ song.title }}</h4>
-                            <p>{{ song.artist.name }}</p>
+                            <p><a href="{% url 'artist_detail' song.artist.id %}">
+                                    {{ song.artist.name }}
+                                </a></p>
                             <p>{{ song.duration }}</p>
 
                             {% if user.is_authenticated %}
