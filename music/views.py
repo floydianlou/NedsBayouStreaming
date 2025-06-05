@@ -2,18 +2,16 @@ import random
 
 from django.contrib.auth.decorators import login_required
 import json
+
+from django.db.models import Count, Q
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
-from django.views.decorators.csrf import csrf_exempt
 from django.views.decorators.http import require_POST
 
 from music.forms import PlaylistForm, PlaylistUpdateForm
-from music.models import Song, Playlist, Artist
+from music.models import Song, Playlist, Artist, Recommendation
+from music.recommendations_utilities import update_recommendations
 
-
-def song_catalogue_snippet(request):
-    songs = Song.objects.select_related('artist', 'genre').all()
-    return render(request, 'home.html', {'songs': songs})
 
 @login_required
 def create_playlist(request):
@@ -24,6 +22,8 @@ def create_playlist(request):
             playlist.created_by = request.user
             playlist.save()
             form.save_m2m()
+            for song in form.cleaned_data['songs']:
+                update_recommendations(request.user, song, +2)
             return redirect('profile', username=request.user.username)
     else:
         form = PlaylistForm()
@@ -38,7 +38,19 @@ def playlist_detail(request, playlist_id):
         if request.method == 'POST':
             form = PlaylistUpdateForm(request.POST, request.FILES, instance=playlist)
             if form.is_valid():
+                old_songs = set(playlist.songs.all())
+                new_songs = set(form.cleaned_data['songs'])
+
                 form.save()
+
+                added_songs = new_songs - old_songs
+                removed_songs = old_songs - new_songs
+
+                for song in added_songs:
+                    update_recommendations(request.user, song, +2)
+
+                for song in removed_songs:
+                    update_recommendations(request.user, song, -2)
                 return redirect('playlist_detail', playlist_id=playlist.id)
         else:
             form = PlaylistUpdateForm(instance=playlist)
@@ -56,6 +68,8 @@ def delete_playlist(request, pk):
     playlist = get_object_or_404(Playlist, pk=pk)
 
     if playlist.created_by == request.user:
+        for song in playlist.songs.all():
+            update_recommendations(request.user, song, -2)
         playlist.delete()
         return redirect('profile', username=request.user.username)
     else:
@@ -83,31 +97,8 @@ def get_user_playlists(request):
     else:
         return JsonResponse({"error": "Non autenticato"}, status=401)
 
-
-@csrf_exempt
-def add_song_to_playlist(request):
-    if request.method == "POST" and request.user.is_authenticated:
-        try:
-            data = json.loads(request.body)
-            playlist_id = data.get("playlist_id")
-            song_id = data.get("song_id")
-
-            playlist = Playlist.objects.get(id=playlist_id, user=request.user)
-            song = Song.objects.get(id=song_id)
-
-            playlist.songs.add(song)  # 🎯 Aggiunta!
-            return JsonResponse({"success": True})
-
-        except Playlist.DoesNotExist:
-            return JsonResponse({"error": "Playlist non trovata."}, status=404)
-        except Song.DoesNotExist:
-            return JsonResponse({"error": "Canzone non trovata."}, status=404)
-        except Exception as e:
-            return JsonResponse({"error": str(e)}, status=500)
-
-    return JsonResponse({"error": "Richiesta non valida o utente non autenticato."}, status=400)
-
 @require_POST
+@login_required
 def add_song_to_playlist(request):
     try:
         data = json.loads(request.body)
@@ -121,6 +112,7 @@ def add_song_to_playlist(request):
             return JsonResponse({"success": False, "error": "You do not own this playlist."})
 
         playlist.songs.add(song)
+        update_recommendations(request.user, song, +2)
         return JsonResponse({"success": True})
 
     except Exception as e:
@@ -136,4 +128,128 @@ def artist_detail(request, artist_id):
         'artist': artist,
         'highlights': highlights,
         'all_songs': all_songs,
+    })
+
+# FUNCTION TO GET RECOMMENDED SONGS AND ARTISTS
+import random
+from music.models import Song, Artist, Genre, Recommendation
+from users.models import BayouUser
+from django.db.models import Q, Count
+
+
+def generate_recommendations(user):
+    print(f"\n>>> GENERATING RECOMMENDATIONS FOR: {user.username if user.is_authenticated else 'Anonymous'}")
+
+    # --- 1. Caso non autenticato o nuovo ---
+    if not user.is_authenticated or not Recommendation.objects.filter(user=user, score__gt=0).exists():
+        print("[NEW OR UNAUTHENTICATED USER] Returning random picks.")
+        random_artists = list(Artist.objects.all())
+        random.shuffle(random_artists)
+
+        random_songs = list(Song.objects.all())
+        random.shuffle(random_songs)
+
+        return {
+            "related_artists": random_artists[:2],
+            "recommended_songs": random_songs[:5],
+            "random_artist": random_artists[2] if len(random_artists) > 2 else None,
+            "random_songs": random_songs[5:7]
+        }
+
+    # --- 2. Recupera i top 3 generi preferiti ---
+    top_genres = Recommendation.objects.filter(user=user).order_by('-score')[:3]
+    top_genre_ids = [rec.genre.id for rec in top_genres]
+    print("\U0001F3A7 Top Genres:")
+    for rec in top_genres:
+        print(f"  - {rec.genre.name}: {rec.score}")
+
+    # --- 3. Recupera artisti affini ordinati per numero di generi in comune ---
+    related_artists = (
+        Artist.objects
+        .filter(genres__in=top_genre_ids)
+        .annotate(common_genres=Count('genres', filter=Q(genres__in=top_genre_ids)))
+        .filter(common_genres__gt=0)
+        .order_by('-common_genres')
+    )
+
+    print("\U0001F3A4 Related Artists Found:")
+    for a in related_artists:
+        print(f"  - {a.name} (common genres: {a.common_genres})")
+
+    # --- 4. Scegli 1 artista top e 1 random dagli altri affini ---
+    related_artists_list = list(related_artists)
+    selected_related_artists = []
+    if related_artists_list:
+        selected_related_artists.append(related_artists_list[0])
+        others = related_artists_list[1:]
+        if others:
+            selected_related_artists.append(random.choice(others))
+
+    # Filler per artisti se meno di 2
+    if len(selected_related_artists) < 2:
+        excluded_artist_ids = [a.id for a in selected_related_artists]
+        filler_artists = Artist.objects.exclude(id__in=excluded_artist_ids)
+        filler_list = list(filler_artists)
+        random.shuffle(filler_list)
+        selected_related_artists.extend(filler_list[:2 - len(selected_related_artists)])
+
+    print("✅ Selected Related Artists:")
+    for a in selected_related_artists:
+        print(f"  - {a.name}")
+
+    # --- 5. Scegli 5 canzoni di artisti con generi affini o liked artist, ma non nei like ---
+    liked_artist_ids = user.liked_songs.values_list('artist__id', flat=True)
+    candidate_songs = Song.objects.filter(
+        Q(artist__genres__in=top_genre_ids) | Q(artist__id__in=liked_artist_ids)
+    ).exclude(id__in=user.liked_songs.values_list('id', flat=True)).distinct()
+
+    candidate_songs = list(candidate_songs)
+    print("\U0001F3B6 Candidate Songs:")
+    for s in candidate_songs:
+        print(f"  - {s.title} by {s.artist.name}")
+
+    recommended_songs = random.sample(candidate_songs, min(5, len(candidate_songs)))
+    recommended_song_ids = [s.id for s in recommended_songs]
+    print(f"\U0001F3B5 Selected {len(recommended_songs)} Recommended Songs")
+
+    # --- Riempie i posti mancanti con canzoni random ---
+    if len(recommended_songs) < 5:
+        missing = 5 - len(recommended_songs)
+        excluded_ids = recommended_song_ids + list(user.liked_songs.values_list('id', flat=True))
+        filler_songs = list(Song.objects.exclude(id__in=excluded_ids))
+        random.shuffle(filler_songs)
+        recommended_songs.extend(filler_songs[:missing])
+        print(f"🪄 Filled with {missing} random song(s):", [s.title for s in filler_songs[:missing]])
+
+    # --- 6. Artista random (escludendo quelli già selezionati) ---
+    excluded_artist_ids = [a.id for a in selected_related_artists]
+    if user.favorite_artist:
+        excluded_artist_ids.append(user.favorite_artist.id)
+
+    remaining_artists = Artist.objects.exclude(id__in=excluded_artist_ids)
+    random_artist = random.choice(list(remaining_artists)) if remaining_artists.exists() else None
+    if random_artist:
+        print(f"\U0001F3B2 Random Artist: {random_artist.name}")
+
+    # --- 7. 2 canzoni random (escludendo quelle già suggerite) ---
+    excluded_song_ids = [s.id for s in recommended_songs] + list(user.liked_songs.values_list('id', flat=True))
+    remaining_songs = Song.objects.exclude(id__in=excluded_song_ids)
+    random_songs = random.sample(list(remaining_songs), min(2, remaining_songs.count()))
+    print("\U0001F3B2 Random Songs:", [s.title for s in random_songs])
+
+    return {
+        "related_artists": selected_related_artists,
+        "recommended_songs": recommended_songs,
+        "random_artist": random_artist,
+        "random_songs": random_songs
+    }
+
+def recommendations_view(request):
+    recs = generate_recommendations(request.user)
+
+    return render(request, 'recommendations.html', {
+        'related_artists': recs['related_artists'],
+        'recommended_songs': recs['recommended_songs'],
+        'random_artist': recs['random_artist'],
+        'random_songs': recs['random_songs'],
     })

@@ -8,4 +8,5 @@ urlpatterns = [
     path('get_user_playlists/', views.get_user_playlists, name='get_user_playlists'),
     path('add_song_to_playlist/', views.add_song_to_playlist, name='add_song_to_playlist'),
     path('artist/<int:artist_id>/', views.artist_detail, name='artist_detail'),
+    path('recommendations/', views.recommendations_view, name='recommendations'),
 ]

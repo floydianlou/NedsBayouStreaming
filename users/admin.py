@@ -13,6 +13,7 @@ class BayouUserAdmin(UserAdmin):
                 "short_bio",
                 "phone_number",
                 "favorite_artist",
+                "liked_songs",
             )
         }),
     )

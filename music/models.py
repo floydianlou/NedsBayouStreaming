@@ -1,8 +1,5 @@
-import os
-
-from music.utils import crop_image_to_square
+from common_functions.utils import crop_image_to_square
 from users.models import BayouUser
-from PIL import Image
 from django.db import models
 
 # DEFAULT COVERS FOR SONG, PLAYLIST AND TODO ARTIST
@@ -35,18 +32,17 @@ class Song(models.Model):
     title = models.CharField(max_length=100)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='songs')
     duration = models.DurationField(help_text="Format: HH:MM:SS")
-    genre = models.ForeignKey(Genre, on_delete=models.CASCADE, related_name='songs')
     cover = models.ImageField(upload_to='song_covers/', default=default_cover(), blank=True)
 
     def __str__(self):
-        return f"{self.title} – {self.artist.name if self.artist else 'Artista sconosciuto'}"
+        return f"{self.title} – {self.artist.name if self.artist else 'Unknown artist'}"
 
     def save(self, *args, **kwargs):
         if not self.cover:
             self.cover = default_cover()
 
         super().save(*args, **kwargs)
-        crop_image_to_square(self.cover, skip_filename='defaultPlaylistCover.png')
+        crop_image_to_square(self.cover, skip_filename='default_cover.png')
 
 # PLAYLIST MODEL (WITH IMAGE CROPPING)
 class Playlist(models.Model):
@@ -71,3 +67,13 @@ class Playlist(models.Model):
         crop_image_to_square(self.cover, skip_filename='defaultPlaylistCover.png')
 
 # RECOMMENDATION MODEL
+class Recommendation(models.Model):
+    user = models.ForeignKey(BayouUser, on_delete=models.CASCADE)
+    genre = models.ForeignKey(Genre, on_delete=models.CASCADE)
+    score = models.IntegerField(default=0)
+
+    class Meta:
+        unique_together = ('user', 'genre')
+
+    def __str__(self):
+        return f"{self.user.username} – {self.genre.name}: {self.score}"

@@ -1,0 +1,42 @@
+{% extends 'toolbar.html' %}
+{% load static %}
+
+{% block extrahead %}
+  <link rel="stylesheet" href="{% static 'css/recommendations.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="recommendations-wrapper">
+  <h2>🎧 Recommendations for You</h2>
+
+  <section>
+    <h3>Artists You Might Like</h3>
+    <ul>
+      {% for artist in related_artists %}
+        <li><a href="{% url 'artist_detail' artist.id %}">{{ artist.name }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section>
+    <h3>Songs You Might Like</h3>
+    <ul>
+      {% for song in recommended_songs %}
+        <li>{{ song.title }} by <a href="{% url 'artist_detail' song.artist.id %}">{{ song.artist.name }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+
+  <section>
+    <h3>Random Pick 🎲</h3>
+    {% if random_artist %}
+      <p><strong>Artist:</strong> <a href="{% url 'artist_detail' random_artist.id %}">{{ random_artist.name }}</a></p>
+    {% endif %}
+    <ul>
+      {% for song in random_songs %}
+        <li>{{ song.title }} by <a href="{% url 'artist_detail' song.artist.id %}">{{ song.artist.name }}</a></li>
+      {% endfor %}
+    </ul>
+  </section>
+</div>
+{% endblock %}

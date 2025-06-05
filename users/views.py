@@ -1,8 +1,12 @@
 from django.contrib.auth import login
+from django.contrib.auth.decorators import login_required
 from django.db.models import Count
+from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404
 from django.shortcuts import render, redirect
 from music.models import Song, Playlist
+from music.recommendations_utilities import update_recommendations
+from music.views import generate_recommendations
 from .forms import BayouUserCreationForm, CustomLoginForm, BayouUserUpdateForm
 from .models import BayouUser
 from django.contrib.auth.models import Group
@@ -20,10 +24,17 @@ def home(request):
         times_added=Count('playlists')
     ).order_by('-times_added')[:5]
 
+    # recommended preview
+    suggestions = generate_recommendations(request.user)
+    preview_artist = suggestions["related_artists"][0] if suggestions["related_artists"] else None
+    preview_songs = suggestions["recommended_songs"][:3] if suggestions["recommended_songs"] else []
+
     return render(request, 'home.html', {
         'songs': songs,
         'latest_playlists': latest_playlists,
         'top_songs': top_songs,
+        'preview_artist': preview_artist,
+        'preview_songs': preview_songs,
     })
 
 
@@ -60,6 +71,7 @@ def profileView(request, username):
     is_owner = request.user.is_authenticated and request.user.username == username
 
     playlists = user_profile.playlists.all()
+    liked_songs = user_profile.liked_songs.select_related('artist').all()
 
     if is_owner:
         if request.method == 'POST':
@@ -77,4 +89,22 @@ def profileView(request, username):
         'is_owner': is_owner,
         'form': form,
         'playlists': playlists,
+        'liked_songs': liked_songs,
     })
+
+@login_required
+def toggle_like_song(request, song_id):
+    if request.method == 'POST':
+        song = get_object_or_404(Song, id=song_id)
+        user = request.user
+
+        liked = False
+        if song in user.liked_songs.all():
+            user.liked_songs.remove(song)
+            update_recommendations(user, song, -3)
+        else:
+            user.liked_songs.add(song)
+            update_recommendations(user, song, 3)
+            liked = True
+        return JsonResponse({'liked': liked})
+    return JsonResponse({'error': 'Invalid request'}, status=400)

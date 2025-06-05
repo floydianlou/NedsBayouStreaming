@@ -3,6 +3,7 @@
 
 {% block extrahead %}
 <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
@@ -50,6 +51,34 @@
 
         <div class="home-main-content">
             <h2>Welcome to Ned's Bayou</h2>
+
+            <div class="suggested-block">
+                <h3>🌊 Suggested for you</h3>
+
+                {% if preview_artist %}
+                    <p><strong>🎤 Artist:</strong>
+                        <a href="{% url 'artist_detail' preview_artist.id %}">
+                            {{ preview_artist.name }}
+                        </a>
+                    </p>
+                {% endif %}
+
+                {% if preview_songs %}
+                    <ul class="suggested-songs">
+                        {% for song in preview_songs %}
+                            <li>
+                                <a href="{% url 'artist_detail' song.artist.id %}">{{ song.artist.name }}</a>
+                                – {{ song.title }}
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% else %}
+                    <p>No suggestions yet 💭</p>
+                {% endif %}
+
+                <a href="{% url 'recommendations' %}" class="btn">View more ➜</a>
+            </div>
+
             <h3>FULL SONGS CATALOGUE</h3>
             <div class="song-grid">
                 {% for song in songs %}
@@ -58,12 +87,23 @@
                         <div class="song-info">
                             <h4>{{ song.title }}</h4>
                             <p><a href="{% url 'artist_detail' song.artist.id %}">
-                                    {{ song.artist.name }}
-                                </a></p>
+                                {{ song.artist.name }}
+                            </a></p>
                             <p>{{ song.duration }}</p>
 
                             {% if user.is_authenticated %}
-                                <button class="quickAddBtn" data-song-id="{{ song.id }}">➕ Quick Add</button>
+                                <div class="song-actions">
+                                    <button class="quickAddBtn" data-song-id="{{ song.id }}">
+                                        <i class="fas fa-plus"></i> Quick Add
+                                    </button>
+
+                                    <button type="button"
+                                            class="like-button"
+                                            data-song-id="{{ song.id }}"
+                                            data-liked="{% if song in user.liked_songs.all %}true{% else %}false{% endif %}">
+                                        <i class="{% if song in user.liked_songs.all %}fas{% else %}far{% endif %} fa-heart"></i>
+                                    </button>
+                                </div>
                             {% endif %}
                         </div>
                     </div>
@@ -86,4 +126,6 @@
 
 {% block scripts %}
   <script src="{% static 'js/quickadd.js' %}"></script>
+    <script src="{% static 'js/utilities.js' %}"></script>
+    <script src="{% static 'js/like.js' %}"></script>
 {% endblock %}

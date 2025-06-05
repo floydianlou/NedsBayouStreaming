@@ -85,6 +85,29 @@
     <p>Non hai ancora creato nessuna playlist! 🌱</p>
 {% endif %}
 
+    <hr>
+
+<h3>❤️ Canzoni che mi piacciono</h3>
+
+{% if liked_songs %}
+    <div class="song-grid">
+        {% for song in liked_songs %}
+            <div class="song-card">
+                <img src="{{ song.cover.url }}" alt="Copertina di {{ song.title }}">
+                <div class="song-info">
+                    <h4>{{ song.title }}</h4>
+                    <p>
+                        <a href="{% url 'artist_detail' song.artist.id %}">{{ song.artist.name }}</a>
+                    </p>
+                    <p>{{ song.duration }}</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% else %}
+    <p>Non hai ancora messo like a nessuna canzone! 💔</p>
+{% endif %}
+
 <script>
     function toggleEdit() {
         document.getElementById('edit-form').style.display = 'block';
