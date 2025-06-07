@@ -47,6 +47,12 @@ def register(request):
             listener_group = Group.objects.get(name='Listener')
             user.groups.add(listener_group)
 
+            if user.favorite_artist:
+                favorite_artist_songs = user.favorite_artist.song_set.all()
+                if favorite_artist_songs.exists():
+                    song = favorite_artist_songs.first()
+                    update_recommendations(user, song=song, delta=5)
+
             return redirect('home')
     else:
         form = BayouUserCreationForm()
@@ -75,9 +81,23 @@ def profileView(request, username):
 
     if is_owner:
         if request.method == 'POST':
+            old_favorite = user_profile.favorite_artist
             form = BayouUserUpdateForm(request.POST, request.FILES, instance=user_profile)
             if form.is_valid():
                 form.save()
+
+                if old_favorite and not user_profile.favorite_artist:
+                    old_artist_songs = old_favorite.songs.all()
+                    if old_artist_songs.exists():
+                        first_song = old_artist_songs.first()
+                        update_recommendations(user_profile, song=first_song, delta=-5)
+
+                if user_profile.favorite_artist != old_favorite and user_profile.favorite_artist:
+                    favorite_artist_songs = user_profile.favorite_artist.songs.all()
+                    if favorite_artist_songs.exists():
+                        first_song = favorite_artist_songs.first()
+                        update_recommendations(user_profile, song=first_song, delta=5)
+
                 return redirect('profile', username=username)
         else:
             form = BayouUserUpdateForm(instance=user_profile)

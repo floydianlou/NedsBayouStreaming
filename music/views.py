@@ -10,7 +10,7 @@ from django.views.decorators.http import require_POST
 
 from music.forms import PlaylistForm, PlaylistUpdateForm
 from music.models import Song, Playlist, Artist, Recommendation
-from music.recommendations_utilities import update_recommendations
+from music.recommendations_utilities import update_recommendations, get_random_recommendations
 
 
 @login_required
@@ -137,24 +137,13 @@ from users.models import BayouUser
 from django.db.models import Q, Count
 
 
-def generate_recommendations(user):
+def generate_recommendations(user): # TODO REMOVE COMMENTARY
     print(f"\n>>> GENERATING RECOMMENDATIONS FOR: {user.username if user.is_authenticated else 'Anonymous'}")
 
     # --- 1. Caso non autenticato o nuovo ---
     if not user.is_authenticated or not Recommendation.objects.filter(user=user, score__gt=0).exists():
         print("[NEW OR UNAUTHENTICATED USER] Returning random picks.")
-        random_artists = list(Artist.objects.all())
-        random.shuffle(random_artists)
-
-        random_songs = list(Song.objects.all())
-        random.shuffle(random_songs)
-
-        return {
-            "related_artists": random_artists[:2],
-            "recommended_songs": random_songs[:5],
-            "random_artist": random_artists[2] if len(random_artists) > 2 else None,
-            "random_songs": random_songs[5:7]
-        }
+        return get_random_recommendations(user)
 
     # --- 2. Recupera i top 3 generi preferiti ---
     top_genres = Recommendation.objects.filter(user=user).order_by('-score')[:3]
@@ -176,8 +165,10 @@ def generate_recommendations(user):
     for a in related_artists:
         print(f"  - {a.name} (common genres: {a.common_genres})")
 
-    # --- 4. Scegli 1 artista top e 1 random dagli altri affini ---
+    # --- 4. random dagli altri affini ---
     related_artists_list = list(related_artists)
+    random.shuffle(related_artists_list)
+
     selected_related_artists = []
     if related_artists_list:
         selected_related_artists.append(related_artists_list[0])
@@ -204,9 +195,14 @@ def generate_recommendations(user):
     ).exclude(id__in=user.liked_songs.values_list('id', flat=True)).distinct()
 
     candidate_songs = list(candidate_songs)
+
     print("\U0001F3B6 Candidate Songs:")
     for s in candidate_songs:
         print(f"  - {s.title} by {s.artist.name}")
+
+    if not candidate_songs:
+        print("🎉 You added everything to your library! You must really love music. 🥰✨")
+        return get_random_recommendations(user)
 
     recommended_songs = random.sample(candidate_songs, min(5, len(candidate_songs)))
     recommended_song_ids = [s.id for s in recommended_songs]
