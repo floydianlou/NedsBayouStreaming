@@ -1,20 +1,19 @@
 from django.contrib.auth import login
+from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
 from django.db.models import Count
 from django.http import JsonResponse
-from django.shortcuts import render, get_object_or_404
-from django.shortcuts import render, redirect
+from django.shortcuts import render, get_object_or_404, redirect
 from music.models import Song, Playlist
 from music.recommendations_utilities import update_recommendations
 from music.views import generate_recommendations
 from .forms import BayouUserCreationForm, CustomLoginForm, BayouUserUpdateForm
 from .models import BayouUser
-from django.contrib.auth.models import Group
 
 
 def home(request):
-    # all songs
-    songs = Song.objects.all()
+    # 10 random songs
+    songs = Song.objects.order_by('?')[:8]
 
     # latest playlists created
     latest_playlists = Playlist.objects.order_by('-id')[:5]
@@ -36,7 +35,6 @@ def home(request):
         'preview_artist': preview_artist,
         'preview_songs': preview_songs,
     })
-
 
 def register(request):
     if request.method == 'POST':

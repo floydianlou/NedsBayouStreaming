@@ -1,13 +1,10 @@
-import random
-
 from django.contrib.auth.decorators import login_required
-import json
-
-from django.db.models import Count, Q
+import json, random
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
-
+from django.db.models import Q, Count
+from django.views.generic import ListView
 from music.forms import PlaylistForm, PlaylistUpdateForm
 from music.models import Song, Playlist, Artist, Recommendation
 from music.recommendations_utilities import update_recommendations, get_random_recommendations
@@ -131,12 +128,6 @@ def artist_detail(request, artist_id):
     })
 
 # FUNCTION TO GET RECOMMENDED SONGS AND ARTISTS
-import random
-from music.models import Song, Artist, Genre, Recommendation
-from users.models import BayouUser
-from django.db.models import Q, Count
-
-
 def generate_recommendations(user): # TODO REMOVE COMMENTARY
     print(f"\n>>> GENERATING RECOMMENDATIONS FOR: {user.username if user.is_authenticated else 'Anonymous'}")
 
@@ -213,6 +204,10 @@ def generate_recommendations(user): # TODO REMOVE COMMENTARY
         missing = 5 - len(recommended_songs)
         excluded_ids = recommended_song_ids + list(user.liked_songs.values_list('id', flat=True))
         filler_songs = list(Song.objects.exclude(id__in=excluded_ids))
+
+        if not filler_songs:
+            filler_songs = list(Song.objects.all())
+
         random.shuffle(filler_songs)
         recommended_songs.extend(filler_songs[:missing])
         print(f"🪄 Filled with {missing} random song(s):", [s.title for s in filler_songs[:missing]])
@@ -249,3 +244,11 @@ def recommendations_view(request):
         'random_artist': recs['random_artist'],
         'random_songs': recs['random_songs'],
     })
+
+
+class SongListView(ListView):
+    model = Song
+    template_name = 'song_list.html'
+    context_object_name = 'songs'
+    ordering = ['artist__name', 'title']
+

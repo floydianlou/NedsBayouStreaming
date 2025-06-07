@@ -2,35 +2,25 @@
 {% load static %}
 
 {% block extrahead %}
-  <link rel="stylesheet" href="{% static 'css/recommendations.css' %}">
     <link rel="stylesheet" href="{% static 'css/common_items.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
-    <h2>Recommended for You 🌊</h2>
+  <h2>All songs in Ned's Bayou</h2>
 
-    <div class="artist-grid large-artist-grid">
-        {% for artist in related_artists %}
-            {% include "artist_card.html" with artist=artist %}
-        {% endfor %}
+  {% regroup songs by artist as artist_list %}
 
-        {% if random_artist %}
-            {% include "artist_card.html" with artist=random_artist %}
-        {% endif %}
+  {% for artist_group in artist_list %}
+    <h3>{{ artist_group.grouper.name }}</h3>
+    <div class="song-grid">
+      {% for song in artist_group.list %}
+        {% include "song_card.html" with song=song %}
+      {% endfor %}
     </div>
+  {% endfor %}
 
-<div class="song-grid large-song-grid" style="margin-top: 40px;">
-    {% for song in recommended_songs %}
-        {% include "song_card.html" with song=song %}
-    {% endfor %}
-</div>
 
-<div class="song-grid large-song-grid" style="margin-top: 40px;">
-    {% for song in random_songs %}
-        {% include "song_card.html" with song=song %}
-    {% endfor %}
-</div>
 <div id="quickAddModal" class="modal hidden">
         <div class="modal-content">
             <h3>Add this song to one of your playlists</h3>
