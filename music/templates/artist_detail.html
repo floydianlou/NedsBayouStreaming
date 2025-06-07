@@ -2,8 +2,9 @@
 {% load static %}
 
 {% block extrahead %}
-  <link rel="stylesheet" href="{% static 'css/artist.css' %}">
-    <link rel="stylesheet" href="{% static 'css/home.css' %}">
+    <link rel="stylesheet" href="{% static 'css/common_items.css' %}">
+    <link rel="stylesheet" href="{% static 'css/artist.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
@@ -26,8 +27,19 @@
                             <strong>{{ song.title }}</strong><br>
                             <span class="duration">{{ song.duration }}</span>
                         </div>
+
                         {% if user.is_authenticated %}
-                            <button class="quickAddBtn highlight-add" data-song-id="{{ song.id }}">➕</button>
+                            <div class="highlight-actions"
+                                 style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
+                                <button class="quickAddBtn highlight-add" data-song-id="{{ song.id }}">➕</button>
+
+                                <button type="button"
+                                        class="like-button"
+                                        data-song-id="{{ song.id }}"
+                                        data-liked="{% if song in user.liked_songs.all %}true{% else %}false{% endif %}">
+                                    <i class="{% if song in user.liked_songs.all %}fas{% else %}far{% endif %} fa-heart"></i>
+                                </button>
+                            </div>
                         {% endif %}
                     </div>
                 {% endfor %}
@@ -45,25 +57,12 @@
 <h2 style="padding: 0 20px;">Songs from {{ artist.name }}</h2>
 <div class="song-grid">
     {% for song in all_songs %}
-        <div class="song-card">
-            <img src="{{ song.cover.url }}" alt="{{ song.title }} cover">
-            <div class="song-info">
-                <h4>{{ song.title }}</h4>
-                <p>
-                    <a href="{% url 'artist_detail' song.artist.id %}">
-                        {{ song.artist.name }}
-                    </a>
-                </p>
-                <p>{{ song.duration }}</p>
-                {% if user.is_authenticated %}
-                    <button class="quickAddBtn" data-song-id="{{ song.id }}">Add to playlist</button>
-                {% endif %}
-            </div>
-        </div>
+        {% include "song_card.html" with song=song %}
     {% empty %}
         <p style="padding: 20px;">This artist has not provided songs yet.</p>
     {% endfor %}
 </div>
+
 
     <div id="quickAddModal" class="modal hidden">
         <div class="modal-content">
@@ -76,5 +75,7 @@
 {% endblock %}
 
 {% block scripts %}
-  <script src="{% static 'js/quickadd.js' %}"></script>
+    <script src="{% static 'js/quickadd.js' %}"></script>
+    <script src="{% static 'js/utilities.js' %}"></script>
+    <script src="{% static 'js/like.js' %}"></script>
 {% endblock %}

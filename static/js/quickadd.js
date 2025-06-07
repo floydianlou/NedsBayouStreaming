@@ -45,9 +45,9 @@ document.querySelectorAll('.quickAddBtn').forEach(btn => {
           });
         } else {
           list.innerHTML = `
-            <li>There are no playlists without this song! 
-              <a href="/music/create-playlist/" class="create-link">Make a new one here.</a>
-            </li>`;
+            <p>You either have this song in all your playlists or don't have one!
+              <a href="/music/create-playlist/" class="create-link">Make it here.</a>
+            </p>`;
         }
 
         document.getElementById("quickAddModal").classList.remove("hidden");

@@ -1,7 +1,9 @@
 {% extends 'toolbar.html' %}
 {% load static %}
 {% block extrahead %}
+    <link rel="stylesheet" href="{% static 'css/common_items.css' %}">
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 {% endblock %}
 {% block content %}
 <h2>{{ user_profile.username }}'s profile</h2>
@@ -63,7 +65,7 @@
 
 <hr>
 
-<h3>🎵 Le mie playlist</h3>
+<h3>{{user_profile.username}}'s playlists</h3>
 {% if playlists %}
     <div class="song-grid">
     {% for playlist in playlists %}
@@ -82,37 +84,52 @@
     {% endfor %}
     </div>
 {% else %}
-    <p>Non hai ancora creato nessuna playlist! 🌱</p>
+    {% if is_owner %}
+        <p>You haven't made any playlists yet! Make one now.</p>
+        {% else %}
+        <p>This user has no playlists.</p>
+        {% endif %}
 {% endif %}
 
     <hr>
 
-<h3>❤️ Canzoni che mi piacciono</h3>
+<h3>{{user_profile.username}}'s liked songs</h3>
 
 {% if liked_songs %}
     <div class="song-grid">
         {% for song in liked_songs %}
-            <div class="song-card">
-                <img src="{{ song.cover.url }}" alt="Copertina di {{ song.title }}">
-                <div class="song-info">
-                    <h4>{{ song.title }}</h4>
-                    <p>
-                        <a href="{% url 'artist_detail' song.artist.id %}">{{ song.artist.name }}</a>
-                    </p>
-                    <p>{{ song.duration }}</p>
-                </div>
-            </div>
+            {% include "song_card.html" with song=song %}
         {% endfor %}
     </div>
 {% else %}
-    <p>Non hai ancora messo like a nessuna canzone! 💔</p>
+    {% if is_owner %}
+        <p>You have no liked songs yet. Find something you like!</p>
+        {% else %}
+        <p>This user has no liked songs.</p>
+    {% endif %}
 {% endif %}
 
-<script>
-    function toggleEdit() {
-        document.getElementById('edit-form').style.display = 'block';
-        document.getElementById('profile-info').style.display = 'none';
-        document.getElementById('edit-button').style.display = 'none';
-    }
-</script>
+<div id="quickAddModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Add this song to one of your playlists</h3>
+            <ul id="playlistList">
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}
+
+
+{% block scripts %}
+    <script src="{% static 'js/quickadd.js' %}"></script>
+    <script src="{% static 'js/utilities.js' %}"></script>
+    <script src="{% static 'js/like.js' %}"></script>
+
+    <script>
+        function toggleEdit() {
+            document.getElementById('edit-form').style.display = 'block';
+            document.getElementById('profile-info').style.display = 'none';
+            document.getElementById('edit-button').style.display = 'none';
+        }
+    </script>
 {% endblock %}
