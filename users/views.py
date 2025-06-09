@@ -84,17 +84,21 @@ def profileView(request, username):
             if form.is_valid():
                 form.save()
 
-                if old_favorite and not user_profile.favorite_artist:
-                    old_artist_songs = old_favorite.songs.all()
-                    if old_artist_songs.exists():
-                        first_song = old_artist_songs.first()
-                        update_recommendations(user_profile, song=first_song, delta=-5)
+                # If favorite artist has changed, update recommendations accordingly
+                if user_profile.favorite_artist != old_favorite:
+                    # Remove 5 points from old favorite (if exists)
+                    if old_favorite:
+                        old_artist_songs = old_favorite.songs.all()
+                        if old_artist_songs.exists():
+                            first_song = old_artist_songs.first()
+                            update_recommendations(user_profile, song=first_song, delta=-5)
 
-                if user_profile.favorite_artist != old_favorite and user_profile.favorite_artist:
-                    favorite_artist_songs = user_profile.favorite_artist.songs.all()
-                    if favorite_artist_songs.exists():
-                        first_song = favorite_artist_songs.first()
-                        update_recommendations(user_profile, song=first_song, delta=5)
+                    # Add 5 points to new favorite (if exists)
+                    if user_profile.favorite_artist:
+                        favorite_artist_songs = user_profile.favorite_artist.songs.all()
+                        if favorite_artist_songs.exists():
+                            first_song = favorite_artist_songs.first()
+                            update_recommendations(user_profile, song=first_song, delta=5)
 
                 return redirect('profile', username=username)
         else:

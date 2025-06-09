@@ -7,7 +7,7 @@ from django.db.models import Q, Count
 from django.views.generic import ListView
 from music.forms import PlaylistForm, PlaylistUpdateForm
 from music.models import Song, Playlist, Artist, Recommendation
-from music.recommendations_utilities import update_recommendations, get_random_recommendations
+from music.recommendations_utilities import update_recommendations, get_random_recommendations, get_random_songs
 
 
 @login_required
@@ -128,22 +128,27 @@ def artist_detail(request, artist_id):
     })
 
 # FUNCTION TO GET RECOMMENDED SONGS AND ARTISTS
-def generate_recommendations(user): # TODO REMOVE COMMENTARY
+def generate_recommendations(user):
     print(f"\n>>> GENERATING RECOMMENDATIONS FOR: {user.username if user.is_authenticated else 'Anonymous'}")
 
-    # --- 1. Caso non autenticato o nuovo ---
+    # --- 1. If user is unauthenticated or has no recommendation data yet, return random picks ---
     if not user.is_authenticated or not Recommendation.objects.filter(user=user, score__gt=0).exists():
         print("[NEW OR UNAUTHENTICATED USER] Returning random picks.")
         return get_random_recommendations(user)
 
-    # --- 2. Recupera i top 3 generi preferiti ---
-    top_genres = Recommendation.objects.filter(user=user).order_by('-score')[:3]
+    # --- 2. Retrieve top 3 favorite genres for the user ---
+    top_genres = Recommendation.objects.filter(user=user, score__gt=0).order_by('-score')[:3]
     top_genre_ids = [rec.genre.id for rec in top_genres]
     print("\U0001F3A7 Top Genres:")
     for rec in top_genres:
         print(f"  - {rec.genre.name}: {rec.score}")
 
-    # --- 3. Recupera artisti affini ordinati per numero di generi in comune ---
+    if not top_genres:
+        # fallback: return random picks
+        print("[NO TOP GENRES WITH POSITIVE SCORE] Using random picks.")
+        return get_random_recommendations(user)
+
+    # --- 3. Retrieve related artists ordered by number of common genres with user's top genres ---
     related_artists = (
         Artist.objects
         .filter(genres__in=top_genre_ids)
@@ -156,7 +161,7 @@ def generate_recommendations(user): # TODO REMOVE COMMENTARY
     for a in related_artists:
         print(f"  - {a.name} (common genres: {a.common_genres})")
 
-    # --- 4. random dagli altri affini ---
+    # --- 4. Select up to 2 related artists at random ---
     related_artists_list = list(related_artists)
     random.shuffle(related_artists_list)
 
@@ -167,7 +172,7 @@ def generate_recommendations(user): # TODO REMOVE COMMENTARY
         if others:
             selected_related_artists.append(random.choice(others))
 
-    # Filler per artisti se meno di 2
+    # If there are less than 2 related artists, fill with random artists
     if len(selected_related_artists) < 2:
         excluded_artist_ids = [a.id for a in selected_related_artists]
         filler_artists = Artist.objects.exclude(id__in=excluded_artist_ids)
@@ -179,7 +184,10 @@ def generate_recommendations(user): # TODO REMOVE COMMENTARY
     for a in selected_related_artists:
         print(f"  - {a.name}")
 
-    # --- 5. Scegli 5 canzoni di artisti con generi affini o liked artist, ma non nei like ---
+    # --- 5. Select up to 5 songs from either:
+    # - artists with genres matching top genres
+    # - liked artists
+    # Exclude songs already liked by the user ---
     liked_artist_ids = user.liked_songs.values_list('artist__id', flat=True)
     candidate_songs = Song.objects.filter(
         Q(artist__genres__in=top_genre_ids) | Q(artist__id__in=liked_artist_ids)
@@ -191,28 +199,23 @@ def generate_recommendations(user): # TODO REMOVE COMMENTARY
     for s in candidate_songs:
         print(f"  - {s.title} by {s.artist.name}")
 
+    # If no candidate songs available, fallback to random picks
     if not candidate_songs:
-        print("🎉 You added everything to your library! You must really love music. 🥰✨")
-        return get_random_recommendations(user)
+        recommended_songs = get_random_songs(user, 5)
+    else:
+        recommended_songs = random.sample(candidate_songs, min(5, len(candidate_songs)))
 
-    recommended_songs = random.sample(candidate_songs, min(5, len(candidate_songs)))
-    recommended_song_ids = [s.id for s in recommended_songs]
-    print(f"\U0001F3B5 Selected {len(recommended_songs)} Recommended Songs")
+    print(f"\U0001F3B5 Selected {len(recommended_songs)} Recommended Songs:")
+    for s in recommended_songs:
+        print(f"  - {s.title} by {s.artist.name}")
 
-    # --- Riempie i posti mancanti con canzoni random ---
+    # --- 6. If less than 5 recommended songs, fill remaining slots with random songs ---
     if len(recommended_songs) < 5:
         missing = 5 - len(recommended_songs)
-        excluded_ids = recommended_song_ids + list(user.liked_songs.values_list('id', flat=True))
-        filler_songs = list(Song.objects.exclude(id__in=excluded_ids))
+        print(f"🪄 Need to fill {missing} more song(s).")
+        recommended_songs.extend(get_random_songs(user, missing, exclude_song_ids=[s.id for s in recommended_songs]))
 
-        if not filler_songs:
-            filler_songs = list(Song.objects.all())
-
-        random.shuffle(filler_songs)
-        recommended_songs.extend(filler_songs[:missing])
-        print(f"🪄 Filled with {missing} random song(s):", [s.title for s in filler_songs[:missing]])
-
-    # --- 6. Artista random (escludendo quelli già selezionati) ---
+    # --- 7. Select 1 random artist not already in the related artists list ---
     excluded_artist_ids = [a.id for a in selected_related_artists]
     if user.favorite_artist:
         excluded_artist_ids.append(user.favorite_artist.id)
@@ -222,12 +225,24 @@ def generate_recommendations(user): # TODO REMOVE COMMENTARY
     if random_artist:
         print(f"\U0001F3B2 Random Artist: {random_artist.name}")
 
-    # --- 7. 2 canzoni random (escludendo quelle già suggerite) ---
+    # --- 8. Select 2 random songs from remaining pool ---
     excluded_song_ids = [s.id for s in recommended_songs] + list(user.liked_songs.values_list('id', flat=True))
     remaining_songs = Song.objects.exclude(id__in=excluded_song_ids)
-    random_songs = random.sample(list(remaining_songs), min(2, remaining_songs.count()))
+
+    remaining_songs_list = list(remaining_songs)
+
+    if len(remaining_songs_list) < 2:
+        print("⚠️ Not enough unseen songs, using fallback.")
+        fallback_candidates = list(
+            Song.objects.exclude(id__in=[s.id for s in recommended_songs]))
+        random.shuffle(fallback_candidates)
+        random_songs = fallback_candidates[:2]
+    else:
+        random_songs = random.sample(remaining_songs_list, 2)
+
     print("\U0001F3B2 Random Songs:", [s.title for s in random_songs])
 
+    # --- Return full recommendation data ---
     return {
         "related_artists": selected_related_artists,
         "recommended_songs": recommended_songs,

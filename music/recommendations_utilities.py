@@ -32,3 +32,41 @@ def get_random_recommendations(user):
         "random_artist": random_artists[2] if len(random_artists) > 2 else None,
         "random_songs": random_songs[5:7]
     }
+
+def get_random_songs(user, count, exclude_song_ids=None):
+    print(f"🎲 get_random_songs(user, count={count})")
+
+    # Prepare list of song IDs to exclude
+    excluded_song_ids = list(user.liked_songs.values_list('id', flat=True))
+    if exclude_song_ids:
+        excluded_song_ids.extend(exclude_song_ids)
+
+    # First try: exclude liked songs + optionally provided exclusions
+    available_songs = Song.objects.exclude(id__in=excluded_song_ids)
+    available_songs_list = list(available_songs)
+
+    random.shuffle(available_songs_list)
+
+    selected_songs = available_songs_list[:count]
+
+    # If not enough, fallback to full random for the missing ones
+    if len(selected_songs) < count:
+        missing = count - len(selected_songs)
+        print(f"⚠️ Only {len(selected_songs)} unseen songs available. Filling {missing} more with fallback.")
+
+        fallback_exclude_ids = [s.id for s in selected_songs] + excluded_song_ids
+        fallback_candidates = list(Song.objects.exclude(id__in=fallback_exclude_ids))
+        random.shuffle(fallback_candidates)
+
+        if not fallback_candidates:
+            # ULTIMO fallback: at least pick from all excluding recommended_songs
+            print("⚠️ Fallback candidates empty. Using final fallback from full catalog excluding recommended.")
+            final_fallback_exclude_ids = exclude_song_ids if exclude_song_ids else []
+            fallback_candidates = list(Song.objects.exclude(id__in=final_fallback_exclude_ids))
+            random.shuffle(fallback_candidates)
+
+        selected_songs.extend(fallback_candidates[:missing])
+
+    print(f"🎵 Selected {len(selected_songs)} random song(s):", [s.title for s in selected_songs])
+
+    return selected_songs
