@@ -1,0 +1,24 @@
+.search-page-container {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    margin: 0 auto;
+    padding: 16px 24px;
+}
+
+.filters-sidebar {
+    width: 250px;
+    flex-shrink: 0;
+    background-color: #3a837b;
+    border-radius: 8px;
+    padding: 5px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.05);
+}
+
+.search-results-container {
+    flex: 1;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 16px;
+    justify-items: center;
+}

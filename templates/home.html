@@ -9,6 +9,12 @@
 {% endblock %}
 
 {% block content %}
+    <form method="get" action="{% url 'search_results' %}" class="search-bar">
+        <label>
+            <input type="text" name="q" placeholder="Search everything here..."/>
+        </label>
+        <button type="submit"><i class="fa fa-search"></i></button>
+        </form>
     <div class="home-wrapper">
 
         <div class="home-sidebar">

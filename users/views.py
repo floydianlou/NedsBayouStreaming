@@ -1,10 +1,10 @@
 from django.contrib.auth import login
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count
+from django.db.models import Count, Case, When, Value, IntegerField
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from music.models import Song, Playlist
+from music.models import Song, Playlist, Artist, Recommendation
 from music.recommendations_utilities import update_recommendations
 from music.views import generate_recommendations
 from .forms import BayouUserCreationForm, CustomLoginForm, BayouUserUpdateForm
@@ -130,3 +130,106 @@ def toggle_like_song(request, song_id):
             liked = True
         return JsonResponse({'liked': liked})
     return JsonResponse({'error': 'Invalid request'}, status=400)
+
+
+def search_results_view(request):
+    query = request.GET.get('q', '')
+    print("📥 QUERY ricevuta:", query)
+
+    top_genres_ordered = []
+
+    if request.user.is_authenticated:
+        print("✅ Utente autenticato:", request.user.username)
+
+        top_recommendations = Recommendation.objects.filter(
+            user=request.user, score__gt=0
+        ).order_by('-score')[:3]
+
+        print("📊 Recommendation trovate:", top_recommendations)
+
+        top_genres_ordered = [rec.genre for rec in top_recommendations]
+
+        print("🏆 Top generi ordinati:")
+        for i, genre in enumerate(top_genres_ordered):
+            print(f"  {i+1}. {genre.name}")
+    else:
+        print("⛔ Utente non autenticato")
+
+    # === SONGS ===
+    if top_genres_ordered:
+        print("🎶 Filtro per canzoni nei top generi attivo!")
+
+        songs_top = Song.objects.filter(
+            title__icontains=query,
+            artist__genres__in=top_genres_ordered
+        ).annotate(
+            match_score=Case(
+                *(When(artist__genres=genre, then=Value(score)) for genre, score in zip(top_genres_ordered, [3, 2, 1])),
+                default=Value(0),
+                output_field=IntegerField()
+            )
+        ).distinct().order_by('-match_score', 'title')
+
+        print("🎧 Canzoni nei top generi:", list(songs_top))
+
+        songs_other = Song.objects.filter(
+            title__icontains=query
+        ).exclude(
+            artist__genres__in=top_genres_ordered
+        ).order_by('title')
+    else:
+        print("🎵 Nessun top genere: tutte le canzoni sono 'other'")
+        songs_top = Song.objects.none()
+        songs_other = Song.objects.filter(
+            title__icontains=query
+        ).order_by('title')
+
+    # === ARTISTS ===
+    if top_genres_ordered:
+        print("🧑‍🎤 Filtro per artisti nei top generi attivo!")
+        artists_top = Artist.objects.filter(
+            name__icontains=query,
+            genres__in=top_genres_ordered
+        ).annotate(
+            match_score=Case(
+                *(When(genres=genre, then=Value(score)) for genre, score in zip(top_genres_ordered, [3, 2, 1])),
+                default=Value(0),
+                output_field=IntegerField()
+            )
+        ).distinct().order_by('-match_score', 'name')
+
+        print("🎨 Artisti nei top generi:", list(artists_top))
+
+        artists_other = Artist.objects.filter(
+            name__icontains=query
+        ).exclude(
+            genres__in=top_genres_ordered
+        ).distinct().order_by('name')
+    else:
+        print("🧑‍🎨 Nessun top genere: tutti gli artisti sono 'other'")
+        artists_top = Artist.objects.none()
+        artists_other = Artist.objects.filter(
+            name__icontains=query
+        ).distinct().order_by('name')
+
+    # === PLAYLIST & USER ===
+    playlists = Playlist.objects.filter(name__icontains=query)
+    users = BayouUser.objects.filter(username__icontains=query)
+
+    is_personalized = bool(top_genres_ordered)
+
+    print("📚 Playlist trovate:", list(playlists))
+    print("👤 Utenti trovati:", list(users))
+
+    context = {
+        'query': query,
+        'songs_top': songs_top,
+        'songs_other': songs_other,
+        'artists_top': artists_top,
+        'artists_other': artists_other,
+        'playlists': playlists,
+        'users': users,
+        'is_personalized': is_personalized,
+    }
+
+    return render(request, 'search_results.html', context)

@@ -1,0 +1,76 @@
+{% extends "toolbar.html" %}
+{% load static %}
+
+{% block extrahead %}
+     <link rel="stylesheet" href="{% static 'css/common_items.css' %}">
+    <link rel="stylesheet" href="{% static 'css/search_results.css' %}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+{% endblock %}
+
+{% block content %}
+
+    <h2>Risultati per "{{ query }}"</h2>
+
+    {% if is_personalized %}
+        <p style="font-style: italic; color: #3AA6B9; font-weight: bold;">
+            🎵 Stai vedendo risultati personalizzati in base ai tuoi interessi musicali!
+        </p>
+    {% else %}
+        <p style="font-style: italic; color: #888;">
+            🎵 Nessun interesse trovato, ecco tutti i risultati disponibili.
+        </p>
+    {% endif %}
+
+    <div class="search-page-container">
+
+        <div class="filters-sidebar">
+            <!-- Qui ci metti le schede per i filtri -->
+        </div>
+
+        <div class="search-results-container">
+            <!-- Songs top -->
+            {% for song in songs_top %}
+                {% include 'song_card.html' with song=song %}
+            {% endfor %}
+
+            <!-- Artists top -->
+            {% for artist in artists_top %}
+                {% include 'artist_card.html' with artist=artist %}
+            {% endfor %}
+
+            <!-- Songs other -->
+            {% for song in songs_other %}
+                {% include 'song_card.html' with song=song %}
+            {% endfor %}
+
+            <!-- Artists other -->
+            {% for artist in artists_other %}
+                {% include 'artist_card.html' with artist=artist %}
+            {% endfor %}
+
+            {% for playlist in playlists %}
+                {% include 'playlist_card.html' with playlist=playlist %}
+            {% endfor %}
+
+            {% for user in users %}
+                {% include 'user_card.html' with user=user %}
+            {% endfor %}
+        </div>
+
+    </div>
+
+    <div id="quickAddModal" class="modal hidden">
+        <div class="modal-content">
+            <h3>Add this song to one of your playlists</h3>
+            <ul id="playlistList">
+            </ul>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block scripts %}
+  <script src="{% static 'js/quickadd.js' %}"></script>
+    <script src="{% static 'js/utilities.js' %}"></script>
+    <script src="{% static 'js/like.js' %}"></script>
+{% endblock %}
