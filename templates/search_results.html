@@ -22,17 +22,75 @@
     {% endif %}
 
     <div id="typeTabs" class="tab-container">
-    <button class="tab active" data-filter="all">All</button>
-    <button class="tab" data-filter="song">Songs</button>
-    <button class="tab" data-filter="artist">Artists</button>
-    <button class="tab" data-filter="playlist">Playlists</button>
-    <button class="tab" data-filter="user">Bayou Users</button>
-  </div>
+        <button class="tab {% if not request.GET.type or request.GET.type == 'all' %}active{% endif %}"
+                data-filter="all">All</button>
+        <button class="tab {% if request.GET.type == 'song' %}active{% endif %}" data-filter="song">Songs</button>
+        <button class="tab {% if request.GET.type == 'artist' %}active{% endif %}" data-filter="artist">Artists</button>
+        <button class="tab {% if request.GET.type == 'playlist' %}active{% endif %}" data-filter="playlist">Playlists</button>
+        <button class="tab {% if request.GET.type == 'user' %}active{% endif %}" data-filter="user">Bayou Users</button>
+    </div>
 
     <div class="search-page-container">
 
         <div class="filters-sidebar">
-            <!-- Qui ci metti le schede per i filtri -->
+            <form method="get" id="genreFilterForm">
+                <input type="hidden" name="q" value="{{ query }}">
+                <input type="hidden" name="type" id="typeInput" value="{{ request.GET.type }}">
+
+            <div id="genreFilterBox">
+                <h4>🎧 Filtra per genere</h4>
+                {% for genre in genres %}
+                    <label>
+                        <input type="checkbox" name="genre" value="{{ genre.name }}"
+                               {% if genre.name in selected_genre_names %}checked{% endif %}>
+                        {{ genre.name }}
+                    </label><br>
+                {% endfor %}
+            </div>
+
+            <div id="genreFilterNotice" style="display: none; margin-top: 1rem; color: #888; font-style: italic;">
+                This category does not support genre filtering.
+            </div>
+
+            <!-- Playlist length filter deve stare DENTRO il form -->
+            <div id="playlistLengthFilterBox" style="display: none;">
+                <h4>🎵 Filtra per lunghezza playlist</h4>
+                <label>
+                    <input type="checkbox" name="length" value="short"
+                           {% if 'short' in selected_lengths %}checked{% endif %}>
+                    Brevi (1–5 canzoni)
+                </label><br>
+                <label>
+                    <input type="checkbox" name="length" value="medium"
+                           {% if 'medium' in selected_lengths %}checked{% endif %}>
+                    Medie (6–15 canzoni)
+                </label><br>
+                <label>
+                    <input type="checkbox" name="length" value="long"
+                           {% if 'long' in selected_lengths %}checked{% endif %}>
+                    Lunghe (16+ canzoni)
+                </label><br>
+            </div>
+
+                <div id="userLikesFilterBox" style="display: none;">
+                    <h4>❤️ Filtra utenti per likes</h4>
+                    <label>
+                        <input type="checkbox" name="min_likes" value="10"
+                               {% if 10 in selected_min_likes %}checked{% endif %}>
+                        Almeno 10 likes
+                    </label><br>
+                    <label>
+                        <input type="checkbox" name="min_likes" value="25"
+                               {% if 25 in selected_min_likes %}checked{% endif %}>
+                        Almeno 25 likes
+                    </label><br>
+                    <label>
+                        <input type="checkbox" name="min_likes" value="50"
+                               {% if 50 in selected_min_likes %}checked{% endif %}>
+                        Almeno 50 likes
+                    </label><br>
+                </div>
+            </form>
         </div>
 
         <div class="search-results-container">

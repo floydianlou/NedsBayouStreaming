@@ -1,10 +1,10 @@
 from django.contrib.auth import login
 from django.contrib.auth.models import Group
 from django.contrib.auth.decorators import login_required
-from django.db.models import Count, Case, When, Value, IntegerField
+from django.db.models import Count, Case, When, Value, IntegerField, Q
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from music.models import Song, Playlist, Artist, Recommendation
+from music.models import Song, Playlist, Artist, Recommendation, Genre
 from music.recommendations_utilities import update_recommendations
 from music.views import generate_recommendations
 from .forms import BayouUserCreationForm, CustomLoginForm, BayouUserUpdateForm
@@ -142,6 +142,15 @@ def search_results_view(request):
     query = request.GET.get('q', '')
     print("📥 QUERY ricevuta:", query)
 
+    genre_names = request.GET.getlist('genre')
+    print("🎯 Generi selezionati:", genre_names)
+
+    genres = Genre.objects.all()
+    selected_genres = Genre.objects.filter(name__in=genre_names) if genre_names else []
+
+    length_params = request.GET.getlist('length')
+    selected_lengths = length_params
+
     top_genres_ordered = []
 
     if request.user.is_authenticated:
@@ -161,8 +170,10 @@ def search_results_view(request):
     else:
         print("⛔ Utente non autenticato")
 
-        # === SONGS ===
+    # === SONGS + FILTER ===
     songs_qs = Song.objects.filter(title__icontains=query)
+    if selected_genres:
+        songs_qs = songs_qs.filter(artist__genres__in=selected_genres)
 
     if top_genres_ordered:
         print("🎶 Filtro per canzoni nei top generi attivo!")
@@ -179,6 +190,8 @@ def search_results_view(request):
 
     # === ARTISTS ===
     artists_qs = Artist.objects.filter(name__icontains=query)
+    if selected_genres:
+        artists_qs = artists_qs.filter(genres__in=selected_genres)
 
     if top_genres_ordered:
         print("🧑‍🎤 Filtro per artisti nei top generi attivo!")
@@ -194,8 +207,35 @@ def search_results_view(request):
         artists_other = artists_qs.distinct().order_by('name')
 
     # === PLAYLIST & USER ===
-    playlists = Playlist.objects.filter(name__icontains=query)
-    users = BayouUser.objects.filter(username__icontains=query)
+    playlists_qs = Playlist.objects.annotate(song_count=Count('songs'))
+    playlist_length_filter = Q()
+
+    if 'short' in selected_lengths:
+        playlist_length_filter |= Q(song_count__lte=5)
+
+    if 'medium' in selected_lengths:
+        playlist_length_filter |= Q(song_count__gte=6, song_count__lte=15)
+
+    if 'long' in selected_lengths:
+        playlist_length_filter |= Q(song_count__gte=16)
+
+    if selected_lengths:
+        playlists_qs = playlists_qs.filter(playlist_length_filter)
+
+    # Filtro sul nome come prima
+    playlists = playlists_qs.filter(name__icontains=query)
+
+    # === USERS ===
+    likes_params = request.GET.getlist('min_likes')
+    selected_min_likes = [int(val) for val in likes_params if val.isdigit()]  # sicuro
+
+    users_qs = BayouUser.objects.filter(username__icontains=query).annotate(like_count=Count('liked_songs'))
+
+    if selected_min_likes:
+        max_selected = max(selected_min_likes)
+        users_qs = users_qs.filter(like_count__gte=max_selected)
+
+    users = users_qs
 
     is_personalized = bool(top_genres_ordered)
 
@@ -211,6 +251,10 @@ def search_results_view(request):
         'playlists': playlists,
         'users': users,
         'is_personalized': is_personalized,
+        'genres': genres,
+        'selected_genre_names': genre_names,
+        'selected_lengths': selected_lengths,
+        'selected_min_likes': selected_min_likes,
     }
 
     return render(request, 'search_results.html', context)
