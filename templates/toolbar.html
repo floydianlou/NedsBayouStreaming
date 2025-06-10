@@ -3,7 +3,7 @@
 {% block extrahead %}{% endblock %}
 <head>
     <meta charset="UTF-8">
-    <title>Ned's Bayou Streaming</title>
+    <title>Ned's Bayou</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'css/toolbar.css' %}">
 </head>
@@ -24,7 +24,11 @@
                  alt="Profile Picture" width="50" class="profile-pic">
         </a>
 
-        <a href="{% url 'create_playlist' %}" class="toolbar-btn">➕ Nuova Playlist</a>
+        {% if req_user_is_curator %}
+            <a href="{% url 'curator_dashboard' %}" class="toolbar-btn">Curator Dashboard</a>
+        {% endif %}
+
+        <a href="{% url 'create_playlist' %}" class="toolbar-btn">Add playlist</a>
 
         <form action="{% url 'logout' %}" method="post" class="logout-form">
             {% csrf_token %}
@@ -34,7 +38,7 @@
     {% else %}
     <div class="toolbar-auth">
         <a href="{% url 'login' %}" class="auth-link">Login</a>
-        <a href="{% url 'register' %}" class="auth-link">Registrati</a>
+        <a href="{% url 'register' %}" class="auth-link">Make an account</a>
     </div>
     {% endif %}
 </header>

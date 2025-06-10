@@ -12,3 +12,22 @@ function getCookie(name) {
   }
   return cookieValue;
 }
+
+function copyPlaylistLink(button, playlistId = null, event=null) {
+  if (event) {
+        event.stopPropagation();
+    }
+
+    let playlistUrl = playlistId ? `${window.location.origin}/playlist/${playlistId}/` : window.location.href;
+    navigator.clipboard.writeText(playlistUrl).then(() => {
+
+        const statusSpan = button.querySelector('.copy-status');
+        statusSpan.innerHTML = '✔️';
+
+        setTimeout(() => {
+            statusSpan.innerHTML = '';
+        }, 2000);
+    }).catch(err => {
+        console.error("Failed to copy link: ", err);
+    });
+}

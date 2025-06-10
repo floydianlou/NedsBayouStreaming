@@ -19,31 +19,7 @@
     <div class="artist-content">
         <div class="left-column">
             <h2>Artist Highlights</h2>
-            <div class="highlight-list">
-                {% for song in highlights %}
-                    <div class="highlight-item">
-                        <img src="{{ song.cover.url }}" alt="Copertina {{ song.title }}" class="highlight-cover">
-                        <div class="highlight-info">
-                            <strong>{{ song.title }}</strong><br>
-                            <span class="duration">{{ song.duration }}</span>
-                        </div>
-
-                        {% if user.is_authenticated %}
-                            <div class="highlight-actions"
-                                 style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
-                                <button class="quickAddBtn highlight-add" data-song-id="{{ song.id }}">➕</button>
-
-                                <button type="button"
-                                        class="like-button"
-                                        data-song-id="{{ song.id }}"
-                                        data-liked="{% if song in user.liked_songs.all %}true{% else %}false{% endif %}">
-                                    <i class="{% if song in user.liked_songs.all %}fas{% else %}far{% endif %} fa-heart"></i>
-                                </button>
-                            </div>
-                        {% endif %}
-                    </div>
-                {% endfor %}
-            </div>
+            {% include "highlight_list.html" with songs=highlights %}
         </div>
 
         <div class="right-column">

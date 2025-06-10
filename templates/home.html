@@ -9,15 +9,20 @@
 {% endblock %}
 
 {% block content %}
-    <form method="get" action="{% url 'search_results' %}" class="search-bar">
-        <label>
-            <input type="text" name="q" placeholder="Search everything here..."/>
-        </label>
-        <button type="submit"><i class="fa fa-search"></i></button>
+    <div class="home-title">
+        <h2>Welcome to Ned's Bayou</h2>
+
+        <form method="get" action="{% url 'search_results' %}" class="search-bar">
+            <label>
+                <input type="text" name="q" placeholder="Search everything here..."/>
+            </label>
+            <button type="submit"><i class="fa fa-search"></i></button>
         </form>
+
+    </div>
     <div class="home-wrapper">
 
-        <div class="home-sidebar">
+    <div class="home-sidebar">
             <section class="latest-playlists">
                 <h3>Latest Playlists Created</h3>
                 {% for playlist in latest_playlists %}
@@ -44,39 +49,11 @@
 
             <section class="top-songs">
                 <h3>Top songs right now</h3>
-                <div class="highlight-list">
-                    {% for song in top_songs %}
-                        <div class="highlight-item">
-                            <img src="{{ song.cover.url }}" alt="Cover {{ song.title }}" class="highlight-cover">
-                            <div class="highlight-info">
-                                <strong>{{ song.title }}</strong><br>
-                                <a href="{% url 'artist_detail' song.artist.id %}">{{ song.artist.name }}</a><br>
-                                <span class="duration">{{ song.duration }}</span>
-                            </div>
-                            {% if user.is_authenticated %}
-                                <div class="highlight-actions"
-                                     style="display: flex; gap: 10px; align-items: center; margin-top: 5px;">
-                                    <button class="quickAddBtn highlight-add" data-song-id="{{ song.id }}">➕</button>
-
-                                    <button type="button"
-                                            class="like-button"
-                                            data-song-id="{{ song.id }}"
-                                            data-liked="{% if song in user.liked_songs.all %}true{% else %}false{% endif %}">
-                                        <i class="{% if song in user.liked_songs.all %}fas{% else %}far{% endif %} fa-heart"></i>
-                                    </button>
-                                </div>
-                            {% endif %}
-                        </div>
-                    {% empty %}
-                        <p>There currently are no top songs.</p>
-                    {% endfor %}
-                </div>
+                {% include "highlight_list.html" with songs=top_songs %}
             </section>
         </div>
 
     <div class="home-main-content">
-        <h2>Welcome to Ned's Bayou</h2>
-
         <div class="suggested-block">
             <h3>Suggested for you</h3>
 
@@ -93,7 +70,7 @@
                     {% endif %}
                 </div>
             {% else %}
-                <p>No suggestions yet 💭</p>
+                <p>No suggestions yet.</p>
             {% endif %}
 
             <a href="{% url 'recommendations' %}" class="btn">View more ➜</a>

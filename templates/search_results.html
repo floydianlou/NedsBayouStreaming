@@ -9,15 +9,15 @@
 
 {% block content %}
 
-    <h2>Risultati per "{{ query }}"</h2>
+    <h2>You searched for: {{ query }}</h2>
 
     {% if is_personalized %}
         <p style="font-style: italic; color: #3AA6B9; font-weight: bold;">
-            🎵 Stai vedendo risultati personalizzati in base ai tuoi interessi musicali!
+            You're seeing results ordered by your interests
         </p>
     {% else %}
         <p style="font-style: italic; color: #888;">
-            🎵 Nessun interesse trovato, ecco tutti i risultati disponibili.
+            You're seeing results in a random order.
         </p>
     {% endif %}
 
@@ -38,7 +38,7 @@
                 <input type="hidden" name="type" id="typeInput" value="{{ request.GET.type }}">
 
             <div id="genreFilterBox">
-                <h4>🎧 Filtra per genere</h4>
+                <h4>Genres</h4>
                 {% for genre in genres %}
                     <label>
                         <input type="checkbox" name="genre" value="{{ genre.name }}"
@@ -54,68 +54,64 @@
 
             <!-- Playlist length filter deve stare DENTRO il form -->
             <div id="playlistLengthFilterBox" style="display: none;">
-                <h4>🎵 Filtra per lunghezza playlist</h4>
+                <h4>🎵Playlist length</h4>
                 <label>
                     <input type="checkbox" name="length" value="short"
                            {% if 'short' in selected_lengths %}checked{% endif %}>
-                    Brevi (1–5 canzoni)
+                    Short (5 songs)
                 </label><br>
                 <label>
                     <input type="checkbox" name="length" value="medium"
                            {% if 'medium' in selected_lengths %}checked{% endif %}>
-                    Medie (6–15 canzoni)
+                    Medium (15 songs)
                 </label><br>
                 <label>
                     <input type="checkbox" name="length" value="long"
                            {% if 'long' in selected_lengths %}checked{% endif %}>
-                    Lunghe (16+ canzoni)
+                    Long (16+ songs)
                 </label><br>
             </div>
 
                 <div id="userLikesFilterBox" style="display: none;">
-                    <h4>❤️ Filtra utenti per likes</h4>
+                    <h4>User likes</h4>
                     <label>
                         <input type="checkbox" name="min_likes" value="10"
                                {% if 10 in selected_min_likes %}checked{% endif %}>
-                        Almeno 10 likes
+                        From 10 likes
                     </label><br>
                     <label>
                         <input type="checkbox" name="min_likes" value="25"
                                {% if 25 in selected_min_likes %}checked{% endif %}>
-                        Almeno 25 likes
+                        From 25 likes
                     </label><br>
                     <label>
                         <input type="checkbox" name="min_likes" value="50"
                                {% if 50 in selected_min_likes %}checked{% endif %}>
-                        Almeno 50 likes
+                        From 50 likes
                     </label><br>
                 </div>
             </form>
         </div>
 
         <div class="search-results-container">
-            <!-- Songs top -->
             {% for song in songs_top %}
                 <div class="result-item" data-type="song">
                 {% include 'song_card.html' with song=song %}
                 </div>
             {% endfor %}
 
-            <!-- Artists top -->
             {% for artist in artists_top %}
                 <div class="result-item" data-type="artist">
                 {% include 'artist_card.html' with artist=artist %}
                 </div>
             {% endfor %}
 
-            <!-- Songs other -->
             {% for song in songs_other %}
                 <div class="result-item" data-type="song">
                 {% include 'song_card.html' with song=song %}
                 </div>
             {% endfor %}
 
-            <!-- Artists other -->
             {% for artist in artists_other %}
                  <div class="result-item" data-type="artist">
                 {% include 'artist_card.html' with artist=artist %}

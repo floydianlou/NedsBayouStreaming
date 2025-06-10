@@ -1,0 +1,55 @@
+{% extends "toolbar.html" %}
+{% load static %}
+
+{% block extrahead %}
+	<link rel="stylesheet" href="{% static 'css/curator_dashboard.css' %}">
+{% endblock %}
+{% block content %}
+
+<h1 style="text-align: center; color: #62b9af; margin-bottom: 20px;">Curator Dashboard</h1>
+
+    {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+                <div class="message {{ message.tags }}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+<div class="curator-dashboard-container">
+
+    <!-- Genre Form -->
+    <div class="curator-form-box">
+        <h2>Add a musical Genre</h2>
+        <form method="post">
+            {% csrf_token %}
+            {{ genre_form.as_p }}
+            <button type="submit" name="genre_submit">Save genre</button>
+        </form>
+    </div>
+
+    <!-- Artist Form -->
+    <div class="curator-form-box">
+        <h2>Add an artist</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ artist_form.as_p }}
+            <button type="submit" name="artist_submit">Save artist</button>
+        </form>
+    </div>
+
+    <!-- Song Form -->
+    <div class="curator-form-box">
+        <h2>Add a song</h2>
+        <form method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            {{ song_form.as_p }}
+            <button type="submit" name="song_submit">Save song</button>
+        </form>
+    </div>
+
+</div>
+
+{% endblock %}

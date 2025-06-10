@@ -36,7 +36,7 @@
 
 {% if is_owner %}
     <br>
-    <button id="edit-button" onclick="toggleEdit()" class="btn">✏️ Modifica profilo</button>
+    <button id="edit-button" onclick="toggleEdit()" class="btn">Edit profile</button>
 
     <div id="edit-form" style="display: none; margin-top: 20px;">
         <form method="POST" enctype="multipart/form-data">
@@ -50,7 +50,7 @@
             {% if user_profile.profile_picture.name != "profile_pics/defaultPicture.png" %}
                 {{ form.profile_picture.label_tag }} {{ form.profile_picture }}<br>
             {% else %}
-                <label for="{{ form.profile_picture.id_for_label }}">Carica nuova foto profilo:</label>
+                <label for="{{ form.profile_picture.id_for_label }}">New profile picture:</label>
                 <input type="file" name="{{ form.profile_picture.name }}" id="{{ form.profile_picture.id_for_label }}"><br>
             {% endif %}
 
@@ -58,7 +58,7 @@
             {{ form.phone_number.label_tag }} {{ form.phone_number }}<br>
             {{ form.favorite_artist.label_tag }} {{ form.favorite_artist }}<br>
 
-            <button type="submit">💾 Salva modifiche</button>
+            <button type="submit">Save</button>
         </form>
     </div>
 {% endif %}
@@ -69,26 +69,15 @@
 {% if playlists %}
     <div class="song-grid">
     {% for playlist in playlists %}
-        <a href="{% url 'playlist_detail' playlist.id %}" class="song-card-link">
-            <div class="song-card">
-                <img src="{% if playlist.cover %}{{ playlist.cover.url }}{% else %}/media/playlist_covers/default_cover.png{% endif %}"
-                     alt="Copertina di {{ playlist.name }}">
-                <div class="song-info">
-                    <h4>{{ playlist.name }}</h4>
-                    {% if playlist.description %}
-                        <p>{{ playlist.description }}</p>
-                    {% endif %}
-                </div>
-            </div>
-        </a>
+        {% include "playlist_card.html" with playlist=playlist %}
     {% endfor %}
     </div>
 {% else %}
     {% if is_owner %}
         <p>You haven't made any playlists yet! Make one now.</p>
-        {% else %}
+    {% else %}
         <p>This user has no playlists.</p>
-        {% endif %}
+    {% endif %}
 {% endif %}
 
     <hr>

@@ -1,0 +1,41 @@
+<div class="highlight-list">
+    {% for song in songs %}
+        <div class="highlight-object">
+
+        <div class="left-stuff">
+            <img src="{{ song.cover.url }}" alt="Copertina di {{ song.title }}" class="highlight-cover">
+
+            <div class="highlight-text">
+                {{ song.title }}
+                <a class="artist-name" href="{% url 'artist_detail' song.artist.id %}">{{ song.artist.name }}</a>
+            </div>
+        </div>
+
+
+            <div class="highlight-actions">
+                <div class="buttons-container">
+                {% if user.is_authenticated %}
+                    <button class="quickAddBtn highlight-add" data-song-id="{{ song.id }}">
+                        <i class="fas fa-plus"></i>
+                    </button>
+
+                    <button type="button"
+                            class="like-button"
+                            data-song-id="{{ song.id }}"
+                            data-liked="{% if song in user.liked_songs.all %}true{% else %}false{% endif %}">
+                        <i class="{% if song in user.liked_songs.all %}fas{% else %}far{% endif %} fa-heart"></i>
+                    </button>
+                {% endif %}
+                </div>
+
+                <audio controls class="micro-audio-player" style="margin-top: 8px; width: 100%;">
+                    <source src="{{ song.audio_file.url }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
+
+            </div>
+        </div>
+    {% empty %}
+        <p>{{ empty_message|default:"There currently are no songs to display." }}</p>
+    {% endfor %}
+</div>

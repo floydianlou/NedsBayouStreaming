@@ -18,7 +18,7 @@ def update_recommendations(user, song, delta):
 
 
 def get_random_recommendations(user):
-    print("🎲 Returning random recommendations.")
+    print("Returning random recommendations.")
 
     random_artists = list(Artist.objects.all())
     random.shuffle(random_artists)
@@ -52,21 +52,23 @@ def get_random_songs(user, count, exclude_song_ids=None):
     # If not enough, fallback to full random for the missing ones
     if len(selected_songs) < count:
         missing = count - len(selected_songs)
-        print(f"⚠️ Only {len(selected_songs)} unseen songs available. Filling {missing} more with fallback.")
+        print(f"Only {len(selected_songs)} unseen songs available. Filling {missing} more with fallback.")
 
         fallback_exclude_ids = [s.id for s in selected_songs] + excluded_song_ids
         fallback_candidates = list(Song.objects.exclude(id__in=fallback_exclude_ids))
         random.shuffle(fallback_candidates)
 
         if not fallback_candidates:
-            # ULTIMO fallback: at least pick from all excluding recommended_songs
-            print("⚠️ Fallback candidates empty. Using final fallback from full catalog excluding recommended.")
+            print("Fallback candidates empty. Using final fallback from full catalog excluding recommended.")
             final_fallback_exclude_ids = exclude_song_ids if exclude_song_ids else []
             fallback_candidates = list(Song.objects.exclude(id__in=final_fallback_exclude_ids))
             random.shuffle(fallback_candidates)
 
         selected_songs.extend(fallback_candidates[:missing])
 
-    print(f"🎵 Selected {len(selected_songs)} random song(s):", [s.title for s in selected_songs])
+    print(f"Selected {len(selected_songs)} random song(s):", [s.title for s in selected_songs])
 
     return selected_songs
+
+def is_curator(user):
+    return user.groups.filter(name='Curator').exists()

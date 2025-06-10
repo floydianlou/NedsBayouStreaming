@@ -1,5 +1,5 @@
-from django import forms
-from .models import Playlist, Song, Artist
+
+from .models import Playlist, Song, Artist, Genre
 
 from django import forms
 
@@ -59,3 +59,24 @@ class ArtistAdminForm(forms.ModelForm):
         if genres.count() > 3:
             raise forms.ValidationError("Puoi selezionare al massimo 3 generi.")
         return genres
+
+class GenreForm(forms.ModelForm):
+    class Meta:
+        model = Genre
+        fields = '__all__'
+        widgets = {
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome del genere'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Descrizione (facoltativa)'})
+        }
+
+
+class SongForm(forms.ModelForm):
+    class Meta:
+        model = Song
+        fields = '__all__'
+        widgets = {
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Titolo della canzone'}),
+            'artist': forms.Select(attrs={'class': 'form-control'}),
+            'audio_file': forms.ClearableFileInput(),
+            'cover': forms.ClearableFileInput(),
+        }

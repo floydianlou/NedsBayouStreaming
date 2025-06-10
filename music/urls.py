@@ -11,4 +11,5 @@ urlpatterns = [
     path('artist/<int:artist_id>/', views.artist_detail, name='artist_detail'),
     path('recommendations/', views.recommendations_view, name='recommendations'),
     path('songs/', SongListView.as_view(), name='song_list'),
+    path('curator-dashboard/', views.curator_dashboard, name='curator_dashboard'),
 ]

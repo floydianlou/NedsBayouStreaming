@@ -1,8 +1,12 @@
 from common_functions.utils import crop_image_to_square
+from mutagen import File as MutagenFile
 from users.models import BayouUser
 from django.db import models
 
 # DEFAULT COVERS FOR SONG, PLAYLIST AND TODO ARTIST
+def default_audio_file():
+    return 'song_audio/13_Heavydirtysoul_Instrumental.mp3'
+
 def default_cover():
     return 'song_covers/default_cover.png'
 
@@ -31,7 +35,8 @@ class Artist(models.Model):
 class Song(models.Model):
     title = models.CharField(max_length=100)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='songs')
-    duration = models.DurationField(help_text="Format: HH:MM:SS")
+    audio_file = models.FileField(upload_to='song_audio/', default=default_audio_file)
+    duration = models.FloatField(blank=True, null=True)
     cover = models.ImageField(upload_to='song_covers/', default=default_cover(), blank=True)
 
     def __str__(self):
@@ -42,6 +47,20 @@ class Song(models.Model):
             self.cover = default_cover()
 
         super().save(*args, **kwargs)
+
+        if self.audio_file:
+            try:
+                audio_path = self.audio_file.path
+                audio = MutagenFile(audio_path)
+                if audio and audio.info:
+                    self.duration = audio.info.length
+                    Song.objects.filter(pk=self.pk).update(duration=self.duration)
+                else:
+                    print("Unsupported audio format or missing info.")
+            except Exception as e:
+                print(f"Error reading audio file: {e}")
+
+        # Crop della cover
         crop_image_to_square(self.cover, skip_filename='default_cover.png')
 
 # PLAYLIST MODEL (WITH IMAGE CROPPING)

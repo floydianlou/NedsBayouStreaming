@@ -6,9 +6,9 @@
 }
 
 .song-card, .playlist-card  {
-    background-color: #d6cde2;
-    border: 1px solid #6b5f79;
-    border-radius: 15px;
+    background-color: #98d5ce;
+    border: 1px solid #4da89f;
+    border-radius: 16px;
     padding: 10px;
     width: 200px;
     text-align: center;
@@ -17,8 +17,18 @@
     flex-shrink: 0;
 }
 
+.song-card a, .playlist-card a {
+    text-decoration: none;
+}
+
 .song-card:hover, .playlist-card:hover {
     transform: scale(1.03);
+}
+
+.song-info a {
+    text-decoration: none;
+    color:  black;
+    font-weight: 600;
 }
 
 .song-card img, .playlist-card img  {
@@ -28,15 +38,18 @@
     border-radius: 10px;
 }
 
-.song-info h4, .playlist-card h4 {
+.song-info h4, .playlist-card h4{
     margin: 10px 0 5px;
-    color: #333;
+    color: black;
+    font-size: 17px;
+    font-weight: bold;
 }
 
 .song-info p,.playlist-card .playlist-description {
     margin: 0;
-    font-size: 0.9em;
-    color: #666;
+    font-size: 15px;
+    color: black;
+    text-decoration: none;
 }
 
 
@@ -85,6 +98,25 @@
     align-items: center;
 }
 
+.mini-audio-player {
+    width: 190px;
+    height: 30px;
+    display: block;
+    background: #62b9af;
+    border: 2px solid #62b9af;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    padding: 2px;
+}
+
+.tools-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+}
+
 .quickAddBtn,
 .like-button {
     background: none;
@@ -97,9 +129,6 @@
     transition: transform 0.2s ease;
 }
 
-.like-button i.fas.fa-heart {
-    color:  #4aa299;
-}
 
 .like-button i.far.fa-heart {
     color: #aaa;
@@ -170,4 +199,150 @@
 
 .artist-card a:hover {
     text-decoration: none;
+}
+
+.share-icon-btn {
+    background-color: rgba(98, 185, 175, 0.15);
+    border: 2px solid #62b9af;
+    color: #62b9af;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1.2em;
+    padding: 6px 10px;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.share-icon-small {
+    background: white;
+    border: 1px solid #62b9af;
+    border-radius: 5px;
+    color: #62b9af;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 4px;
+    transition: color 0.3s ease, transform 0.1s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.share-icon-small:hover {
+    color: #4a958d;
+    transform: scale(1.1);
+}
+
+.share-icon-small .copy-status {
+    color: #62b9af;
+    font-size: 1em;
+    transition: opacity 0.3s ease;
+}
+
+.share-icon-btn:hover {
+    background-color: #62b9af;
+    color: white;
+}
+
+.share-icon-btn .copy-status {
+    color: #62b9af;
+    font-size: 1em;
+    transition: opacity 0.3s ease;
+}
+
+.share-icon-btn:hover .copy-status {
+    color: white;
+}
+
+.highlight-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.highlight-object {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #98d5ce;
+    border-radius: 12px;
+    max-height: 90px;
+    min-width: 430px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+    padding: 10px;
+}
+
+.highlight-item:hover {
+    transform: scale(1.01);
+}
+
+.left-stuff {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+}
+
+.highlight-cover {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+    margin-right: 10px;
+    flex-shrink: 0;
+}
+
+.highlight-text {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    gap: 4px;
+    color: black;
+    font-weight: 900;
+    font-size: 16px;
+}
+
+.artist-name {
+    font-weight: bold;
+    font-size: 14px;
+    color: black;
+    text-decoration: none;
+}
+
+.highlight-actions {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 150px;
+}
+
+.buttons-container {
+    padding-top: 10px;
+    display: flex;
+    gap: 5px;
+    flex-direction: row;
+}
+
+
+.highlight-actions button {
+    background-color: #3a837b;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 13px;
+    color: white;
+    transition: background-color 0.2s ease;
+}
+
+.highlight-actions button:hover {
+    background-color: #0c5460;
+}
+
+.micro-audio-player {
+    height: 30px;
+    width: 60px;
+    border: #98d5ce solid 1px;
+    border-radius: 15px;
+    background-color: #62b9af;
 }

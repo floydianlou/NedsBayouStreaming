@@ -5,21 +5,30 @@
         <p>
             <a href="{% url 'artist_detail' song.artist.id %}">{{ song.artist.name }}</a>
         </p>
-        <p>{{ song.duration }}</p>
 
-        {% if user.is_authenticated %}
-            <div class="song-actions">
-                <button class="quickAddBtn" data-song-id="{{ song.id }}">
-                    <i class="fas fa-plus"></i> Quick Add
-                </button>
-
-                <button type="button"
-                        class="like-button"
-                        data-song-id="{{ song.id }}"
-                        data-liked="{% if song in user.liked_songs.all %}true{% else %}false{% endif %}">
-                    <i class="{% if song in user.liked_songs.all %}fas{% else %}far{% endif %} fa-heart"></i>
-                </button>
+        <div class="tools-container">
+            <div class="song-audio">
+                <audio controls class="mini-audio-player">
+                    <source src="{{ song.audio_file.url }}" type="audio/mpeg">
+                    Your browser does not support the audio element.
+                </audio>
             </div>
-        {% endif %}
+
+            {% if user.is_authenticated %}
+                <div class="song-actions">
+                    <button class="quickAddBtn" data-song-id="{{ song.id }}">
+                        <i class="fas fa-plus"></i>
+                    </button>
+
+                    <button type="button"
+                            class="like-button"
+                            data-song-id="{{ song.id }}"
+                            data-liked="{% if song in user.liked_songs.all %}true{% else %}false{% endif %}">
+                        <i class="{% if song in user.liked_songs.all %}fas{% else %}far{% endif %} fa-heart"></i>
+                    </button>
+                </div>
+            {% endif %}
+        </div>
     </div>
+
 </div>

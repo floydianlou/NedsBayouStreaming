@@ -2,11 +2,11 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Login - NedsBayouStreaming</title>
+    <title>Login</title>
 </head>
 <body>
 
-  <h2>Accedi al tuo account</h2>
+  <h2>Login to your account</h2>
 
   <form method="post">
     {% csrf_token %}
@@ -27,7 +27,7 @@
     <button type="submit">Login</button>
   </form>
 
-  <p>Non hai un account? <a href="{% url 'register' %}">Registrati qui</a></p>
+  <p>No account? <a href="{% url 'register' %}">Make one here</a></p>
 
 </body>
 </html>

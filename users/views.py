@@ -12,7 +12,7 @@ from .models import BayouUser
 
 
 def home(request):
-    # 10 random songs
+    # 8 random songs for catalogue preview
     songs = Song.objects.order_by('?')[:8]
 
     # latest playlists created
@@ -84,16 +84,16 @@ def profileView(request, username):
             if form.is_valid():
                 form.save()
 
-                # If favorite artist has changed, update recommendations accordingly
+                # if favorite artist has changed, update recommendations accordingly
                 if user_profile.favorite_artist != old_favorite:
-                    # Remove 5 points from old favorite (if exists)
+                    # remove 5 points from old favorite
                     if old_favorite:
                         old_artist_songs = old_favorite.songs.all()
                         if old_artist_songs.exists():
                             first_song = old_artist_songs.first()
                             update_recommendations(user_profile, song=first_song, delta=-5)
 
-                    # Add 5 points to new favorite (if exists)
+                    # add 5 points to new favorite
                     if user_profile.favorite_artist:
                         favorite_artist_songs = user_profile.favorite_artist.songs.all()
                         if favorite_artist_songs.exists():

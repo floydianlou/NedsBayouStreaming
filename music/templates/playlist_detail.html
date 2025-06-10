@@ -12,7 +12,7 @@
     <div class="playlist-header">
         <img src="
                 {% if playlist.cover %}{{ playlist.cover.url }}{% else %}/media/playlist_covers/default_cover.png{% endif %}"
-             alt="Copertina di {{ playlist.name }}">
+             alt="{{ playlist.name }} cover">
         <div class="playlist-header-info">
             <h2>{{ playlist.name }}</h2>
             {% if playlist.description %}
@@ -20,6 +20,11 @@
             {% else %}
                 <p><em>This playlist has no description.</em></p>
             {% endif %}
+
+            <button type="button" class="share-icon-btn" onclick="copyPlaylistLink(this, '{{ playlist.id }}')">
+                <i class="fas fa-share-alt"></i>Share this playlist<span class="copy-status"></span>
+            </button>
+
             {% if is_owner %}
                 <form method="post" action="{% url 'delete_playlist' playlist.id %}" style="margin-top: 10px;">
                     {% csrf_token %}
@@ -95,7 +100,7 @@
 
             form.style.display = showing ? 'none' : 'block';
             songList.style.display = showing ? 'block' : 'none';
-            button.innerText = showing ? '✏️ Modifica playlist' : '❌ Annulla';
+            button.innerText = showing ? 'Edit playlist' : 'Back';
         }
     </script>
 
