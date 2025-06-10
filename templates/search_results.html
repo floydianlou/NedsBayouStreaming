@@ -21,6 +21,14 @@
         </p>
     {% endif %}
 
+    <div id="typeTabs" class="tab-container">
+    <button class="tab active" data-filter="all">All</button>
+    <button class="tab" data-filter="song">Songs</button>
+    <button class="tab" data-filter="artist">Artists</button>
+    <button class="tab" data-filter="playlist">Playlists</button>
+    <button class="tab" data-filter="user">Bayou Users</button>
+  </div>
+
     <div class="search-page-container">
 
         <div class="filters-sidebar">
@@ -30,30 +38,42 @@
         <div class="search-results-container">
             <!-- Songs top -->
             {% for song in songs_top %}
+                <div class="result-item" data-type="song">
                 {% include 'song_card.html' with song=song %}
+                </div>
             {% endfor %}
 
             <!-- Artists top -->
             {% for artist in artists_top %}
+                <div class="result-item" data-type="artist">
                 {% include 'artist_card.html' with artist=artist %}
+                </div>
             {% endfor %}
 
             <!-- Songs other -->
             {% for song in songs_other %}
+                <div class="result-item" data-type="song">
                 {% include 'song_card.html' with song=song %}
+                </div>
             {% endfor %}
 
             <!-- Artists other -->
             {% for artist in artists_other %}
+                 <div class="result-item" data-type="artist">
                 {% include 'artist_card.html' with artist=artist %}
+                 </div>
             {% endfor %}
 
             {% for playlist in playlists %}
+                 <div class="result-item" data-type="playlist">
                 {% include 'playlist_card.html' with playlist=playlist %}
+                 </div>
             {% endfor %}
 
             {% for user in users %}
+                 <div class="result-item" data-type="user">
                 {% include 'user_card.html' with user=user %}
+                 </div>
             {% endfor %}
         </div>
 
@@ -73,4 +93,5 @@
   <script src="{% static 'js/quickadd.js' %}"></script>
     <script src="{% static 'js/utilities.js' %}"></script>
     <script src="{% static 'js/like.js' %}"></script>
+    <script src="{% static 'js/tabrunner.js' %}"></script>
 {% endblock %}

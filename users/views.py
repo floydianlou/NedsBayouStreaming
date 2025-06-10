@@ -131,6 +131,12 @@ def toggle_like_song(request, song_id):
         return JsonResponse({'liked': liked})
     return JsonResponse({'error': 'Invalid request'}, status=400)
 
+def build_match_score(field, top_genres):
+    return Case(
+        *(When(**{field: genre}, then=Value(score)) for genre, score in zip(top_genres, [3, 2, 1])),
+        default=Value(0),
+        output_field=IntegerField()
+    )
 
 def search_results_view(request):
     query = request.GET.get('q', '')
@@ -155,62 +161,37 @@ def search_results_view(request):
     else:
         print("⛔ Utente non autenticato")
 
-    # === SONGS ===
+        # === SONGS ===
+    songs_qs = Song.objects.filter(title__icontains=query)
+
     if top_genres_ordered:
         print("🎶 Filtro per canzoni nei top generi attivo!")
 
-        songs_top = Song.objects.filter(
-            title__icontains=query,
-            artist__genres__in=top_genres_ordered
-        ).annotate(
-            match_score=Case(
-                *(When(artist__genres=genre, then=Value(score)) for genre, score in zip(top_genres_ordered, [3, 2, 1])),
-                default=Value(0),
-                output_field=IntegerField()
-            )
+        songs_top = songs_qs.filter(artist__genres__in=top_genres_ordered).annotate(
+            match_score=build_match_score('artist__genres', top_genres_ordered)
         ).distinct().order_by('-match_score', 'title')
 
-        print("🎧 Canzoni nei top generi:", list(songs_top))
-
-        songs_other = Song.objects.filter(
-            title__icontains=query
-        ).exclude(
-            artist__genres__in=top_genres_ordered
-        ).order_by('title')
+        songs_other = songs_qs.exclude(artist__genres__in=top_genres_ordered).order_by('title')
     else:
         print("🎵 Nessun top genere: tutte le canzoni sono 'other'")
         songs_top = Song.objects.none()
-        songs_other = Song.objects.filter(
-            title__icontains=query
-        ).order_by('title')
+        songs_other = songs_qs.order_by('title')
 
     # === ARTISTS ===
+    artists_qs = Artist.objects.filter(name__icontains=query)
+
     if top_genres_ordered:
         print("🧑‍🎤 Filtro per artisti nei top generi attivo!")
-        artists_top = Artist.objects.filter(
-            name__icontains=query,
-            genres__in=top_genres_ordered
-        ).annotate(
-            match_score=Case(
-                *(When(genres=genre, then=Value(score)) for genre, score in zip(top_genres_ordered, [3, 2, 1])),
-                default=Value(0),
-                output_field=IntegerField()
-            )
+
+        artists_top = artists_qs.filter(genres__in=top_genres_ordered).annotate(
+            match_score=build_match_score('genres', top_genres_ordered)
         ).distinct().order_by('-match_score', 'name')
 
-        print("🎨 Artisti nei top generi:", list(artists_top))
-
-        artists_other = Artist.objects.filter(
-            name__icontains=query
-        ).exclude(
-            genres__in=top_genres_ordered
-        ).distinct().order_by('name')
+        artists_other = artists_qs.exclude(genres__in=top_genres_ordered).distinct().order_by('name')
     else:
         print("🧑‍🎨 Nessun top genere: tutti gli artisti sono 'other'")
         artists_top = Artist.objects.none()
-        artists_other = Artist.objects.filter(
-            name__icontains=query
-        ).distinct().order_by('name')
+        artists_other = artists_qs.distinct().order_by('name')
 
     # === PLAYLIST & USER ===
     playlists = Playlist.objects.filter(name__icontains=query)
