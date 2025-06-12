@@ -1,13 +1,34 @@
 .home-wrapper {
   display: flex;
   gap: 30px;
-  padding: 20px;
+  padding: 30px;
 }
+
+.home-title {
+    padding-top: 10px;
+    padding-bottom: 0;
+    padding-right: 30px;
+    padding-left: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.home-title h1 {
+    font-family: 'Belwe Bold BT', sans-serif;
+    font-size: 40px;
+    font-weight: 900;
+    color: black;
+}
+
 
 .home-sidebar {
   flex: 1;
   background-color: #c2e6e1;
-  padding: 20px;
+    padding-top: 2px;
+  padding-left: 10px;
+    padding-right: 20px;
   border-radius: 15px;
   box-shadow: 0 0 10px #4da89f;
 }
@@ -16,22 +37,29 @@
   flex: 2;
 }
 
+.latest-playlists {
+    padding-left: 5px;
+}
+
 h3 {
   font-size: 23px;
-  font-weight: bold;
+  font-weight: 900;
   color: black;
+    font-family: 'Belwe Bold BT', sans-serif;
 }
 
 .playlist-snippet,
 .song-snippet {
   margin-bottom: 15px;
-  font-size: 0.95rem;
+  font-size: 17px;
 }
 
 .playlist-snippet a {
+    padding-bottom: 5px;
+    padding-top: 5px;
   text-decoration: none;
-  color: #7a1ea1;
-  font-weight: bold;
+  color: #000000;
+  font-weight: 900;
 }
 
 .playlist-snippet a:hover {
@@ -46,8 +74,8 @@ h3 {
 }
 
 .playlist-cover {
-  width: 50px;
-  height: 50px;
+  width: 60px;
+  height: 60px;
   object-fit: cover;
   border-radius: 10px;
   border: 1px solid #ccc;
@@ -60,25 +88,30 @@ h3 {
 
 .playlist-link {
   text-decoration: none;
-  color: #5e0ea1;
+  color: black;
 }
 
 .playlist-link:hover {
-  text-decoration: underline;
+    transform: scale(1.05);
+  text-decoration: none;
 }
 
-.suggested-block {
-  background-color: #e6f7ff;
-  border-left: 5px solid #7dbdff;
+.suggested-block, .suggested-block2 {
+  background-color: #0c5460;
+  border-left: 5px solid #3a837b;
   padding: 20px;
   border-radius: 15px;
   margin-bottom: 30px;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
 }
 
-.suggested-block h3 {
+.suggested-block2 {
+    margin-bottom: 0;
+}
+
+.suggested-block h3, .suggested-block2 h3 {
   margin-top: 0;
-  color: #0077cc;
+  color: white;
 }
 
 .suggested-row {
@@ -89,31 +122,30 @@ h3 {
     margin-bottom: 20px;
 }
 
-.suggested-block .btn {
+.suggested-block .btn, .suggested-block2 .btn {
   display: inline-block;
   margin-top: 10px;
   padding: 6px 12px;
-  background-color: #4b0082;
-  color: white;
+  background-color: white;
+  color: black;
   text-decoration: none;
   border-radius: 6px;
   font-size: 0.9rem;
   transition: background-color 0.2s ease;
 }
 
-.suggested-block .btn:hover {
-  background-color: #36005f;
+.suggested-block .btn:hover, .suggested-block2 .btn:hover {
+  background-color: #aaaaaa;
 }
 
 .search-bar {
     display: flex;
     align-items: center;
-    justify-content: center;
-    margin: 20px auto;
-    max-width: 500px;
-    padding: 5px;
-    background-color: #f3e6fb; /* lilla chiaro */
-    border: 2px solid #a35ddc;
+    justify-content: space-between;
+    max-width: 900px;
+    max-height: 60px;
+    background-color: 	#98d5ce;
+    border: 2px solid #4da89f;
     border-radius: 25px;
     box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
     transition: box-shadow 0.2s ease;
@@ -131,15 +163,15 @@ h3 {
     border-radius: 25px;
     font-size: 16px;
     background-color: transparent;
-    color: #333;
+    color: white;
 }
 
 .search-bar input[type="text"]::placeholder {
-    color: #999;
+    color: white;
 }
 
 .search-bar button {
-    background-color: #a35ddc;
+    background-color: #3a837b;
     border: none;
     border-radius: 50%;
     width: 40px;
@@ -155,5 +187,5 @@ h3 {
 }
 
 .search-bar button:hover {
-    background-color: #872dcf;
+    background-color: #0c5460;
 }

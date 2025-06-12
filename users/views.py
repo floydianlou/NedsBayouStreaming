@@ -46,9 +46,8 @@ def register(request):
             user.groups.add(listener_group)
 
             if user.favorite_artist:
-                favorite_artist_songs = user.favorite_artist.song_set.all()
-                if favorite_artist_songs.exists():
-                    song = favorite_artist_songs.first()
+                song = user.favorite_artist.songs.first()
+                if song:
                     update_recommendations(user, song=song, delta=5)
 
             return redirect('home')

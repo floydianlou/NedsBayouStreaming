@@ -18,7 +18,7 @@ function copyPlaylistLink(button, playlistId = null, event=null) {
         event.stopPropagation();
     }
 
-    let playlistUrl = playlistId ? `${window.location.origin}/playlist/${playlistId}/` : window.location.href;
+    let playlistUrl = playlistId ? `${window.location.origin}/music/playlist/${playlistId}/` : window.location.href;
     navigator.clipboard.writeText(playlistUrl).then(() => {
 
         const statusSpan = button.querySelector('.copy-status');
@@ -31,3 +31,32 @@ function copyPlaylistLink(button, playlistId = null, event=null) {
         console.error("Failed to copy link: ", err);
     });
 }
+
+
+document.addEventListener('DOMContentLoaded', function() {
+    const phoneInput = document.querySelector("#phoneInput");
+    let iti = null;
+
+    if (phoneInput) {
+        iti = window.intlTelInput(phoneInput, {
+            initialCountry: "auto",
+            geoIpLookup: callback => {
+                fetch('https://ipapi.co/json')
+                    .then(res => res.json())
+                    .then(data => callback(data.country_code))
+                    .catch(() => callback("IT"));
+            },
+            utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@17/build/js/utils.js"
+        });
+
+        // On submit → set the full international number in the input value:
+        const form = document.querySelector("form");
+        if (form) {
+            form.addEventListener("submit", function(e) {
+                if (phoneInput && iti) {
+                    phoneInput.value = iti.getNumber();  // Get the full international number
+                }
+            });
+        }
+    }
+});

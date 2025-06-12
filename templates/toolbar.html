@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-{% block extrahead %}{% endblock %}
+
+<!-- this is a head made for pages which extend to add css and more -->
+{% block extrahead %}
+{% endblock %}
+
 <head>
     <meta charset="UTF-8">
     <title>Ned's Bayou</title>
@@ -20,8 +24,7 @@
             {% if req_user_is_curator %}
                 <img src="{% static 'icons/curatorIcon.png' %}" alt="Curator" width="20">
             {% endif %}
-            <img src="{% if user.profile_picture %}{{ user.profile_picture.url }}{% else %}/media/profile_pics/defaultPicture.png{% endif %}"
-                 alt="Profile Picture" width="50" class="profile-pic">
+            <img src="{{ user.profile_picture.url }}" alt="Profile Picture" width="50" class="profile-pic">
         </a>
 
         {% if req_user_is_curator %}
@@ -32,7 +35,7 @@
 
         <form action="{% url 'logout' %}" method="post" class="logout-form">
             {% csrf_token %}
-            <button type="submit" class="logout-btn">Logout</button>
+            <button type="submit" class="logout">Logout</button>
         </form>
     </div>
     {% else %}
@@ -46,11 +49,27 @@
 <hr class="divider">
 
 <main>
+<!-- this is the main space in all pages -->
     {% block content %}
     {% endblock %}
 </main>
 
-{% block scripts %}{% endblock %}
+<footer class="footers">
+    <div class="footer-content">
+        <p>WARNING: this website was made for a project as part of my degree at
+            <a href="https://www.ing-inl.unifi.it/">Università degli Studi di Firenze - Ingegneria informatica</a>
+            and it does not want in any way or form steal from any artist or replace any streaming platform. All songs used in the project
+            database are a tribute to my favorite bands and the audio used for every single one of them is a free instrumental track of the single
+            <a href="https://youtu.be/r_9Kf0D5BTs?si=y-Rg7BzOo_Qr36yE">Heavydirtysoul by Twenty One Pilots</a>
+            , not the real songs. All rights and merits go to the respective artists and their labels.</p>
+        <p>Thank you to all artists featured for inspiring me even in the darkest of times.</p>
+        <p>&copy; 2025 FPE. All rights NOT reserved.</p>
+    </div>
+</footer>
+
+<!-- this is a space made to load js scripts -->
+{% block scripts %}
+{% endblock %}
 
 </body>
 </html>

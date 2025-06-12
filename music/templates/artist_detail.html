@@ -8,35 +8,35 @@
 {% endblock %}
 
 {% block content %}
+    <div class="container">
+        <div class="artist-banner">
+            <img src="{{ artist.photo.url }}" alt="{{ artist.name }}">
+            <div class="banner-overlay">
+                <h1>{{ artist.name }}</h1>
+            </div>
+        </div>
 
-<div class="artist-banner">
-  <img src="{{ artist.photo.url }}" alt="{{ artist.name }}">
-  <div class="banner-overlay">
-    <h1>{{ artist.name }}</h1>
-  </div>
-</div>
-
-    <div class="artist-content">
+        <div class="artist-content">
         <div class="left-column">
             <h2>Artist Highlights</h2>
             {% include "highlight_list.html" with songs=highlights %}
         </div>
 
         <div class="right-column">
-        <h2>What to know about the artist</h2>
-        <p>{{ artist.bio|default:"No biography was provided by the artist. Maybe later?" }}</p>
+            <h2>What to know about the artist</h2>
+            <p>{{ artist.bio|default:"No biography was provided by the artist. Maybe later?" }}</p>
+        </div>
     </div>
-</div>
 
-<hr>
+    <h2>Songs from {{ artist.name }}</h2>
+    <div class="song-grid">
+        {% for song in all_songs %}
+            {% include "song_card.html" with song=song %}
+        {% empty %}
+            <p style="padding: 20px;">This artist has not provided songs yet.</p>
+        {% endfor %}
+    </div>
 
-<h2 style="padding: 0 20px;">Songs from {{ artist.name }}</h2>
-<div class="song-grid">
-    {% for song in all_songs %}
-        {% include "song_card.html" with song=song %}
-    {% empty %}
-        <p style="padding: 20px;">This artist has not provided songs yet.</p>
-    {% endfor %}
 </div>
 
     <div id="quickAddModal" class="modal hidden">

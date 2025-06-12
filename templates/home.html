@@ -10,7 +10,7 @@
 
 {% block content %}
     <div class="home-title">
-        <h2>Welcome to Ned's Bayou</h2>
+        <h1>Welcome to Ned's Bayou</h1>
 
         <form method="get" action="{% url 'search_results' %}" class="search-bar">
             <label>
@@ -20,8 +20,8 @@
         </form>
 
     </div>
-    <div class="home-wrapper">
 
+    <div class="home-wrapper">
     <div class="home-sidebar">
             <section class="latest-playlists">
                 <h3>Latest Playlists Created</h3>
@@ -30,7 +30,7 @@
                         <div class="playlist-cover-info">
                             <a href="{% url 'playlist_detail' playlist.id %}">
                                 <img class="playlist-cover" src="{{ playlist.cover.url }}"
-                                     alt="Cover {{ playlist.name }}">
+                                     alt="{{ playlist.name }}'s cover">
                             </a>
                             <div>
                                 <strong>
@@ -38,8 +38,8 @@
                                         {{ playlist.name }}
                                     </a>
                                 </strong><br>
-                                by <a href="{% url 'profile' playlist.created_by.username %}" class="user-link">
-                                {{ playlist.created_by.username }}
+                                <a href="{% url 'profile' playlist.created_by.username %}" class="user-link">
+                                    by {{ playlist.created_by.username }}
                             </a>
                             </div>
                         </div>
@@ -77,7 +77,7 @@
         </div>
 
 
-        <div class="suggested-block">
+        <div class="suggested-block2">
             <h3>Discover More Songs</h3>
             <div class="song-grid">
                 {% for song in songs %}

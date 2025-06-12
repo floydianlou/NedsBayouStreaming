@@ -6,25 +6,28 @@
 {% endblock %}
 
 {% block content %}
-<h2>Crea una nuova playlist 🎵</h2>
+<h1>Make a new playlist</h1>
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+    <div class="formcontainer">
+        <form class="playlist-form" method="POST" enctype="multipart/form-data">
+            {% csrf_token %}
 
-    <label for="{{ form.name.id_for_label }}">Nome Playlist:</label>
-    {{ form.name }}
+            <label for="{{ form.name.id_for_label }}">Name:</label>
+            {{ form.name }}
 
-    <label for="{{ form.description.id_for_label }}">Descrizione (opzionale):</label>
-    {{ form.description }}
+            <label for="{{ form.description.id_for_label }}">Playlist description:</label>
+            {{ form.description }}
 
-    <label for="{{ form.cover.id_for_label }}">Copertina (opzionale):</label>
-    {{ form.cover }}
+            <label for="{{ form.cover.id_for_label }}">Playlist cover:</label>
+            {{ form.cover }}
 
-    <label for="{{ form.songs.id_for_label }}">Scegli le canzoni da aggiungere:</label>
-    <div class="song-checkboxes">
-        {{ form.songs }}
+            <label for="{{ form.songs.id_for_label }}">Choose which songs to add:</label>
+            <div class="song-checkboxes">
+                {{ form.songs }}
+            </div>
+
+            <button type="submit" class="btn ned">Create</button>
+        </form>
+
     </div>
-
-    <button type="submit" class="btn ned">💾 Crea Playlist</button>
-</form>
 {% endblock %}

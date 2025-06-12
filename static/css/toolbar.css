@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'Belwe Bold BT';
+    src: url('../fonts/Belwe Bold BT.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -8,7 +15,7 @@ body {
 
 .toolbar-header {
     background-color: #62b9af;
-    padding: 15px 30px;
+    padding: 10px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -16,10 +23,11 @@ body {
 }
 
 .site-title a {
+    font-family: 'Belwe Bold BT', sans-serif;
     text-decoration: none;
     color: white;
-    font-size: 28px;
-    font-weight: bold;
+    font-size: 35px;
+    font-weight: 900;
 }
 
 .toolbar-user {
@@ -53,7 +61,7 @@ body {
     margin-left: 10px;
 }
 
-.logout-btn {
+.logout {
     background-color: white;
     color: #62b9af;
     border: none;
@@ -64,7 +72,7 @@ body {
     transition: background-color 0.3s ease;
 }
 
-.logout-btn:hover {
+.logout:hover {
     background-color: #e4f4f2;
 }
 
@@ -90,7 +98,7 @@ body {
 .divider {
     border: none;
     height: 2px;
-    background-color: #c0e5e1;
+    background-color: #3a837b;
     margin: 0;
 }
 
@@ -104,6 +112,28 @@ body {
     margin-left: 10px;
     transition: background-color 0.3s ease;
 }
+
 .toolbar-btn:hover {
     background-color: #4a958d;
+}
+
+.footers {
+    background-color: black;
+    border-top: 1px solid #aaaaaa;
+    text-align: center;
+    padding: 15px 30px;
+    margin-top: 30px;
+}
+
+.footer-content {
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.footer-content a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+
 }

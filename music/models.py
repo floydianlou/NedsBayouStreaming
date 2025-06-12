@@ -1,4 +1,4 @@
-from common_functions.utils import crop_image_to_square
+from common_functions.utils import crop_image_to_square, crop_image_to_169
 from mutagen import File as MutagenFile
 from users.models import BayouUser
 from django.db import models
@@ -6,6 +6,9 @@ from django.db import models
 # DEFAULT COVERS FOR SONG, PLAYLIST AND TODO ARTIST
 def default_audio_file():
     return 'song_audio/13_Heavydirtysoul_Instrumental.mp3'
+
+def default_artist_photo():
+    return 'artist_photos/default_artist.png'
 
 def default_cover():
     return 'song_covers/default_cover.png'
@@ -21,15 +24,23 @@ class Genre(models.Model):
     def __str__(self):
         return self.name
 
-# ARTIST MODEL TODO add image cropping for artist page
+# ARTIST MODEL
 class Artist(models.Model):
     name = models.CharField(max_length=100, unique=True)
     bio = models.TextField(blank=True)
-    photo = models.ImageField(upload_to='artist_photos/', blank=True, null=True)
+    photo = models.ImageField(upload_to='artist_photos/', default=default_artist_photo(), blank=True)
     genres = models.ManyToManyField('Genre', related_name='artists')
 
     def __str__(self):
         return self.name
+
+    def save(self, *args, **kwargs):
+        if not self.photo:
+            self.photo = default_artist_photo()
+
+        super().save(*args, **kwargs)
+        crop_image_to_169(self.photo, skip_filename='default_artist.png')
+
 
 # SONG MODEL (WITH IMAGE CROPPING)
 class Song(models.Model):

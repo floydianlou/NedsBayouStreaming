@@ -1,6 +1,6 @@
 .artist-banner {
   position: relative;
-  height: 500px;
+  height: 700px;
   overflow: hidden;
 }
 
@@ -8,7 +8,7 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
-  object-position: top center; /* puoi cambiare: 'top', 'center', 'bottom' */
+  object-position: top center;
 }
 
 .banner-overlay {
@@ -16,20 +16,28 @@
   bottom: 0;
   width: 100%;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
-  padding: 20px;
+ padding: 80px 20px 20px 20px;
 }
 
 .banner-overlay h1 {
+  font-family: 'Belwe Bold BT', sans-serif;
   color: white;
-  font-size: 3em;
+  font-size: 80px;
   margin: 0;
 }
 
+.container {
+  background-color: black;
+}
+
+footer {
+  margin-top: 0 !important;
+}
 
 .artist-content {
+  background-color: black;
   display: flex;
   padding: 30px 20px;
-  background-color: #e0f7ff;
   gap: 40px;
   flex-wrap: wrap;
 }
@@ -39,19 +47,17 @@
   min-width: 300px;
 }
 
-.left-column h2, .right-column h2 {
-  color: #003344;
+.left-column h2, .right-column h2, h2 {
+  font-size: 30px;
+  font-family:  'Belwe Bold BT', sans-serif;
+  color: white;
   margin-bottom: 10px;
+  padding-left: 3px;
+  padding-bottom: 5px;
 }
 
-.left-column ul, .all-songs ul {
-  list-style-type: none;
-  padding: 0;
-}
-
-.left-column li, .all-songs li {
-  padding: 6px 0;
-  border-bottom: 1px solid #ccc;
+h2 {
+  padding-left: 30px;
 }
 
 .highlight-list {
@@ -60,42 +66,8 @@
   gap: 10px;
 }
 
-.highlight-item {
-  display: flex;
-  align-items: center;
-  background-color: #f9f9ff;
-  border: 1px solid #ccc;
-  border-radius: 12px;
-  padding: 10px;
-  gap: 10px;
-  box-shadow: 1px 1px 4px rgba(0,0,0,0.05);
-}
-
-.highlight-cover {
-  width: 50px;
-  height: 50px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #aaa;
-}
-
-.highlight-info {
-  flex-grow: 1;
-  font-size: 0.9em;
-  color: #333;
-}
-
-.highlight-add {
-  padding: 6px 10px;
-  font-size: 0.9em;
-  border-radius: 8px;
-  border: none;
-  background-color: #d9b3ff;
-  color: #2d004d;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-.highlight-add:hover {
-  background-color: #c08aff;
+.right-column p {
+  font-size: 16px;
+  color: white;
+  font-weight: 600;
 }

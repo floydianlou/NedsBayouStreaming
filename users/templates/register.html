@@ -1,66 +1,54 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Registrati su NedsBayouStreaming</title>
+{% extends 'toolbar.html' %}
+{% load static %}
+{% block extrahead %}
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/intl-tel-input@17/build/css/intlTelInput.min.css">
-    <style>
-        label { font-weight: bold; }
-        input, select, textarea { margin-bottom: 10px; width: 300px; }
-    </style>
-</head>
-<body>
-<h1>Create an account</h1>
+    <link rel="stylesheet" href="{% static 'css/register.css' %}">
+{% endblock %}
 
-<form method="POST" enctype="multipart/form-data">
-    {% csrf_token %}
+{% block content %}
+    <h1>Create an account</h1>
+    <div class="formcontainer">
+        <form method="POST" enctype="multipart/form-data">
+            {% if form.errors %}
+                <div>
+                    <strong>There was something wrong with your rrgistration!</strong>
+                <ul>
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <li>{{ field.label }}: {{ error }}</li>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        {% endif %}
 
-    {{ form.username.label_tag }} {{ form.username }}<br>
-    {{ form.email.label_tag }} {{ form.email }}<br>
-    {{ form.first_name.label_tag }} {{ form.first_name }}<br>
-    {{ form.last_name.label_tag }} {{ form.last_name }}<br>
-    {{ form.profile_picture.label_tag }} {{ form.profile_picture }}<br>
-    {{ form.short_bio.label_tag }} {{ form.short_bio }}<br>
+        {% csrf_token %}
 
-    <label for="phoneInput">Phone:</label><br>
-    <input id="phoneInput" type="tel" name="phone_number"><br>
+        {{ form.username.label_tag }} {{ form.username }}<br>
+        {{ form.email.label_tag }} {{ form.email }}<br>
+        {{ form.first_name.label_tag }} {{ form.first_name }}<br>
+        {{ form.last_name.label_tag }} {{ form.last_name }}<br>
+        {{ form.profile_picture.label_tag }} {{ form.profile_picture }}<br>
+        {{ form.short_bio.label_tag }} {{ form.short_bio }}<br>
 
-    {{ form.favorite_artist.label_tag }} {{ form.favorite_artist }}<br>
+        <label for="phoneInput">Phone:</label><br>
+        <input id="phoneInput" type="tel" name="phone_number"><br>
 
-    {{ form.password1.label_tag }} {{ form.password1 }}<br>
-    {{ form.password2.label_tag }} {{ form.password2 }}<br>
+        {{ form.favorite_artist.label_tag }} {{ form.favorite_artist }}<br>
 
-    <button type="submit">Create an account</button>
-</form>
+        {{ form.password1.label_tag }} {{ form.password1 }}<br>
+        {{ form.password2.label_tag }} {{ form.password2 }}<br>
 
+        <button type="submit">Create account</button>
+    </form>
+    </div>
 
-<script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const input = document.getElementById('phoneInput');
-    if (input) {
-      input.addEventListener('input', () => {
-        input.value = input.value.replace(/\D/g, '');
-      });
-    }
-  });
-</script>
+{% endblock %}
 
-
-<script src="https://cdn.jsdelivr.net/npm/intl-tel-input@17/build/js/intlTelInput.min.js"></script>
-<script>
-  const input = document.querySelector("#phoneInput");
-  if (input) {
-    window.intlTelInput(input, {
-      initialCountry: "auto",
-      geoIpLookup: callback => {
-        fetch('https://ipapi.co/json')
-          .then(res => res.json())
-          .then(data => callback(data.country_code))
-          .catch(() => callback("IT"));
-      },
-      utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@17/build/js/utils.js"
-    });
-  }
-</script>
-</body>
-</html>
+{% block scripts %}
+    <script src="https://cdn.jsdelivr.net/npm/intl-tel-input@17/build/js/intlTelInput.min.js"></script>
+    <script src="{% static 'js/utilities.js' %}"></script>
+{% endblock %}
