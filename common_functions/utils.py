@@ -39,14 +39,12 @@ def crop_image_to_169(image_field, skip_filename=None):
             current_ratio = img.width / img.height
 
             if current_ratio > target_ratio:
-                # Image is too wide → crop width
                 new_width = int(img.height * target_ratio)
                 left = (img.width - new_width) // 2
                 top = 0
                 right = left + new_width
                 bottom = img.height
             else:
-                # Image is too tall → crop height
                 new_height = int(img.width / target_ratio)
                 left = 0
                 top = (img.height - new_height) // 2

@@ -1,4 +1,5 @@
 // script to create popup button for quick adding songs
+
 document.querySelectorAll('.quickAddBtn').forEach(btn => {
   btn.addEventListener('click', function () {
     const songId = this.dataset.songId;

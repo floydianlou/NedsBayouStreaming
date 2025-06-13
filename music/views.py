@@ -8,8 +8,7 @@ from django.db.models import Q, Count
 from django.views.generic import ListView
 from music.forms import PlaylistForm, PlaylistUpdateForm, GenreForm, ArtistAdminForm, SongForm
 from music.models import Song, Playlist, Artist, Recommendation
-from music.recommendations_utilities import update_recommendations, get_random_recommendations, get_random_songs, \
-    is_curator
+from music.recommendations_utilities import update_recommendations, get_random_recommendations, get_random_songs, is_curator
 
 
 @login_required
@@ -37,6 +36,7 @@ def playlist_detail(request, playlist_id):
         if request.method == 'POST':
             form = PlaylistUpdateForm(request.POST, request.FILES, instance=playlist)
             if form.is_valid():
+                # updates recommendation data removing points for removed songs and adding for new songs
                 old_songs = set(playlist.songs.all())
                 new_songs = set(form.cleaned_data['songs'])
 
@@ -50,6 +50,7 @@ def playlist_detail(request, playlist_id):
 
                 for song in removed_songs:
                     update_recommendations(request.user, song, -2)
+
                 return redirect('playlist_detail', playlist_id=playlist.id)
         else:
             form = PlaylistUpdateForm(instance=playlist)
@@ -110,6 +111,7 @@ def add_song_to_playlist(request):
         if request.user != playlist.created_by:
             return JsonResponse({"success": False, "error": "You do not own this playlist."})
 
+        # updates recommendations for added songs
         playlist.songs.add(song)
         update_recommendations(request.user, song, +2)
         return JsonResponse({"success": True})
@@ -129,6 +131,7 @@ def artist_detail(request, artist_id):
         'all_songs': all_songs,
     })
 
+
 # FUNCTION TO GET RECOMMENDED SONGS AND ARTISTS
 def generate_recommendations(user):
     print(f"\nGENERATING RECOMMENDATIONS FOR: {user.username if user.is_authenticated else 'Anonymous'}")
@@ -146,7 +149,7 @@ def generate_recommendations(user):
         print(f"  - {rec.genre.name}: {rec.score}")
 
     if not top_genres:
-        # fallback: return random picks
+        # return random picks
         print("[NO TOP GENRES WITH POSITIVE SCORE] Using random picks.")
         return get_random_recommendations(user)
 
@@ -174,7 +177,7 @@ def generate_recommendations(user):
         if others:
             selected_related_artists.append(random.choice(others))
 
-    # If there are less than 2 related artists, fill with random artists
+    # if there are less than 2 related artists, fill with random artists
     if len(selected_related_artists) < 2:
         excluded_artist_ids = [a.id for a in selected_related_artists]
         filler_artists = Artist.objects.exclude(id__in=excluded_artist_ids)
@@ -199,7 +202,7 @@ def generate_recommendations(user):
     for s in candidate_songs:
         print(f"  - {s.title} by {s.artist.name}")
 
-    # If no candidate songs available, fallback to random picks
+    # if no candidate songs available, fallback to random picks
     if not candidate_songs:
         recommended_songs = get_random_songs(user, 5)
     else:
@@ -215,7 +218,8 @@ def generate_recommendations(user):
         print(f"🪄 Need to fill {missing} more song(s).")
         recommended_songs.extend(get_random_songs(user, missing, exclude_song_ids=[s.id for s in recommended_songs]))
 
-    # RANDOM PART
+
+    # --- RANDOM PART ---
     # select 1 random artist not already in the related artists list
     excluded_artist_ids = [a.id for a in selected_related_artists]
     if user.favorite_artist:
@@ -261,11 +265,13 @@ def recommendations_view(request):
     })
 
 
+# LISTVIEW FOR REQUIREMENTS
 class SongListView(ListView):
     model = Song
     template_name = 'song_list.html'
     context_object_name = 'songs'
     ordering = ['artist__name', 'title']
+
 
 @login_required
 @user_passes_test(is_curator)

@@ -3,22 +3,30 @@
 
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'css/common_items.css' %}">
+    <link rel="stylesheet" href="{% static 'css/song_list.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
-  <h2>All songs in Ned's Bayou</h2>
+    <div class="container">
+        <div class="title">
+            <h1>Full song catalogue</h1>
+            <p>Enjoy a rich catalogue of songs, ordered by artist.</p>
+        </div>
 
-  {% regroup songs by artist as artist_list %}
+        {% regroup songs by artist as artist_list %}
+        {% for artist_group in artist_list %}
+            <h2>Songs by
+                <a href="{% url 'artist_detail' artist_group.grouper.id %}">{{ artist_group.grouper.name }}</a>
+            </h2>
+            <div class="song-grid">
+                {% for song in artist_group.list %}
+                    {% include "song_card.html" with song=song %}
+                {% endfor %}
+            </div>
+        {% endfor %}
 
-  {% for artist_group in artist_list %}
-    <h3>{{ artist_group.grouper.name }}</h3>
-    <div class="song-grid">
-      {% for song in artist_group.list %}
-        {% include "song_card.html" with song=song %}
-      {% endfor %}
     </div>
-  {% endfor %}
 
 
 <div id="quickAddModal" class="modal hidden">

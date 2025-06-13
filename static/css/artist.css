@@ -16,7 +16,7 @@
   bottom: 0;
   width: 100%;
   background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
- padding: 80px 20px 20px 20px;
+  padding: 80px 20px 20px 20px;
 }
 
 .banner-overlay h1 {
@@ -66,7 +66,7 @@ h2 {
   gap: 10px;
 }
 
-.right-column p {
+.right-column p, .left-column p, p {
   font-size: 16px;
   color: white;
   font-weight: 600;

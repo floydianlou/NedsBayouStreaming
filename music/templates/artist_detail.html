@@ -33,7 +33,7 @@
         {% for song in all_songs %}
             {% include "song_card.html" with song=song %}
         {% empty %}
-            <p style="padding: 20px;">This artist has not provided songs yet.</p>
+            <p>This artist has not provided songs yet.</p>
         {% endfor %}
     </div>
 

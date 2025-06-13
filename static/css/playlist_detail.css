@@ -1,27 +1,65 @@
 .playlist-header {
     display: flex;
+    flex-direction: row;
     align-items: center;
-    gap: 20px;
-    margin-bottom: 30px;
+    justify-content:  space-between;
+    margin: 20px 40px 30px 20px;
+}
+
+.playlist-left {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-items: center;
 }
 
 .playlist-header img {
-    width: 180px;
-    height: 180px;
+    width: 220px;
+    height: 220px;
     object-fit: cover;
     border-radius: 12px;
     box-shadow: 0 0 8px rgba(98, 185, 175, 0.3);
 }
 
-.playlist-header-info h2 {
-    color: #62b9af;
-    font-size: 24px;
-    margin-bottom: 10px;
+.playlist-header-info h1 {
+    font-family: 'Belwe Bold BT', sans-serif;
+    color: #0c5460;
+    font-size: 35px;
+    font-weight: 900;
 }
 
 .playlist-header-info p {
-    color: #444;
+    color: black;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.edit-btns {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.edit, .delete {
+    width: 90px;
+    height: 45px;
+    text-align: center;
+    background-color: #3a837b;
+    color: white;
+    padding: 10px 0;
+    border-radius: 12px;
     font-size: 16px;
+    font-weight: 600;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.edit:hover, .delete:hover {
+    cursor: pointer;
+    background-color: #03363d;
+    transform: scale(1.02);
 }
 
 .song-grid {
@@ -31,80 +69,88 @@
     padding: 20px 0;
 }
 
-.song-card {
-    background-color: #f0f8f6;
-    border: 1px solid #c2e3df;
-    border-radius: 15px;
-    padding: 10px;
-    width: 200px;
-    text-align: center;
-    box-shadow: 2px 2px 5px rgba(0,0,0,0.1);
-    transition: transform 0.2s ease;
-    flex-shrink: 0;
-}
-
-.song-card:hover {
-    transform: scale(1.03);
-}
-
-.song-card img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 10px;
-}
-
-.song-info h4 {
-    margin: 10px 0 5px;
-    color: #333;
-}
-
-.song-info p {
-    margin: 0;
-    font-size: 0.9em;
-    color: #666;
-}
-
-#edit-playlist-form {
-    background-color: #ffffff;
-    border: 1px dashed #98d5ce;
+.edit-playlist-form {
+    background-color: #e4f4f2;
+    padding: 30px;
     border-radius: 12px;
-    padding: 20px;
-    margin-top: 30px;
-    max-width: 600px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
 }
 
-#edit-playlist-form label {
+.edit-playlist-form label {
+    font-size: 18px;
     font-weight: bold;
-    color: #3a837b;
-    display: block;
-    margin-top: 10px;
+    color: #0c5460;
+    margin-bottom: 5px;
 }
 
-#edit-playlist-form input,
-#edit-playlist-form textarea,
-#edit-playlist-form select {
+.edit-playlist-form input,
+.edit-playlist-form textarea,
+.edit-playlist-form select {
     width: 100%;
-    padding: 8px;
-    margin-top: 4px;
-    border: 1px solid #b4e2dd;
+    padding: 10px;
+    border: 1px solid #ccc;
     border-radius: 6px;
-    background-color: #fafffe;
     font-size: 14px;
+    box-sizing: border-box;
 }
 
-#edit-playlist-form button[type="submit"] {
+.song-checkboxes ul {
+    list-style: none;
+    margin: 0;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    background: #e6f7f5;
+    border-radius: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.song-checkboxes li label {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px 10px;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.song-checkboxes li label:hover {
+    background-color: #e6f4f3;
+}
+
+.song-checkboxes li label input[type="checkbox"] {
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.save-btn {
     background-color: #62b9af;
     color: white;
     border: none;
+    padding: 12px 20px;
     border-radius: 8px;
-    padding: 10px 16px;
-    font-weight: bold;
+    font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    margin-top: 15px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    align-self: center;
+    margin-top: 10px;
 }
 
-#edit-playlist-form button[type="submit"]:hover {
-    background-color: #4fa298;
+.save-btn:hover {
+    background-color: #4da89d;
+    transform: scale(1.02);
 }

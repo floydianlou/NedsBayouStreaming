@@ -134,6 +134,10 @@
     color: #aaa;
 }
 
+.like-button i.fas.fa-heart {
+    color: black;
+}
+
 .like-button:hover,
 .quickAddBtn:hover {
     transform: scale(1.1);

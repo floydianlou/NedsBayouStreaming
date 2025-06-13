@@ -4,12 +4,11 @@ from music.models import Recommendation, Artist, Song
 
 
 def update_recommendations(user, song, delta):
-    """
-    BASIS FOR RECOMMENDATION SYSTEM: delta can be positive or negative and can assume
-    different values depending on the action taken (liking a song or adding to playlist)
-    if no row for the artist's genres exists it creates one and adds the score starting from
-    0, can both go in negative and positive values.
-    """
+
+    # BASIS FOR RECOMMENDATION SYSTEM: delta can be positive or negative and can assume
+    # different values depending on the action taken (liking a song or adding to playlist)
+    # if no row for the artist's genres exists it creates one and adds the score starting from
+    # 0, can both go in negative and positive values.
     if user.is_authenticated:
         for genre in song.artist.genres.all():
             rec, created = Recommendation.objects.get_or_create(user=user, genre=genre)
@@ -36,20 +35,19 @@ def get_random_recommendations(user):
 def get_random_songs(user, count, exclude_song_ids=None):
     print(f"🎲 get_random_songs(user, count={count})")
 
-    # Prepare list of song IDs to exclude
+    # gets a list of exlcuded song ids
     excluded_song_ids = list(user.liked_songs.values_list('id', flat=True))
     if exclude_song_ids:
         excluded_song_ids.extend(exclude_song_ids)
 
-    # First try: exclude liked songs + optionally provided exclusions
+    # removes the excluded songs and shuffles them
     available_songs = Song.objects.exclude(id__in=excluded_song_ids)
     available_songs_list = list(available_songs)
 
     random.shuffle(available_songs_list)
-
     selected_songs = available_songs_list[:count]
 
-    # If not enough, fallback to full random for the missing ones
+    # if they're not enough, it fills the selected songs with random ones, excluding the ones already in list
     if len(selected_songs) < count:
         missing = count - len(selected_songs)
         print(f"Only {len(selected_songs)} unseen songs available. Filling {missing} more with fallback.")

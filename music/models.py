@@ -3,7 +3,7 @@ from mutagen import File as MutagenFile
 from users.models import BayouUser
 from django.db import models
 
-# DEFAULT COVERS FOR SONG, PLAYLIST AND TODO ARTIST
+# DEFAULT COVERS FOR SONG, PLAYLIST AND ARTIST
 def default_audio_file():
     return 'song_audio/13_Heavydirtysoul_Instrumental.mp3'
 
@@ -15,6 +15,8 @@ def default_cover():
 
 def default_playlist_cover():
     return 'playlist_covers/defaultPlaylistCover.png'
+
+# ----------------------------------------------------------
 
 # GENRE MODEL
 class Genre(models.Model):
@@ -71,7 +73,6 @@ class Song(models.Model):
             except Exception as e:
                 print(f"Error reading audio file: {e}")
 
-        # Crop della cover
         crop_image_to_square(self.cover, skip_filename='default_cover.png')
 
 # PLAYLIST MODEL (WITH IMAGE CROPPING)

@@ -1,6 +1,4 @@
-
 from .models import Playlist, Song, Artist, Genre
-
 from django import forms
 
 class PlaylistForm(forms.ModelForm):
@@ -10,12 +8,12 @@ class PlaylistForm(forms.ModelForm):
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': 'form-control',
-                'placeholder': 'Nome della playlist'
+                'placeholder': 'Playlist name'
             }),
             'description': forms.Textarea(attrs={
                 'class': 'form-control',
                 'rows': 3,
-                'placeholder': 'Description (facultative)'
+                'placeholder': 'Caption'
             }),
             'songs': forms.CheckboxSelectMultiple()
         }
@@ -27,7 +25,7 @@ class PlaylistUpdateForm(forms.ModelForm):
         queryset=Song.objects.all(),
         widget=forms.CheckboxSelectMultiple,
         required=False,
-        label="Canzoni nella playlist"
+        label="Songs in playlist"
     )
 
     class Meta:
@@ -35,8 +33,8 @@ class PlaylistUpdateForm(forms.ModelForm):
         fields = ['name', 'description', 'cover', 'songs']
 
         widgets = {
-            'name': forms.TextInput(attrs={'placeholder': 'Nome della playlist'}),
-            'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Descrizione'}),
+            'name': forms.TextInput(attrs={'placeholder': 'Playlist name'}),
+            'description': forms.Textarea(attrs={'rows': 3, 'placeholder': 'Caption'}),
             'cover': forms.ClearableFileInput(),
         }
 
@@ -55,9 +53,9 @@ class ArtistAdminForm(forms.ModelForm):
     def clean_genres(self):
         genres = self.cleaned_data.get('genres')
         if genres.count() < 1:
-            raise forms.ValidationError("Seleziona almeno un genere.")
+            raise forms.ValidationError("Please select at leaste one genre")
         if genres.count() > 3:
-            raise forms.ValidationError("Puoi selezionare al massimo 3 generi.")
+            raise forms.ValidationError("The maximum genres allowed is 3.")
         return genres
 
 class GenreForm(forms.ModelForm):
@@ -65,8 +63,8 @@ class GenreForm(forms.ModelForm):
         model = Genre
         fields = '__all__'
         widgets = {
-            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nome del genere'}),
-            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Descrizione (facoltativa)'})
+            'name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Genre name'}),
+            'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Genre description'}),
         }
 
 
@@ -75,7 +73,7 @@ class SongForm(forms.ModelForm):
         model = Song
         fields = '__all__'
         widgets = {
-            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Titolo della canzone'}),
+            'title': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Song title'}),
             'artist': forms.Select(attrs={'class': 'form-control'}),
             'audio_file': forms.ClearableFileInput(),
             'cover': forms.ClearableFileInput(),

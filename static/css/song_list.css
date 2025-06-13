@@ -1,6 +1,6 @@
 .title h1 {
     font-family: 'Belwe Bold BT', sans-serif;
-    color: #03363d;
+    color: white;
     font-size: 45px;
     font-weight: 900;
     text-align: center;
@@ -16,17 +16,34 @@
 
 .title p {
     font-family: 'Belwe Bold BT', sans-serif;
-    color: black;
+    color: #e4f4f2;
     font-size: 20px;
     font-weight: 700;
     text-align: center;
 }
 
-.recommendations-grid {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    align-items: center;
-    gap: 25px;
-    margin: 20px auto;
+.container {
+  background-color: black;
+}
+
+footer {
+  margin-top: 0 !important;
+}
+
+h2 {
+    color: white;
+    padding-left: 30px;
+    font-family: 'Belwe Bold BT', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+}
+
+h2 a  {
+    color: white;
+    text-decoration: none;
+}
+
+.song-grid {
     padding-left: 40px;
+    padding-right: 40px;
 }

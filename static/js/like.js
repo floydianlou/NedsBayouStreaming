@@ -1,3 +1,5 @@
+// js function to dynamically like a song and add it to user's liked songs
+
 document.addEventListener('DOMContentLoaded', () => {
   document.querySelectorAll('.like-button').forEach(button => {
     button.addEventListener('click', () => {
@@ -17,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
           if (data.liked) {
             icon.classList.remove('far');
             icon.classList.add('fas');
-            icon.style.color = '#e14f7a';
+            icon.style.color = 'black';
           } else {
             icon.classList.remove('fas');
             icon.classList.add('far');

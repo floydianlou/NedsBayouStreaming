@@ -8,9 +8,12 @@
 {% endblock %}
 
 {% block content %}
-    <h2>Recommended for You</h2>
+    <div class="title">
+    <h1>Recommended for You</h1>
+    <p>We think you might like these songs and artists, based on your activity on Ned's Bayou!</p>
+    </div>
 
-    <div class="artist-grid large-artist-grid">
+    <div class="recommendations-grid">
         {% for artist in related_artists %}
             {% include "artist_card.html" with artist=artist %}
         {% endfor %}
@@ -18,26 +21,24 @@
         {% if random_artist %}
             {% include "artist_card.html" with artist=random_artist %}
         {% endif %}
+
+        {% for song in recommended_songs %}
+            {% include "song_card.html" with song=song %}
+        {% endfor %}
+
+        {% for song in random_songs %}
+            {% include "song_card.html" with song=song %}
+        {% endfor %}
+
     </div>
 
-<div class="song-grid large-song-grid" style="margin-top: 40px;">
-    {% for song in recommended_songs %}
-        {% include "song_card.html" with song=song %}
-    {% endfor %}
-</div>
-
-<div class="song-grid large-song-grid" style="margin-top: 40px;">
-    {% for song in random_songs %}
-        {% include "song_card.html" with song=song %}
-    {% endfor %}
-</div>
-<div id="quickAddModal" class="modal hidden">
+    <div id="quickAddModal" class="modal hidden">
         <div class="modal-content">
             <h3>Add this song to one of your playlists</h3>
             <ul id="playlistList">
             </ul>
         </div>
-</div>
+    </div>
 {% endblock %}
 
 {% block scripts %}
