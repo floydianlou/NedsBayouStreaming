@@ -49,7 +49,6 @@ class Song(models.Model):
     title = models.CharField(max_length=100)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='songs')
     audio_file = models.FileField(upload_to='song_audio/', default=default_audio_file)
-    duration = models.FloatField(blank=True, null=True)
     cover = models.ImageField(upload_to='song_covers/', default=default_cover(), blank=True)
 
     def __str__(self):
@@ -60,18 +59,6 @@ class Song(models.Model):
             self.cover = default_cover()
 
         super().save(*args, **kwargs)
-
-        if self.audio_file:
-            try:
-                audio_path = self.audio_file.path
-                audio = MutagenFile(audio_path)
-                if audio and audio.info:
-                    self.duration = audio.info.length
-                    Song.objects.filter(pk=self.pk).update(duration=self.duration)
-                else:
-                    print("Unsupported audio format or missing info.")
-            except Exception as e:
-                print(f"Error reading audio file: {e}")
 
         crop_image_to_square(self.cover, skip_filename='default_cover.png')
 
