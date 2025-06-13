@@ -8,29 +8,31 @@
 {% endblock %}
 
 {% block content %}
+    <div class="container">
+        <div class="title">
+            <h1>You searched for: {{ query }}</h1>
+            {% if is_personalized %}
+                <p>You're seeing results ordered by your interests, starting with related songs and artists.</p>
+            {% else %}
+                <p>You're seeing results not ordered by your interests.</p>
+            {% endif %}
+        </div>
 
-    <h2>You searched for: {{ query }}</h2>
+        <div id="typeTabs" class="tab-container">
+            <button class="tab {% if not request.GET.type or request.GET.type == 'all' %}active{% endif %}"
+                    data-filter="all">All
+            </button>
+            <button class="tab {% if request.GET.type == 'song' %}active{% endif %}" data-filter="song">Songs</button>
+            <button class="tab {% if request.GET.type == 'artist' %}active{% endif %}" data-filter="artist">Artists
+            </button>
+            <button class="tab {% if request.GET.type == 'playlist' %}active{% endif %}" data-filter="playlist">
+                Playlists
+            </button>
+            <button class="tab {% if request.GET.type == 'user' %}active{% endif %}" data-filter="user">Bayou Users
+            </button>
+        </div>
 
-    {% if is_personalized %}
-        <p style="font-style: italic; color: #3AA6B9; font-weight: bold;">
-            You're seeing results ordered by your interests
-        </p>
-    {% else %}
-        <p style="font-style: italic; color: #888;">
-            You're seeing results in a random order.
-        </p>
-    {% endif %}
-
-    <div id="typeTabs" class="tab-container">
-        <button class="tab {% if not request.GET.type or request.GET.type == 'all' %}active{% endif %}"
-                data-filter="all">All</button>
-        <button class="tab {% if request.GET.type == 'song' %}active{% endif %}" data-filter="song">Songs</button>
-        <button class="tab {% if request.GET.type == 'artist' %}active{% endif %}" data-filter="artist">Artists</button>
-        <button class="tab {% if request.GET.type == 'playlist' %}active{% endif %}" data-filter="playlist">Playlists</button>
-        <button class="tab {% if request.GET.type == 'user' %}active{% endif %}" data-filter="user">Bayou Users</button>
-    </div>
-
-    <div class="search-page-container">
+        <div class="search-page-container">
 
         <div class="filters-sidebar">
             <form method="get" id="genreFilterForm">
@@ -38,57 +40,50 @@
                 <input type="hidden" name="type" id="typeInput" value="{{ request.GET.type }}">
 
             <div id="genreFilterBox">
-                <h4>Genres</h4>
+                <h3>Genres</h3>
                 {% for genre in genres %}
                     <label>
                         <input type="checkbox" name="genre" value="{{ genre.name }}"
                                {% if genre.name in selected_genre_names %}checked{% endif %}>
                         {{ genre.name }}
-                    </label><br>
+                    </label>
                 {% endfor %}
             </div>
 
-            <div id="genreFilterNotice" style="display: none; margin-top: 1rem; color: #888; font-style: italic;">
+            <div id="genreFilterNotice" class="notice">
                 This category does not support genre filtering.
             </div>
 
-            <!-- Playlist length filter deve stare DENTRO il form -->
             <div id="playlistLengthFilterBox" style="display: none;">
-                <h4>🎵Playlist length</h4>
+                <h3>Playlist length</h3>
                 <label>
                     <input type="checkbox" name="length" value="short"
                            {% if 'short' in selected_lengths %}checked{% endif %}>
-                    Short (5 songs)
-                </label><br>
+                    Short (5 songs)</label>
                 <label>
                     <input type="checkbox" name="length" value="medium"
                            {% if 'medium' in selected_lengths %}checked{% endif %}>
-                    Medium (15 songs)
-                </label><br>
+                    Medium (15 songs)</label>
                 <label>
                     <input type="checkbox" name="length" value="long"
                            {% if 'long' in selected_lengths %}checked{% endif %}>
-                    Long (16+ songs)
-                </label><br>
+                    Long (16+ songs)</label>
             </div>
 
                 <div id="userLikesFilterBox" style="display: none;">
-                    <h4>User likes</h4>
+                    <h3>User likes</h3>
                     <label>
                         <input type="checkbox" name="min_likes" value="10"
                                {% if 10 in selected_min_likes %}checked{% endif %}>
-                        From 10 likes
-                    </label><br>
+                        From 10 likes</label>
                     <label>
                         <input type="checkbox" name="min_likes" value="25"
                                {% if 25 in selected_min_likes %}checked{% endif %}>
-                        From 25 likes
-                    </label><br>
+                        From 25 likes</label>
                     <label>
                         <input type="checkbox" name="min_likes" value="50"
                                {% if 50 in selected_min_likes %}checked{% endif %}>
-                        From 50 likes
-                    </label><br>
+                        From 50 likes</label>
                 </div>
             </form>
         </div>
@@ -96,13 +91,13 @@
         <div class="search-results-container">
             {% for song in songs_top %}
                 <div class="result-item" data-type="song">
-                {% include 'song_card.html' with song=song %}
+                    {% include 'song_card.html' with song=song %}
                 </div>
             {% endfor %}
 
             {% for artist in artists_top %}
                 <div class="result-item" data-type="artist">
-                {% include 'artist_card.html' with artist=artist %}
+                    {% include 'artist_card.html' with artist=artist %}
                 </div>
             {% endfor %}
 
@@ -113,23 +108,25 @@
             {% endfor %}
 
             {% for artist in artists_other %}
-                 <div class="result-item" data-type="artist">
-                {% include 'artist_card.html' with artist=artist %}
-                 </div>
+                <div class="result-item" data-type="artist">
+                    {% include 'artist_card.html' with artist=artist %}
+                </div>
             {% endfor %}
 
             {% for playlist in playlists %}
-                 <div class="result-item" data-type="playlist">
-                {% include 'playlist_card.html' with playlist=playlist %}
-                 </div>
+                <div class="result-item" data-type="playlist">
+                    {% include 'playlist_card.html' with playlist=playlist %}
+                </div>
             {% endfor %}
 
             {% for user in users %}
-                 <div class="result-item" data-type="user">
-                {% include 'user_card.html' with user=user %}
-                 </div>
+                <div class="result-item" data-type="user">
+                    {% include 'user_card.html' with user=user %}
+                </div>
             {% endfor %}
         </div>
+
+    </div>
 
     </div>
 
