@@ -1,10 +1,6 @@
 <div class="user-card">
     <a href="{% url 'profile' username=user.username %}">
-        {% if user.profile_picture %}
             <img src="{{ user.profile_picture.url }}" alt="Profile picture of {{ user.username }}">
-        {% else %}
-            <img src="/media/profile_pics/defaultPicture.png" alt="Default profile picture">
-        {% endif %}
         <h4>{{ user.username }}</h4>
     </a>
 </div>

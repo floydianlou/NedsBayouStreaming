@@ -7,19 +7,25 @@
 
 body {
     margin: 0;
-    padding: 0;
     font-family: 'Segoe UI', sans-serif;
     background-color: #f0fbf9;
     color: #333;
+    padding: 100px 0 0;
 }
 
 .toolbar-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+     width: calc(100% - 60px);
     background-color: #62b9af;
     padding: 10px 30px;
     display: flex;
     justify-content: space-between;
     align-items: center;
     flex-wrap: wrap;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
 }
 
 .site-title a {
@@ -38,7 +44,7 @@ body {
 
 .welcome-text {
     margin: 0;
-    font-weight: 500;
+    font-weight: 600;
 }
 
 .user-link {
@@ -53,7 +59,7 @@ body {
 .profile-pic {
     border-radius: 50%;
     border: 2px solid white;
-    box-shadow: 0 0 4px rgba(0,0,0,0.2);
+    box-shadow: 0 2px 15px #62b9af;
 }
 
 .logout-form {
@@ -95,13 +101,6 @@ body {
     background-color: rgba(255, 255, 255, 0.3);
 }
 
-.divider {
-    border: none;
-    height: 2px;
-    background-color: #3a837b;
-    margin: 0;
-}
-
 .toolbar-btn {
     padding: 6px 10px;
     background-color: #62b9af;
@@ -120,20 +119,23 @@ body {
 .footers {
     background-color: black;
     border-top: 1px solid #aaaaaa;
-    text-align: center;
-    padding: 15px 30px;
+    width: 100%;
     margin-top: 30px;
+    padding: 0;
 }
 
 .footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 30px;
+    text-align: center;
     color: white;
     font-size: 15px;
     font-weight: 600;
 }
 
 .footer-content a {
-    color: white;
+    color: #b4e2dd;
     text-decoration: none;
     font-weight: bold;
-
 }

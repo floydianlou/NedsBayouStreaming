@@ -3,7 +3,7 @@
         <div class="highlight-object">
 
         <div class="left-stuff">
-            <img src="{{ song.cover.url }}" alt="Copertina di {{ song.title }}" class="highlight-cover">
+            <img src="{{ song.cover.url }}" alt="{{ song.title }}'s cover" class="highlight-cover">
 
             <div class="highlight-text">
                 {{ song.title }}
@@ -28,7 +28,7 @@
                 {% endif %}
                 </div>
 
-                <audio controls class="micro-audio-player" style="margin-top: 8px; width: 100%;">
+                <audio controls class="micro-audio-player">
                     <source src="{{ song.audio_file.url }}" type="audio/mpeg">
                     Your browser does not support the audio element.
                 </audio>

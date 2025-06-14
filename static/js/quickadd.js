@@ -14,7 +14,13 @@ document.querySelectorAll('.quickAddBtn').forEach(btn => {
           data.playlists.forEach(p => {
             const li = document.createElement("li");
             const button = document.createElement("button");
-            button.textContent = `➕ ${p.name}`;
+
+              const icon = document.createElement("i");
+              icon.classList.add("fa-solid", "fa-plus");
+
+              button.appendChild(icon);
+              button.appendChild(document.createTextNode(p.name));
+
             button.classList.add("playlist-btn");
 
             button.addEventListener("click", () => {
@@ -33,10 +39,10 @@ document.querySelectorAll('.quickAddBtn').forEach(btn => {
                 .then(data => {
                   if (data.success) {
                     button.disabled = true;
-                    button.textContent = "✅ Added!";
-                    button.classList.add("added");
+                      button.innerHTML = '<i class="fa-solid fa-check" style="margin-right:6px;"></i>Added!';
+                      button.classList.add("Added");
                   } else {
-                    button.textContent = "⚠️ Error";
+                    button.textContent = "Error";
                   }
                 });
             });
@@ -46,7 +52,7 @@ document.querySelectorAll('.quickAddBtn').forEach(btn => {
           });
         } else {
           list.innerHTML = `
-            <p>You either have this song in all your playlists or don't have one!
+            <p>You either have this song in all your playlists or don't have a playlist!
               <a href="/music/create-playlist/" class="create-link">Make it here.</a>
             </p>`;
         }

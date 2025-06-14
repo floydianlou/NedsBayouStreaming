@@ -31,17 +31,14 @@ document.addEventListener('DOMContentLoaded', () => {
       }
     });
 
-    // Mostra/nasconde il blocco delle spunte (solo song/artist/all)
     if (genreBox) {
       genreBox.style.display = (filter === 'song' || filter === 'artist' || filter === 'all') ? 'block' : 'none';
     }
 
-    // Mostra/nasconde playlistLengthFilterBox (SOLO playlist!)
     if (playlistLengthBox) {
       playlistLengthBox.style.display = (filter === 'playlist') ? 'block' : 'none';
     }
 
-    // Mostra messaggio solo su Users o Playlists
     if (genreNotice) {
       const isUserOrPlaylist = (filter === 'user' || filter === 'playlist');
       genreNotice.style.display = isUserOrPlaylist ? 'block' : 'none';
@@ -53,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  // Click sui TAB
   tabs.forEach(tab => {
     tab.addEventListener('click', () => {
       tabs.forEach(t => t.classList.remove('active'));
@@ -61,47 +57,42 @@ document.addEventListener('DOMContentLoaded', () => {
 
       const filter = tab.dataset.filter;
 
-      // Aggiorno il campo hidden "type" per il form, così il submit mantiene la tab giusta!
       const typeInput = document.getElementById('typeInput');
       if (typeInput) {
         typeInput.value = filter;
       }
-
       updateResults(filter);
     });
   });
 
-  // aggiorna i risultati anche quando clicchi sulle spunte (per generi)
+
   if (genreBox && genreForm) {
     const checkboxes = genreBox.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
-        genreForm.submit();  // ricarica la pagina
+        genreForm.submit();
       });
     });
   }
 
-  // aggiorna i risultati anche quando clicchi sulle spunte (per playlist length)
   if (playlistLengthBox && playlistLengthForm) {
     const checkboxes = playlistLengthBox.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
-        playlistLengthForm.submit();  // ricarica la pagina
+        playlistLengthForm.submit();
       });
     });
   }
 
-  // aggiorna i risultati anche quando clicchi sulle spunte (per user likes)
   if (userLikesBox && genreForm) {
     const checkboxes = userLikesBox.querySelectorAll('input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
-        genreForm.submit();  // ricarica la pagina
+        genreForm.submit();
       });
     });
   }
 
-  // All'avvio, aggiorna la pagina in base alla tab attiva
   const currentTab = document.querySelector('#typeTabs .tab.active');
   if (currentTab) {
     updateResults(currentTab.dataset.filter);

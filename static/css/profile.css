@@ -1,111 +1,96 @@
-
-body {
-    background-color: #f0fbf9;
-    color: #333;
-    font-family: 'Segoe UI', sans-serif;
-    padding: 20px;
+.profile-container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 auto;
+    padding: 50px 40px;
+    gap: 40px;
 }
 
-h2 {
-    color: #62b9af;
-    font-size: 26px;
-    margin-bottom: 15px;
+
+.pickypicture {
+  width: 33.33%;
+    height: 33.33%;
+  object-fit: cover;
+  border-radius: 50%;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.8);
 }
 
-img[alt="Profile Picture"] {
-    border-radius: 50%;
-    box-shadow: 0 0 8px rgba(98, 185, 175, 0.3);
-    margin-bottom: 20px;
+.profile-info, #edit-form {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 40px 50px;
+  background-color: #e6f7f5;
+  border-radius: 30px;
+  box-shadow: inset 0 0 10px #c2e6e1;
 }
 
-#profile-info {
-    background-color: #e2f7f4;
-    border: 1px solid #c2e6e1;
-    border-radius: 12px;
-    padding: 20px;
-    width: 100%;
-    max-width: 600px;
-    margin-bottom: 20px;
-    box-shadow: 0 0 10px rgba(98, 185, 175, 0.08);
+.readonly-field {
+  background-color: #b4e2dd;
+  color: darkslategrey;
+  border: 1px solid #3a837b;
+  cursor: not-allowed;
 }
 
-#profile-info p {
-    margin: 10px 0;
-    font-size: 16px;
+.profile-info h1, h2 {
+    font-family: 'Belwe Bold BT', sans-serif;
+    font-size: 35px;
+    color: #03363d;
+    font-weight: 800;
 }
 
-#edit-button {
-    background-color: #62b9af;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#edit-button:hover {
-    background-color: #4fa298;
-}
-
-#edit-form {
-    background-color: #ffffff;
-    border: 1px dashed #98d5ce;
-    border-radius: 12px;
-    padding: 20px;
-    max-width: 600px;
-}
-
-#edit-form label {
-    font-weight: bold;
-    color: #3a837b;
-    display: block;
-    margin-top: 10px;
-}
-
-#edit-form input,
-#edit-form textarea {
-    width: 100%;
-    padding: 8px;
-    margin-top: 4px;
-    border: 1px solid #b4e2dd;
-    border-radius: 6px;
-    background-color: #fafffe;
-    font-size: 14px;
-}
-
-#edit-form input[readonly] {
-    background-color: #e8f6f4;
-    color: #777;
-    border: 1px solid #ccc;
-}
-
-#edit-form button[type="submit"] {
-    background-color: #62b9af;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 10px 16px;
-    font-weight: bold;
-    cursor: pointer;
-    margin-top: 15px;
-    transition: background-color 0.3s ease;
-}
-
-#edit-form button[type="submit"]:hover {
-    background-color: #4fa298;
-}
-
-hr {
-    border: none;
-    height: 1px;
-    background-color: #c0e5e1;
-    margin: 40px 0;
-}
-
-h3 {
-    color: #4da89f;
-    margin-top: 30px;
+#edit-form h2 {
+    font-family: 'Belwe Bold BT', sans-serif;
     font-size: 20px;
+    color: #03363d;
+    font-weight: 800;
+}
+
+.info-block {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.info-block p strong, #edit-form p strong {
+    color: #03363d;
+    font-weight: 900;
+    font-size: 17px;
+}
+
+.info-block p, #edit-form p {
+    color: black;
+    font-size: 17px;
+    font-weight: 600;
+}
+
+.edit-button-container {
+  align-self: flex-end;
+  margin-top: 15px;
+}
+
+.btn {
+    margin-top: 5px;
+  padding: 12px 20px;
+  background-color: #62b9af;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #4a958d;
+}
+
+.latter-container {
+    display: flex;
+    flex-direction: column;
+    padding-left: 20px;
+    padding-right: 20px;
 }

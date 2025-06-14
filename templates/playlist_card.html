@@ -1,7 +1,6 @@
 <div class="playlist-card">
     <a href="{% url 'playlist_detail' playlist.id %}">
-        <img src="{% if playlist.cover %}{{ playlist.cover.url }}{% else %}/static/img/defaultPlaylistCover.png{% endif %}"
-             alt="Cover of {{ playlist.name }}">
+        <img src="{{ playlist.cover.url }}" alt="Cover of {{ playlist.name }}">
         <h4>{{ playlist.name }}</h4>
     </a>
     <button type="button" class="share-icon-small" onclick="copyPlaylistLink(this, '{{ playlist.id }}', event)">

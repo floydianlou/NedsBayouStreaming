@@ -139,10 +139,8 @@ def build_match_score(field, top_genres):
 
 def search_results_view(request):
     query = request.GET.get('q', '')
-    print("📥 QUERY ricevuta:", query)
 
     genre_names = request.GET.getlist('genre')
-    print("🎯 Generi selezionati:", genre_names)
 
     genres = Genre.objects.all()
     selected_genres = Genre.objects.filter(name__in=genre_names) if genre_names else []
@@ -153,21 +151,15 @@ def search_results_view(request):
     top_genres_ordered = []
 
     if request.user.is_authenticated:
-        print("✅ Utente autenticato:", request.user.username)
-
         top_recommendations = Recommendation.objects.filter(
             user=request.user, score__gt=0
         ).order_by('-score')[:3]
-
-        print("📊 Recommendation trovate:", top_recommendations)
 
         top_genres_ordered = [rec.genre for rec in top_recommendations]
 
         print("🏆 Top generi ordinati:")
         for i, genre in enumerate(top_genres_ordered):
             print(f"  {i+1}. {genre.name}")
-    else:
-        print("⛔ Utente non autenticato")
 
     # === SONGS + FILTER ===
     songs_qs = Song.objects.filter(title__icontains=query)
@@ -175,7 +167,6 @@ def search_results_view(request):
         songs_qs = songs_qs.filter(artist__genres__in=selected_genres)
 
     if top_genres_ordered:
-        print("🎶 Filtro per canzoni nei top generi attivo!")
 
         songs_top = songs_qs.filter(artist__genres__in=top_genres_ordered).annotate(
             match_score=build_match_score('artist__genres', top_genres_ordered)
@@ -183,7 +174,6 @@ def search_results_view(request):
 
         songs_other = songs_qs.exclude(artist__genres__in=top_genres_ordered).order_by('title')
     else:
-        print("🎵 Nessun top genere: tutte le canzoni sono 'other'")
         songs_top = Song.objects.none()
         songs_other = songs_qs.order_by('title')
 
@@ -193,7 +183,6 @@ def search_results_view(request):
         artists_qs = artists_qs.filter(genres__in=selected_genres)
 
     if top_genres_ordered:
-        print("🧑‍🎤 Filtro per artisti nei top generi attivo!")
 
         artists_top = artists_qs.filter(genres__in=top_genres_ordered).annotate(
             match_score=build_match_score('genres', top_genres_ordered)
@@ -201,7 +190,6 @@ def search_results_view(request):
 
         artists_other = artists_qs.exclude(genres__in=top_genres_ordered).distinct().order_by('name')
     else:
-        print("🧑‍🎨 Nessun top genere: tutti gli artisti sono 'other'")
         artists_top = Artist.objects.none()
         artists_other = artists_qs.distinct().order_by('name')
 
@@ -221,12 +209,11 @@ def search_results_view(request):
     if selected_lengths:
         playlists_qs = playlists_qs.filter(playlist_length_filter)
 
-    # Filtro sul nome come prima
     playlists = playlists_qs.filter(name__icontains=query)
 
     # === USERS ===
     likes_params = request.GET.getlist('min_likes')
-    selected_min_likes = [int(val) for val in likes_params if val.isdigit()]  # sicuro
+    selected_min_likes = [int(val) for val in likes_params if val.isdigit()]
 
     users_qs = BayouUser.objects.filter(username__icontains=query).annotate(like_count=Count('liked_songs'))
 
@@ -237,9 +224,6 @@ def search_results_view(request):
     users = users_qs
 
     is_personalized = bool(top_genres_ordered)
-
-    print("📚 Playlist trovate:", list(playlists))
-    print("👤 Utenti trovati:", list(users))
 
     context = {
         'query': query,

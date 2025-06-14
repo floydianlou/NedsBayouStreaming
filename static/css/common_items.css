@@ -345,8 +345,98 @@
 
 .micro-audio-player {
     height: 30px;
-    width: 60px;
     border: #98d5ce solid 1px;
     border-radius: 15px;
     background-color: #62b9af;
+    margin-top: 8px;
+    width: 100%;
+}
+
+/* MODAL ELEMENT FOR QUICK ADD */
+
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0,0,0,0.6);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 999;
+}
+
+.hidden {
+  display: none;
+}
+
+
+.modal-content {
+  background-color: black;
+  padding: 24px 32px;
+  border-radius: 16px;
+  width: 500px;
+  max-width: 90%;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+  animation: fadeIn 0.3s ease;
+}
+
+.modal-content h2 {
+    font-family: 'Belwe Bold BT', sans-serif;
+  margin-bottom: 15px;
+  font-size: 25px;
+  color: #c2e6e1;
+}
+
+.modal-content p {
+    color: white;
+    font-weight: 600;
+    font-size: 16px;
+}
+
+.modal-content a {
+    color: #b4e2dd;
+    text-decoration: none;
+}
+
+#playlistList {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.playlist-btn {
+  background-color: #b4e2dd;
+  color: #03363d;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 15px;
+  margin: 6px 0;
+  width: 100%;
+  text-align: left;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  transition: background-color 0.25s ease;
+}
+
+.playlist-btn i {
+  margin-right: 8px;
+}
+
+.playlist-btn:hover {
+  background-color: #c2e6e1;
+}
+
+.playlist-btn.added {
+  background-color: #e4f4f2;
+  color: #000000;
+  font-weight: bold;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }

@@ -22,13 +22,13 @@ function copyPlaylistLink(button, playlistId = null, event=null) {
     navigator.clipboard.writeText(playlistUrl).then(() => {
 
         const statusSpan = button.querySelector('.copy-status');
-        statusSpan.innerHTML = '✔️';
+        statusSpan.innerHTML = '<i class="fa-solid fa-check"></i>';
 
         setTimeout(() => {
             statusSpan.innerHTML = '';
         }, 2000);
     }).catch(err => {
-        console.error("Failed to copy link: ", err);
+        console.error("Can't copy link right now: ", err);
     });
 }
 
@@ -49,12 +49,11 @@ document.addEventListener('DOMContentLoaded', function() {
             utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@17/build/js/utils.js"
         });
 
-        // On submit → set the full international number in the input value:
         const form = document.querySelector("form");
         if (form) {
             form.addEventListener("submit", function(e) {
                 if (phoneInput && iti) {
-                    phoneInput.value = iti.getNumber();  // Get the full international number
+                    phoneInput.value = iti.getNumber();
                 }
             });
         }

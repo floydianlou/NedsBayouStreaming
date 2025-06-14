@@ -5,102 +5,111 @@
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 {% endblock %}
+
 {% block content %}
-<h2>{{ user_profile.username }}'s profile</h2>
+<div class="profile-container">
+        <img src="{{ user_profile.profile_picture.url }}" alt="Profile Picture" class="pickypicture">
 
-<img src="{% if user_profile.profile_picture %}{{ user_profile.profile_picture.url }}{% else %}/media/profile_pics/defaultPicture.png{% endif %}"
-     alt="Profile Picture" width="150" style="border-radius: 50%;"><br><br>
+        <div class="profile-info">
+            <h1>{{ user_profile.username }}'s profile</h1>
 
-<div id="profile-info">
-    <p><strong>Username:</strong> {{ user_profile.username }}</p>
+            <div class="info-block">
+                <p><strong>Username:</strong> {{ user_profile.username }}</p>
+
+                {% if is_owner %}
+                    <p><strong>Email:</strong> {{ user_profile.email }}</p>
+                {% endif %}
+
+                <p><strong>Name:</strong> {{ user_profile.first_name }}</p>
+                <p><strong>Surname:</strong> {{ user_profile.last_name }}</p>
+
+                {% if user_profile.short_bio %}
+                    <p><strong>Profile bio:</strong> {{ user_profile.short_bio }}</p>
+                {% endif %}
+
+                {% if is_owner and user_profile.phone_number %}
+                    <p><strong>Phone:</strong> {{ user_profile.phone_number }}</p>
+                {% endif %}
+
+                {% if user_profile.favorite_artist %}
+                    <p><strong>Favourite Artist:</strong> {{ user_profile.favorite_artist }}</p>
+                {% endif %}
+            </div>
+
+            {% if is_owner %}
+                <div class="edit-button-container">
+                    <button id="edit-button" onclick="toggleEdit()" class="btn">Edit profile</button>
+                </div>
+            {% endif %}
+        </div>
 
     {% if is_owner %}
-        <p><strong>Email:</strong> {{ user_profile.email }}</p>
+        <div id="edit-form" style="display: none; margin-top: 20px;">
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                <h2>Edit your info:</h2>
+                <p><strong>{{ form.username.label_tag }}</strong> {{ form.username }}</p>
+                <p><strong>{{ form.email.label_tag }}</strong> {{ form.email }}</p>
+                <p><strong>{{ form.first_name.label_tag }}</strong> {{ form.first_name }}</p>
+                <p><strong>{{ form.last_name.label_tag }}</strong> {{ form.last_name }}</p>
+
+                {% if user_profile.profile_picture.name != "profile_pics/defaultPicture.png" %}
+                    <p><strong>{{ form.profile_picture.label_tag }}</strong> {{ form.profile_picture }}</p>
+                {% else %}
+                    <label for="{{ form.profile_picture.id_for_label }}"><strong>New profile picture:</strong></label>
+                    <input type="file" name="{{ form.profile_picture.name }}"
+                           id="{{ form.profile_picture.id_for_label }}"><br>
+                {% endif %}
+
+                <p><strong>{{ form.short_bio.label_tag }}</strong> {{ form.short_bio }}</p>
+                <p><strong>{{ form.phone_number.label_tag }}</strong> {{ form.phone_number }}</p>
+                <p><strong>{{ form.favorite_artist.label_tag }}</strong> {{ form.favorite_artist }}</p>
+
+                <button type="submit" class="btn">Save</button>
+            </form>
+        </div>
     {% endif %}
 
-    <p><strong>Name:</strong> {{ user_profile.first_name }}</p>
-    <p><strong>Surname:</strong> {{ user_profile.last_name }}</p>
-
-    {% if user_profile.short_bio %}
-        <p><strong>Profile bio:</strong> {{ user_profile.short_bio }}</p>
-    {% endif %}
-
-    {% if is_owner and user_profile.phone_number %}
-        <p><strong>Phone:</strong> {{ user_profile.phone_number }}</p>
-    {% endif %}
-
-    {% if user_profile.favorite_artist %}
-        <p><strong>Favourite Artist:</strong> {{ user_profile.favorite_artist }}</p>
-    {% endif %}
 </div>
 
-{% if is_owner %}
-    <br>
-    <button id="edit-button" onclick="toggleEdit()" class="btn">Edit profile</button>
-
-    <div id="edit-form" style="display: none; margin-top: 20px;">
-        <form method="POST" enctype="multipart/form-data">
-            {% csrf_token %}
-
-            {{ form.username.label_tag }} {{ form.username }}<br>
-            {{ form.email.label_tag }} {{ form.email }}<br>
-            {{ form.first_name.label_tag }} {{ form.first_name }}<br>
-            {{ form.last_name.label_tag }} {{ form.last_name }}<br>
-
-            {% if user_profile.profile_picture.name != "profile_pics/defaultPicture.png" %}
-                {{ form.profile_picture.label_tag }} {{ form.profile_picture }}<br>
-            {% else %}
-                <label for="{{ form.profile_picture.id_for_label }}">New profile picture:</label>
-                <input type="file" name="{{ form.profile_picture.name }}" id="{{ form.profile_picture.id_for_label }}"><br>
-            {% endif %}
-
-            {{ form.short_bio.label_tag }} {{ form.short_bio }}<br>
-            {{ form.phone_number.label_tag }} {{ form.phone_number }}<br>
-            {{ form.favorite_artist.label_tag }} {{ form.favorite_artist }}<br>
-
-            <button type="submit">Save</button>
-        </form>
-    </div>
-{% endif %}
-
-<hr>
-
-<h3>{{user_profile.username}}'s playlists</h3>
-{% if playlists %}
-    <div class="song-grid">
-    {% for playlist in playlists %}
-        {% include "playlist_card.html" with playlist=playlist %}
-    {% endfor %}
-    </div>
-{% else %}
-    {% if is_owner %}
-        <p>You haven't made any playlists yet! Make one now.</p>
-    {% else %}
-        <p>This user has no playlists.</p>
-    {% endif %}
-{% endif %}
-
-    <hr>
-
-<h3>{{user_profile.username}}'s liked songs</h3>
-
-{% if liked_songs %}
-    <div class="song-grid">
-        {% for song in liked_songs %}
-            {% include "song_card.html" with song=song %}
-        {% endfor %}
-    </div>
-{% else %}
-    {% if is_owner %}
-        <p>You have no liked songs yet. Find something you like!</p>
+    <div class="latter-container">
+        <h2>{{ user_profile.username }}'s playlists</h2>
+        {% if playlists %}
+            <div class="song-grid">
+                {% for playlist in playlists %}
+                    {% include "playlist_card.html" with playlist=playlist %}
+                {% endfor %}
+            </div>
         {% else %}
-        <p>This user has no liked songs.</p>
-    {% endif %}
-{% endif %}
+            {% if is_owner %}
+                <p>You haven't made any playlists yet! Make one now.</p>
+            {% else %}
+                <p>This user has no playlists.</p>
+            {% endif %}
+        {% endif %}
 
-<div id="quickAddModal" class="modal hidden">
+        <hr>
+
+        <h2>{{ user_profile.username }}'s liked songs</h2>
+
+        {% if liked_songs %}
+            <div class="song-grid">
+                {% for song in liked_songs %}
+                    {% include "song_card.html" with song=song %}
+                {% endfor %}
+            </div>
+        {% else %}
+            {% if is_owner %}
+                <p>You have no liked songs yet. Find something you like!</p>
+            {% else %}
+                <p>This user has no liked songs.</p>
+            {% endif %}
+        {% endif %}
+    </div>
+
+    <div id="quickAddModal" class="modal hidden">
         <div class="modal-content">
-            <h3>Add this song to one of your playlists</h3>
+            <h2>Add this song to one of your playlists</h2>
             <ul id="playlistList">
             </ul>
         </div>
