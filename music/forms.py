@@ -53,7 +53,7 @@ class ArtistAdminForm(forms.ModelForm):
     def clean_genres(self):
         genres = self.cleaned_data.get('genres')
         if genres.count() < 1:
-            raise forms.ValidationError("Please select at leaste one genre")
+            raise forms.ValidationError("Please select at least one genre")
         if genres.count() > 3:
             raise forms.ValidationError("The maximum genres allowed is 3.")
         return genres
@@ -81,10 +81,13 @@ class SongForm(forms.ModelForm):
     def clean_audio_file(self):
         file = self.cleaned_data.get('audio_file')
 
-        if file:
-            if not file.content_type.startswith('audio'):
-                raise forms.ValidationError("Upload a valid audio file.")
-            if file.size > 20 * 1024 * 1024:
-                raise forms.ValidationError("Audio file is too large (max 15MB).")
+        if not file:
+            raise forms.ValidationError("You can't submit a song without an audio file.")
+
+        if not hasattr(file, 'content_type') or not file.content_type.startswith('audio'):
+            raise forms.ValidationError("You can't submit a song without an audio file.")
+
+        if file.size > 20 * 1024 * 1024:
+            raise forms.ValidationError("File is too big (max 20MB).")
 
         return file

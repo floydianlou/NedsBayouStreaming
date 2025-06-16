@@ -91,6 +91,8 @@ def profileView(request, username):
                         if old_artist_songs.exists():
                             first_song = old_artist_songs.first()
                             update_recommendations(user_profile, song=first_song, delta=-5)
+                        else:
+                            update_recommendations(user_profile, artist=old_favorite, delta=-5)
 
                     # add 5 points to new favorite
                     if user_profile.favorite_artist:
@@ -98,6 +100,8 @@ def profileView(request, username):
                         if favorite_artist_songs.exists():
                             first_song = favorite_artist_songs.first()
                             update_recommendations(user_profile, song=first_song, delta=5)
+                        else:
+                            update_recommendations(user_profile, artist=user_profile.favorite_artist, delta=5)
 
                 return redirect('profile', username=username)
         else:

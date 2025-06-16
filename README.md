@@ -7,3 +7,7 @@ By using the Django Administration Panel, some accounts can also cover a Curator
 
 > All songs use the same track as to not violate any copyright laws. I used an instrumental version of [Heavydirtysoul by Twenty One Pilots](https://www.youtube.com/watch?v=lzXRdS9cynQ) which I found for free on multiple Reddit threads and online.
 
+## WEBSITE FUNCTIONALITIES
+**Ned's Bayou** offers the following functionalities, listed in no particular order:
+
+- 

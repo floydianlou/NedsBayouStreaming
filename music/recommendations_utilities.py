@@ -3,19 +3,24 @@ import random
 from music.models import Recommendation, Artist, Song
 
 
-def update_recommendations(user, song, delta):
-
-    # BASIS FOR RECOMMENDATION SYSTEM: delta can be positive or negative and can assume
-    # different values depending on the action taken (liking a song or adding to playlist)
-    # if no row for the artist's genres exists it creates one and adds the score starting from
-    # 0, can both go in negative and positive values.
+def update_recommendations(user, song=None, artist=None, delta=0):
+    """
+    Update the user's genre recommendations based on a song or directly from an artist.
+    If no row for the genre exists, it creates one starting from 0.
+    """
 
     if user.is_authenticated:
-        for genre in song.artist.genres.all():
+        if song:
+            genres = song.artist.genres.all()
+        elif artist:
+            genres = artist.genres.all()
+        else:
+            return
+
+        for genre in genres:
             rec, created = Recommendation.objects.get_or_create(user=user, genre=genre)
             rec.score += delta
             rec.save()
-
 
 def get_random_recommendations(user):
     print("Returning random recommendations.")
