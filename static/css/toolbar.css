@@ -44,7 +44,9 @@ body {
 
 .welcome-text {
     margin: 0;
-    font-weight: 600;
+    font-weight: 700;
+    color: white;
+    
 }
 
 .user-link {

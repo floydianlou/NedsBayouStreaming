@@ -2,54 +2,147 @@
 {% load static %}
 
 {% block extrahead %}
-	<link rel="stylesheet" href="{% static 'css/curator_dashboard.css' %}">
+    <link rel="stylesheet" href="{% static 'css/curator_dashboard.css' %}">
 {% endblock %}
+
 {% block content %}
-
+     <div class="curator-wrapper">
 <h1>Curator Dashboard</h1>
+    <h2>Add and update forms</h2>
 
-    {% if messages %}
-        <div class="messages">
-            {% for message in messages %}
-                <div class="message {{ message.tags }}">
-                    {{ message }}
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
-
-<div class="formcontainer">
+{% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+            <div class="message {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    </div>
+{% endif %}
 
 
+<div class="dashboard-columns">
+
+  <!-- GENRES -->
+  <div class="dashboard-column">
     <div class="curator-form-box">
-        <h2>Add a musical Genre</h2>
-        <form method="post">
-            {% csrf_token %}
-            {{ genre_form.as_p }}
-            <button type="submit" name="genre_submit">Save genre</button>
-        </form>
+      <h2>{% if genre_form.instance.pk %}Update musical genre{% else %}Add a musical genre{% endif %}</h2>
+      <form method="post">
+        {% csrf_token %}
+        {{ genre_form.as_p }}
+        {% if genre_form.instance.pk %}
+          <input type="hidden" name="genre_id" value="{{ genre_form.instance.pk }}">
+        {% endif %}
+        <button type="submit" name="{% if genre_form.instance.pk %}genre_update{% else %}genre_submit{% endif %}">
+          {% if genre_form.instance.pk %}Update genre{% else %}Save genre{% endif %}
+        </button>
+      </form>
     </div>
 
+    <div class="curator-list-box">
+      <h2>All Genres</h2>
+      <table class="curator-table">
+        <tr><th>Name</th><th>Actions</th></tr>
+        {% for genre in genres %}
+          <tr>
+            <td>{{ genre.name }}</td>
+            <td>
+              <a href="?edit_genre={{ genre.pk }}"><i class="fas fa-pen"></i></a>
+              <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="genre_id" value="{{ genre.pk }}">
+                <button type="submit" name="delete_genre"><i class="fas fa-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="2">No genres available.</td></tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
 
+  <!-- ARTISTS -->
+  <div class="dashboard-column">
     <div class="curator-form-box">
-        <h2>Add an artist</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ artist_form.as_p }}
-            <button type="submit" name="artist_submit">Save artist</button>
-        </form>
+      <h2>{% if artist_form.instance.pk %}Update artist{% else %}Add an artist{% endif %}</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ artist_form.as_p }}
+        {% if artist_form.instance.pk %}
+          <input type="hidden" name="artist_id" value="{{ artist_form.instance.pk }}">
+        {% endif %}
+        <button type="submit" name="{% if artist_form.instance.pk %}artist_update{% else %}artist_submit{% endif %}">
+          {% if artist_form.instance.pk %}Update artist{% else %}Save artist{% endif %}
+        </button>
+      </form>
     </div>
 
-
-    <div class="curator-form-box">
-        <h2>Add a song</h2>
-        <form method="post" enctype="multipart/form-data">
-            {% csrf_token %}
-            {{ song_form.as_p }}
-            <button type="submit" name="song_submit">Save song</button>
-        </form>
+    <div class="curator-list-box">
+      <h2>All Artists</h2>
+      <table class="curator-table">
+        <tr><th>Name</th><th>Actions</th></tr>
+        {% for artist in artists %}
+          <tr>
+            <td>{{ artist.name }}</td>
+            <td>
+              <a href="?edit_artist={{ artist.pk }}"><i class="fas fa-pen"></i></a>
+              <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="artist_id" value="{{ artist.pk }}">
+                <button type="submit" name="delete_artist"><i class="fas fa-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="2">No artists available.</td></tr>
+        {% endfor %}
+      </table>
     </div>
+  </div>
+
+  <!-- SONGS -->
+  <div class="dashboard-column">
+    <div class="curator-form-box">
+      <h2>{% if song_form.instance.pk %}Update song{% else %}Add a song{% endif %}</h2>
+      <form method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ song_form.as_p }}
+        {% if song_form.instance.pk %}
+          <input type="hidden" name="song_id" value="{{ song_form.instance.pk }}">
+        {% endif %}
+        <button type="submit" name="{% if song_form.instance.pk %}song_update{% else %}song_submit{% endif %}">
+          {% if song_form.instance.pk %}Update song{% else %}Save song{% endif %}
+        </button>
+      </form>
+    </div>
+
+    <div class="curator-list-box">
+      <h2>All Songs</h2>
+      <table class="curator-table">
+        <tr><th>Title</th><th>Artist</th><th>Actions</th></tr>
+        {% for song in songs %}
+          <tr>
+            <td>{{ song.title }}</td>
+            <td>{{ song.artist.name }}</td>
+            <td>
+              <a href="?edit_song={{ song.pk }}"><i class="fas fa-pen"></i>️</a>
+              <form method="post" style="display:inline;">
+                {% csrf_token %}
+                <input type="hidden" name="song_id" value="{{ song.pk }}">
+                <button type="submit" name="delete_song"><i class="fas fa-trash"></i></button>
+              </form>
+            </td>
+          </tr>
+        {% empty %}
+          <tr><td colspan="3">No songs available.</td></tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
 
 </div>
+
+    </div>
 
 {% endblock %}

@@ -67,7 +67,6 @@ class GenreForm(forms.ModelForm):
             'description': forms.Textarea(attrs={'class': 'form-control', 'rows': 3, 'placeholder': 'Genre description'}),
         }
 
-
 class SongForm(forms.ModelForm):
     class Meta:
         model = Song
@@ -78,3 +77,14 @@ class SongForm(forms.ModelForm):
             'audio_file': forms.ClearableFileInput(),
             'cover': forms.ClearableFileInput(),
         }
+
+    def clean_audio_file(self):
+        file = self.cleaned_data.get('audio_file')
+
+        if file:
+            if not file.content_type.startswith('audio'):
+                raise forms.ValidationError("Upload a valid audio file.")
+            if file.size > 20 * 1024 * 1024:
+                raise forms.ValidationError("Audio file is too large (max 15MB).")
+
+        return file

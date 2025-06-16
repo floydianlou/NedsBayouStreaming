@@ -5,9 +5,9 @@ from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.db.models import Q, Count
-from django.views.generic import ListView
+from django.views.generic import ListView, UpdateView
 from music.forms import PlaylistForm, PlaylistUpdateForm, GenreForm, ArtistAdminForm, SongForm
-from music.models import Song, Playlist, Artist, Recommendation
+from music.models import Song, Playlist, Artist, Recommendation, Genre
 from music.recommendations_utilities import update_recommendations, get_random_recommendations, get_random_songs, is_curator
 
 
@@ -276,35 +276,110 @@ class SongListView(ListView):
 @login_required
 @user_passes_test(is_curator)
 def curator_dashboard(request):
-    genre_form = GenreForm()
-    artist_form = ArtistAdminForm()
-    song_form = SongForm()
+    genre_instance = None
+    artist_instance = None
+    song_instance = None
+
+    if 'edit_genre' in request.GET:
+        genre_instance = get_object_or_404(Genre, pk=request.GET['edit_genre'])
+    if 'edit_artist' in request.GET:
+        artist_instance = get_object_or_404(Artist, pk=request.GET['edit_artist'])
+    if 'edit_song' in request.GET:
+        song_instance = get_object_or_404(Song, pk=request.GET['edit_song'])
+
+    genre_form = GenreForm(instance=genre_instance)
+    artist_form = ArtistAdminForm(instance=artist_instance)
+    song_form = SongForm(instance=song_instance)
 
     if request.method == 'POST':
         if 'genre_submit' in request.POST:
             genre_form = GenreForm(request.POST)
             if genre_form.is_valid():
                 genre_form.save()
-                messages.success(request, "Genre added successfully!")
+                messages.success(request, "Genre added successfully.")
+                return redirect('curator_dashboard')
+
+        elif 'genre_update' in request.POST:
+            instance = get_object_or_404(Genre, pk=request.POST['genre_id'])
+            genre_form = GenreForm(request.POST, instance=instance)
+            if genre_form.is_valid():
+                genre_form.save()
+                messages.success(request, "Genre was updated correctly.")
                 return redirect('curator_dashboard')
 
         elif 'artist_submit' in request.POST:
             artist_form = ArtistAdminForm(request.POST, request.FILES)
             if artist_form.is_valid():
                 artist_form.save()
-                messages.success(request, "Artist added successfully!")
+                messages.success(request, "Artist added successfully.")
+                return redirect('curator_dashboard')
+
+        elif 'artist_update' in request.POST:
+            instance = get_object_or_404(Artist, pk=request.POST['artist_id'])
+            artist_form = ArtistAdminForm(request.POST, request.FILES, instance=instance)
+            if artist_form.is_valid():
+                artist_form.save()
+                messages.success(request, "Artist was updated correctly.")
                 return redirect('curator_dashboard')
 
         elif 'song_submit' in request.POST:
             song_form = SongForm(request.POST, request.FILES)
             if song_form.is_valid():
                 song_form.save()
-                messages.success(request, "Song added successfully!")
+                messages.success(request, "Song added successfully.")
                 return redirect('curator_dashboard')
+            else:
+                for field, errors in song_form.errors.items():
+                    for error in errors:
+                        messages.error(request, error)
+
+        elif 'song_update' in request.POST:
+            instance = get_object_or_404(Song, pk=request.POST['song_id'])
+            song_form = SongForm(request.POST, request.FILES, instance=instance)
+            if song_form.is_valid():
+                song_form.save()
+                messages.success(request, "Song was updated correctly.")
+                return redirect('curator_dashboard')
+            else:
+                for field, errors in song_form.errors.items():
+                    for error in errors:
+                        messages.error(request, error)
+
+        elif 'delete_genre' in request.POST:
+            genre_id = int(request.POST.get('genre_id'))
+            genre = get_object_or_404(Genre, pk=genre_id)
+
+            artists_to_delete = Artist.objects.annotate(
+                genre_count=Count('genres')
+            ).filter(genres=genre, genre_count=1)
+
+            for artist in artists_to_delete:
+                artist.delete()
+
+            genre.delete()
+
+            messages.success(request, f"Genre '{genre.name}' deleted along with {artists_to_delete.count()} artist(s).")
+            return redirect('curator_dashboard')
+
+        elif 'delete_artist' in request.POST:
+            Artist.objects.filter(pk=request.POST.get('artist_id')).delete()
+            messages.success(request, "Artist deleted.")
+            return redirect('curator_dashboard')
+
+        elif 'delete_song' in request.POST:
+            Song.objects.filter(pk=request.POST.get('song_id')).delete()
+            messages.success(request, "Song deleted.")
+            return redirect('curator_dashboard')
 
     context = {
         'genre_form': genre_form,
         'artist_form': artist_form,
         'song_form': song_form,
+        'genres': Genre.objects.all(),
+        'artists': Artist.objects.all(),
+        'songs': Song.objects.all(),
     }
     return render(request, 'curator_dashboard.html', context)
+
+
+
