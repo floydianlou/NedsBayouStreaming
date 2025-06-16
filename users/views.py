@@ -48,7 +48,7 @@ def register(request):
             if user.favorite_artist:
                 song = user.favorite_artist.songs.first()
                 if song:
-                    update_recommendations(user, song=song, delta=5)
+                    update_recommendations(user, artist=song.artist, delta=5)
 
             return redirect('home')
     else:
@@ -85,23 +85,10 @@ def profileView(request, username):
 
                 # if favorite artist has changed, update recommendations accordingly
                 if user_profile.favorite_artist != old_favorite:
-                    # remove 5 points from old favorite
                     if old_favorite:
-                        old_artist_songs = old_favorite.songs.all()
-                        if old_artist_songs.exists():
-                            first_song = old_artist_songs.first()
-                            update_recommendations(user_profile, song=first_song, delta=-5)
-                        else:
-                            update_recommendations(user_profile, artist=old_favorite, delta=-5)
-
-                    # add 5 points to new favorite
+                        update_recommendations(user_profile, artist=old_favorite, delta=-5)
                     if user_profile.favorite_artist:
-                        favorite_artist_songs = user_profile.favorite_artist.songs.all()
-                        if favorite_artist_songs.exists():
-                            first_song = favorite_artist_songs.first()
-                            update_recommendations(user_profile, song=first_song, delta=5)
-                        else:
-                            update_recommendations(user_profile, artist=user_profile.favorite_artist, delta=5)
+                        update_recommendations(user_profile, artist=user_profile.favorite_artist, delta=5)
 
                 return redirect('profile', username=username)
         else:
@@ -126,10 +113,10 @@ def toggle_like_song(request, song_id):
         liked = False
         if song in user.liked_songs.all():
             user.liked_songs.remove(song)
-            update_recommendations(user, song, -3)
+            update_recommendations(user, artist=song.artist, delta=-3)
         else:
             user.liked_songs.add(song)
-            update_recommendations(user, song, 3)
+            update_recommendations(user, artist=song.artist, delta=3)
             liked = True
         return JsonResponse({'liked': liked})
     return JsonResponse({'error': 'Invalid request'}, status=400)
@@ -161,10 +148,6 @@ def search_results_view(request):
 
         top_genres_ordered = [rec.genre for rec in top_recommendations]
 
-        print("🏆 Top generi ordinati:")
-        for i, genre in enumerate(top_genres_ordered):
-            print(f"  {i+1}. {genre.name}")
-
     # === SONGS + FILTER ===
     songs_qs = Song.objects.filter(title__icontains=query)
     if selected_genres:
@@ -187,17 +170,16 @@ def search_results_view(request):
         artists_qs = artists_qs.filter(genres__in=selected_genres)
 
     if top_genres_ordered:
-
         artists_top = artists_qs.filter(genres__in=top_genres_ordered).annotate(
             match_score=build_match_score('genres', top_genres_ordered)
         ).distinct().order_by('-match_score', 'name')
-
         artists_other = artists_qs.exclude(genres__in=top_genres_ordered).distinct().order_by('name')
     else:
         artists_top = Artist.objects.none()
         artists_other = artists_qs.distinct().order_by('name')
 
     # === PLAYLIST & USER ===
+
     playlists_qs = Playlist.objects.annotate(song_count=Count('songs'))
     playlist_length_filter = Q()
 

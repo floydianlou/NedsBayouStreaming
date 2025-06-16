@@ -21,7 +21,7 @@ def create_playlist(request):
             playlist.save()
             form.save_m2m()
             for song in form.cleaned_data['songs']:
-                update_recommendations(request.user, song, +2)
+                update_recommendations(request.user, artist=song.artist, delta=2)
             return redirect('profile', username=request.user.username)
     else:
         form = PlaylistForm()
@@ -46,10 +46,10 @@ def playlist_detail(request, playlist_id):
                 removed_songs = old_songs - new_songs
 
                 for song in added_songs:
-                    update_recommendations(request.user, song, +2)
+                    update_recommendations(request.user, artist=song.artist, delta=2)
 
                 for song in removed_songs:
-                    update_recommendations(request.user, song, -2)
+                    update_recommendations(request.user, artist=song.artist, delta=-2)
 
                 return redirect('playlist_detail', playlist_id=playlist.id)
         else:
@@ -69,7 +69,7 @@ def delete_playlist(request, pk):
 
     if playlist.created_by == request.user:
         for song in playlist.songs.all():
-            update_recommendations(request.user, song, -2)
+            update_recommendations(request.user, artist=song.artist, delta=-2)
         playlist.delete()
         return redirect('profile', username=request.user.username)
     else:
@@ -113,7 +113,7 @@ def add_song_to_playlist(request):
 
         # updates recommendations for added songs
         playlist.songs.add(song)
-        update_recommendations(request.user, song, +2)
+        update_recommendations(request.user, artist=song.artist, delta=2)
         return JsonResponse({"success": True})
 
     except Exception as e:
@@ -134,23 +134,23 @@ def artist_detail(request, artist_id):
 
 # FUNCTION TO GET RECOMMENDED SONGS AND ARTISTS
 def generate_recommendations(user):
-    print(f"\nGENERATING RECOMMENDATIONS FOR: {user.username if user.is_authenticated else 'Anonymous'}")
+    print(f"\nGENERATING RECOMMENDATIONS FOR: {user.username if user.is_authenticated else 'Unlogged user'}")
 
     # if user is unauthenticated or has no recommendation data yet, return random picks
     if not user.is_authenticated or not Recommendation.objects.filter(user=user, score__gt=0).exists():
-        print("[NEW OR UNAUTHENTICATED USER] Returning random picks.")
+        print("New user or unlogged user: returning random recommendations.")
         return get_random_recommendations(user)
 
     # retrieves top 3 favorite genres
     top_genres = Recommendation.objects.filter(user=user, score__gt=0).order_by('-score')[:3]
     top_genre_ids = [rec.genre.id for rec in top_genres]
-    print("\U0001F3A7 Top Genres:")
+    print("- Top Genres:")
     for rec in top_genres:
         print(f"  - {rec.genre.name}: {rec.score}")
 
     if not top_genres:
         # return random picks
-        print("[NO TOP GENRES WITH POSITIVE SCORE] Using random picks.")
+        print("[NO TOP GENRES WITH POSITIVE SCORE] Using random recommendations.")
         return get_random_recommendations(user)
 
     # retrieves related artists ordered by number of common genres with user's top genres
@@ -162,20 +162,12 @@ def generate_recommendations(user):
         .order_by('-common_genres')
     )
 
-    print("\U0001F3A4 Related Artists Found:")
+    print("- Related Artists Found:")
     for a in related_artists:
         print(f"  - {a.name} (common genres: {a.common_genres})")
 
-    # selects up to 2 related artists at random from pool
-    related_artists_list = list(related_artists)
-    random.shuffle(related_artists_list)
-
-    selected_related_artists = []
-    if related_artists_list:
-        selected_related_artists.append(related_artists_list[0])
-        others = related_artists_list[1:]
-        if others:
-            selected_related_artists.append(random.choice(others))
+    # selects top 2 related artists
+    selected_related_artists = list(related_artists[:2])
 
     # if there are less than 2 related artists, fill with random artists
     if len(selected_related_artists) < 2:
@@ -185,7 +177,7 @@ def generate_recommendations(user):
         random.shuffle(filler_list)
         selected_related_artists.extend(filler_list[:2 - len(selected_related_artists)])
 
-    print("Selected Related Artists:")
+    print("- Selected related artists:")
     for a in selected_related_artists:
         print(f"  - {a.name}")
 
@@ -198,7 +190,7 @@ def generate_recommendations(user):
 
     candidate_songs = list(candidate_songs)
 
-    print("\U0001F3B6 Candidate Songs:")
+    print("- Candidate Songs:")
     for s in candidate_songs:
         print(f"  - {s.title} by {s.artist.name}")
 
@@ -208,14 +200,14 @@ def generate_recommendations(user):
     else:
         recommended_songs = random.sample(candidate_songs, min(5, len(candidate_songs)))
 
-    print(f"\U0001F3B5 Selected {len(recommended_songs)} Recommended Songs:")
+    print(f"-> Selected {len(recommended_songs)} recommended songs:")
     for s in recommended_songs:
         print(f"  - {s.title} by {s.artist.name}")
 
     # if less than 5 recommended songs, fill remaining slots with random songs
     if len(recommended_songs) < 5:
         missing = 5 - len(recommended_songs)
-        print(f"🪄 Need to fill {missing} more song(s).")
+        print(f"Need to fill {missing} more song(s).")
         recommended_songs.extend(get_random_songs(user, missing, exclude_song_ids=[s.id for s in recommended_songs]))
 
 
@@ -228,7 +220,7 @@ def generate_recommendations(user):
     remaining_artists = Artist.objects.exclude(id__in=excluded_artist_ids)
     random_artist = random.choice(list(remaining_artists)) if remaining_artists.exists() else None
     if random_artist:
-        print(f"\U0001F3B2 Random Artist: {random_artist.name}")
+        print(f"- Random artist: {random_artist.name}")
 
     # select 2 random songs from remaining pool
     excluded_song_ids = [s.id for s in recommended_songs] + list(user.liked_songs.values_list('id', flat=True))
@@ -245,7 +237,7 @@ def generate_recommendations(user):
     else:
         random_songs = random.sample(remaining_songs_list, 2)
 
-    print("\U0001F3B2 Random Songs:", [s.title for s in random_songs])
+    print("- Random Songs:", [s.title for s in random_songs])
 
     return {
         "related_artists": selected_related_artists,

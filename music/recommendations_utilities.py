@@ -3,21 +3,9 @@ import random
 from music.models import Recommendation, Artist, Song
 
 
-def update_recommendations(user, song=None, artist=None, delta=0):
-    """
-    Update the user's genre recommendations based on a song or directly from an artist.
-    If no row for the genre exists, it creates one starting from 0.
-    """
-
-    if user.is_authenticated:
-        if song:
-            genres = song.artist.genres.all()
-        elif artist:
-            genres = artist.genres.all()
-        else:
-            return
-
-        for genre in genres:
+def update_recommendations(user, artist, delta=0):
+    if user.is_authenticated and artist:
+        for genre in artist.genres.all():
             rec, created = Recommendation.objects.get_or_create(user=user, genre=genre)
             rec.score += delta
             rec.save()
@@ -39,7 +27,7 @@ def get_random_recommendations(user):
     }
 
 def get_random_songs(user, count, exclude_song_ids=None):
-    print(f"🎲 get_random_songs(user, count={count})")
+    print(f"-- Using {count} random recommendations.)")
 
     # gets a list of exlcuded song ids
     excluded_song_ids = list(user.liked_songs.values_list('id', flat=True))
