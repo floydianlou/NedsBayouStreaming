@@ -84,6 +84,10 @@ DATABASES = {
     )
 }
 
+CSRF_TRUSTED_ORIGINS = [
+    'https://nedsbayoustreaming-production.up.railway.app'
+]
+
 # Password validation
 # https://docs.djangoproject.com/en/5.2/ref/settings/#auth-password-validators
 
