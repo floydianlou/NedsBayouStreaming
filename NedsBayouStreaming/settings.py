@@ -151,9 +151,3 @@ CLOUDINARY_STORAGE = {
     'API_KEY': os.environ.get('CLOUDINARY_API_KEY'),
     'API_SECRET': os.environ.get('CLOUDINARY_API_SECRET'),
 }
-
-# profile pictures
-from pathlib import Path
-import os
-
-MEDIA_URL = '/media/'
