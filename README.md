@@ -28,8 +28,9 @@ By using the Django Administration Panel, some accounts can also cover a Curator
 **All editing, creating and personalised actions are uniquely reserved to logged-in users, while a guest can still browse the website.**
 
 ___________
+## FUNCTIONALITIES HIGHLIGHTS
 
-## RECOMMENDATIONS FEATURE
+### RECOMMENDATIONS FEATURE
 **Ned's Bayou** offers a points based system to suggest songs and artists to its users. 
 The recommendation system works as follows: every interaction of the user with a song or an artist modifies a score related to the artist's genre, influencing the tastes of the user: liking a song will provide a score of +3 to all genres related to the song's artist, while adding a song to a playlist will provide a +2 score.
 The favorite artist the user chooses at any time adds a +5 bonus to the artist's genres. Removing a song from a playlist or unliking it will result in the score being deducted from the total for the related genres.
@@ -42,4 +43,12 @@ The **"Suggested for you"** preview tab and the related **"Recommended for you"*
 
 All scores are stored in a model that links each user to each genre, making them persist between sessions and influence future interactions.
 
-TODO scrivere della ricerca personalizzata
+-> The recommendation algorithm is also used to order results when searching for any term: if results from various genres are present, they get ordered using the *Recommendations* model table with genre scores.
+
+### FILTERING FEATURE
+On the **Search Results** page, the website offers a few filters to sort through query results: you can always choose a tab between *Songs*, *Artists*, *Playlists* and *Users*, on which you will also find a **Genre filtering** when looking at the first two tabs, a **Playlist length** filter for the third one and a **Number of likes** feature for the last one.
+
+### IMAGE AND AUDIO MANAGEMENT
+On **Ned's Bayou**, the user is able to choose between personalising their profile and playlists or to leave a default cover and default profile picture. Removing an added picture will at any time change it to the default one. For *Curators*, an artist or song pictures can be left blank and will be replaced by the default ones; to be coherent, the only space that can not be left blank is the audio file for a song, since it'd be counterproductive to add a song with a default audio file on a streaming platform!
+
+###

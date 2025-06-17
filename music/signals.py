@@ -1,6 +1,6 @@
 from django.db.models.signals import pre_delete
 from django.dispatch import receiver
-from .models import Song
+from .models import Song, Artist
 from users.models import BayouUser
 from music.recommendations_utilities import update_recommendations
 
@@ -16,3 +16,12 @@ def update_recommendations_on_song_delete(sender, instance, **kwargs):
     users_playlist = BayouUser.objects.filter(playlists__songs=instance).distinct()
     for user in users_playlist:
         update_recommendations(user, artist=artist, delta=-2)
+
+
+# SIGNAL BEFORE DELETING AN ARTIST TO UPDATE USER RECOMMENDATIONS IF IT WAS THEIR FAVORITE
+@receiver(pre_delete, sender=Artist)
+def update_recommendations_on_artist_delete(sender, instance, **kwargs):
+    users_with_favorite = BayouUser.objects.filter(favorite_artist=instance).distinct()
+
+    for user in users_with_favorite:
+        update_recommendations(user, artist=instance, delta=-5)
