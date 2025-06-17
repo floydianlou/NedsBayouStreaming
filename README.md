@@ -81,3 +81,5 @@ ___________
 This website was created for a University project (as stated above) and its style is heavily inspired by [Ned Bayou LTD](https://europe.nedbayou.com/gb/), a website for merch by Twenty One Pilots. I would like to clarify that all the icons and images I am using are used for a fake website that will be up for a limited amount of time and are used for personal use only (with no income to the website or me). 
 All artists and songs featured in this project are among my favorite of all time and all mentions, pictures and icons used are just a tribute to them, coming from my heart.
 No copyright or company associated with this website!
+
+This project is on the heavy side (~450MB) because of all the audio and images associated with all the songs in the database. I thought to populate the database a bit to show all the recommendation algorithms possibilities.
