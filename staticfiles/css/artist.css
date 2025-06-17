@@ -1,0 +1,73 @@
+.artist-banner {
+  position: relative;
+  height: 700px;
+  overflow: hidden;
+}
+
+.artist-banner img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: top center;
+}
+
+.banner-overlay {
+  position: absolute;
+  bottom: 0;
+  width: 100%;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+  padding: 80px 20px 20px 20px;
+}
+
+.banner-overlay h1 {
+  font-family: 'Belwe Bold BT', sans-serif;
+  color: white;
+  font-size: 80px;
+  margin: 0;
+}
+
+.container {
+  background-color: black;
+}
+
+footer {
+  margin-top: 0 !important;
+}
+
+.artist-content {
+  background-color: black;
+  display: flex;
+  padding: 30px 20px;
+  gap: 40px;
+  flex-wrap: wrap;
+}
+
+.left-column, .right-column {
+  flex: 1;
+  min-width: 300px;
+}
+
+.left-column h2, .right-column h2, h2 {
+  font-size: 30px;
+  font-family:  'Belwe Bold BT', sans-serif;
+  color: white;
+  margin-bottom: 10px;
+  padding-left: 3px;
+  padding-bottom: 5px;
+}
+
+h2 {
+  padding-left: 30px;
+}
+
+.highlight-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.right-column p, .left-column p, p {
+  font-size: 16px;
+  color: white;
+  font-weight: 600;
+}

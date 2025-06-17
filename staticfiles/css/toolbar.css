@@ -1,0 +1,143 @@
+@font-face {
+    font-family: 'Belwe Bold BT';
+    src: url('../fonts/Belwe Bold BT.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background-color: #f0fbf9;
+    color: #333;
+    padding: 100px 0 0;
+}
+
+.toolbar-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+     width: calc(100% - 60px);
+    background-color: #62b9af;
+    padding: 10px 30px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    z-index: 1000;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+}
+
+.site-title a {
+    font-family: 'Belwe Bold BT', sans-serif;
+    text-decoration: none;
+    color: white;
+    font-size: 35px;
+    font-weight: 900;
+}
+
+.toolbar-user {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.welcome-text {
+    margin: 0;
+    font-weight: 700;
+    color: white;
+
+}
+
+.user-link {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    color: white;
+    font-weight: bold;
+}
+
+.profile-pic {
+    border-radius: 50%;
+    border: 2px solid white;
+    box-shadow: 0 2px 15px #62b9af;
+}
+
+.logout-form {
+    display: inline;
+    margin-left: 10px;
+}
+
+.logout {
+    background-color: white;
+    color: #62b9af;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.logout:hover {
+    background-color: #e4f4f2;
+}
+
+.toolbar-auth {
+    display: flex;
+    gap: 10px;
+}
+
+.auth-link {
+    color: white;
+    font-weight: bold;
+    text-decoration: none;
+    background-color: rgba(255, 255, 255, 0.15);
+    padding: 8px 12px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
+
+.auth-link:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.toolbar-btn {
+    padding: 6px 10px;
+    background-color: #62b9af;
+    color: white;
+    text-decoration: none;
+    border-radius: 10px;
+    font-weight: bold;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.toolbar-btn:hover {
+    background-color: #4a958d;
+}
+
+.footers {
+    background-color: black;
+    border-top: 1px solid #aaaaaa;
+    width: 100%;
+    margin-top: 30px;
+    padding: 0;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 15px 30px;
+    text-align: center;
+    color: white;
+    font-size: 15px;
+    font-weight: 600;
+}
+
+.footer-content a {
+    color: #b4e2dd;
+    text-decoration: none;
+    font-weight: bold;
+}
