@@ -11,5 +11,6 @@ urlpatterns = [
     path('search/', views.search_results_view, name='search_results'),
     path('<str:username>/', views.profileView, name='profile'),
     path('like/<int:song_id>/', views.toggle_like_song, name='toggle_like'), # here because it's in homepage
+    path("setup/", views.migrate_and_create_admin),
 ]
 

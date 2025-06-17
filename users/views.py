@@ -227,3 +227,18 @@ def search_results_view(request):
     }
 
     return render(request, 'search_results.html', context)
+
+from django.http import HttpResponse
+from django.core.management import call_command
+from django.contrib.auth import get_user_model
+
+def migrate_and_create_admin(request):
+
+    call_command("migrate")
+
+
+    User = get_user_model()
+    if not User.objects.filter(username="admin").exists():
+        User.objects.create_superuser("alice", "alice@alice.com", "strongPassword012")
+        return HttpResponse("We did it!")
+    return HttpResponse("We did it and superuser existed already!")
