@@ -51,4 +51,30 @@ On the **Search Results** page, the website offers a few filters to sort through
 ### IMAGE AND AUDIO MANAGEMENT
 On **Ned's Bayou**, the user is able to choose between personalising their profile and playlists or to leave a default cover and default profile picture. Removing an added picture will at any time change it to the default one. For *Curators*, an artist or song pictures can be left blank and will be replaced by the default ones; to be coherent, the only space that can not be left blank is the audio file for a song, since it'd be counterproductive to add a song with a default audio file on a streaming platform!
 
-###
+___________
+## HOW TO USE NED'S BAYOU
+**Ned's Bayou** uses primarily its modular toolbar to allow users to navigate through pages. Clicking on the website's name on the toolbar will always **bring you to the homepage**, while on the right side you will see a varying amount of buttons depending on your log situation:
+- If you're not logged in, the toolbar will feature two buttons to allow users to **Create an account** or **Login**;
+- If you're a Listener, the toolbar will feature a welcome message and a link to your user profile, a button to access the **Create a playlist** form and a button to **Log out** of your account;
+- If you're a Curator, your toolbar will have all previously listed Listener buttons, a small icon to show your different account status and a button to access the **Curator Dashboard**.
+
+You can search and find anything that is on the website using the **Search Bar** on the homepage. The full song catalogue, ordered by artist with links to all individual artist pages, can be accessed through a dedicated section at the bottom of the homepage. If you want to see personalised recommendations, you can also access the "Suggested for you" box at the top of the homepage and its related page.
+From the **Profile** page you will be able to edit or delete all your playlists, change your user data like name, favourite artist and bio and unlike liked songs. You won't be allowed to do these actions on any other user profile than your own and only if you are logged in.
+By using the **Song and Artist Cards** featured on all the website pages, you will always be able to access the artist page by clicking on their name, playing the audio related to the song, quick adding the song to one of your playlists that *does not already feature it* and liking/unliking it. If all your playlists feature a song, the *quick add* feature will provide a link to the **"Add a playlist"** page instead.
+From the **Playlist details** page, you will also be able to click the *Share this playlist* button to get the playlist's link copied. Using the **Playlist Cards** featured in one's profile or on the search bar you will also be able to get a link by using the quick share button.
+
+#### NOTES ON CURATOR DASHBOARD FOR CURATORS
+If your account is from the *Curator group*, you will be able to access the **Curator Dashboard**. On the dashboard page, a Curator will find three forms, made to **Add a Genre, an Artist or a Song** to the database. Under all three forms the user will find three tables featuring all currently present genres, artists and songs in the database, with two buttons: one to **Edit** and one to **Delete** the item in question.
+When the Curator edits an element, the editing form will appear at the top of the page from the already existing ones, changing the writing to "Update" from "Add". When you delete an item instead, no confirmation button will appear and the action will have immediate consequences. As state before, these are the actions that will happen when deleting objects:
+1. **Deleting a song** will result in all scores associated with that song to be deducted from the Recommendations table for all users involved; this means that anyone who liked the song or added the song to a playlist will lose 3 and 2 (x Playlist) points respectfully;
+2. **Deleting an artist** will result in all songs associated with that artist to be deleted (hence the score deduction), and 5 more points deducted from scores of all users who had that artist as their favorite;
+3. **Deleting a genre** will result in all Recommendations rows associated to be deleted and in all artists which only have that single genre associated to be deleted (and scores will disappear).
+
+> On the db.sqlite3 database provided I left one Curator account with the following credentials, as to allow testing of the Curator Dashboard:
+> Username: alice | Password: alice | Can also access /admin of Django Administration.
+
+___________
+### FINAL NOTES AND INDICATIONS
+This website was created for a University project (as stated above) and its style is heavily inspired by [Ned Bayou LTD](https://europe.nedbayou.com/gb/), a website for merch by Twenty One Pilots. I would like to clarify that all the icons and images I am using are used for a fake website that will be up for a limited amount of time and are used for personal use only (with no income to the website or me). 
+All artists and songs featured in this project are among my favorite of all time and all mentions, pictures and icons used are just a tribute to them, coming from my heart.
+No copyright or company associated with this website!
