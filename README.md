@@ -71,7 +71,10 @@ When the Curator edits an element, the editing form will appear at the top of th
 3. **Deleting a genre** will result in all Recommendations rows associated to be deleted and in all artists which only have that single genre associated to be deleted (and scores will disappear).
 
 > On the db.sqlite3 database provided I left one Curator account with the following credentials, as to allow testing of the Curator Dashboard:
-> Username: alice | Password: alice | Can also access /admin of Django Administration.
+ 
+_**Username: alice
+Password: alice
+Can also access /admin of Django Administration.**_
 
 ___________
 ### FINAL NOTES AND INDICATIONS
