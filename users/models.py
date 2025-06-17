@@ -24,10 +24,9 @@ class BayouUser(AbstractUser):
         return self.username
 
     def save(self, *args, **kwargs):
+     #   if not self.profile_picture:
+      #      self.profile_picture = 'profile_pics/defaultPicture.png'
+
         super().save(*args, **kwargs)
-      #  if not self.profile_picture:
-       #     self.profile_picture = 'profile_pics/defaultPicture.png'
 
-        #super().save(*args, **kwargs)
-
-        #crop_image_to_square(self.profile_picture, skip_filename='defaultPicture.png')
+       # crop_image_to_square(self.profile_picture, skip_filename='defaultPicture.png')
