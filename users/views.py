@@ -187,11 +187,11 @@ def search_results_view(request):
             artist__genres__in=top_genres_ordered
         ).annotate(
             match_score=build_match_score('artist__genres', top_genres_ordered)
-        ).order_by('-match_score', 'title').distinct('id')
+        ).order_by('id', '-match_score', 'title').distinct('id')
 
         songs_other = songs_qs.exclude(
             artist__genres__in=top_genres_ordered
-        ).order_by('title').distinct('id')
+        ).order_by('id', 'title').distinct('id')
     else:
         songs_top = Song.objects.none()
         songs_other = songs_qs.order_by('title').distinct('id')
@@ -206,11 +206,11 @@ def search_results_view(request):
             genres__in=top_genres_ordered
         ).annotate(
             match_score=build_match_score('genres', top_genres_ordered)
-        ).order_by('-match_score', 'name').distinct('id')
+        ).order_by('id', '-match_score', 'name').distinct('id')
 
         artists_other = artists_qs.exclude(
             genres__in=top_genres_ordered
-        ).order_by('name').distinct('id')
+        ).order_by('id', 'name').distinct('id')
     else:
         artists_top = Artist.objects.none()
         artists_other = artists_qs.order_by('name').distinct('id')
