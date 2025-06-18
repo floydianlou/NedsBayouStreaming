@@ -18,16 +18,6 @@ import cloudinary_storage
 import dj_database_url
 import environ
 
-print("📦 SETTINGS: sto leggendo DEFAULT_FILE_STORAGE...")
-
-CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dliev5zuy',
-    'API_KEY':'427978424534537',
-    'API_SECRET': '6hkZwHzJHI8DqJMTv1tyi5ZNTHY',
-}
-
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
-
 
 env = environ.Env()
 environ.Env.read_env()
@@ -153,7 +143,14 @@ STATIC_URL = '/static/'
 
 STATICFILES_DIRS = [ BASE_DIR / "static" ]
 
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+STORAGES = {
+    'default': {
+        'BACKEND': 'cloudinary_storage.storage.MediaCloudinaryStorage'
+    },
+    'staticfiles': {
+        'BACKEND': 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+    },
+}
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.2/ref/settings/#default-auto-field
@@ -162,12 +159,10 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 AUTH_USER_MODEL = 'users.BayouUser'
 
+MEDIA_URL= '/media/'
+
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dliev5zuy',
     'API_KEY':'427978424534537',
     'API_SECRET': '6hkZwHzJHI8DqJMTv1tyi5ZNTHY',
 }
-
-
-from django.core.files.storage import default_storage
-print("🚨 STORAGE CLASS IN DJANGO:", default_storage.__class__)

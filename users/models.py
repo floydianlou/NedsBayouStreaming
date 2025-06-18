@@ -16,7 +16,7 @@ class BayouUser(AbstractUser):
     email = models.EmailField(unique=True)
     profile_picture = models.ImageField(
         upload_to='profile_pics/',
-        storage=MediaCloudinaryStorage(),
+        default=default_profile_pic,
         blank=True
     )
     short_bio = models.TextField(blank=True)
@@ -28,9 +28,9 @@ class BayouUser(AbstractUser):
         return self.username
 
     def save(self, *args, **kwargs):
-        if not self.profile_picture:
-            default_url = "https://res.cloudinary.com/dliev5zuy/image/upload/v1750204693/defaultPicture_z9uqh8.png"
-            response = urlopen(default_url)
-            image_data = response.read()
-            self.profile_picture.save("defaultPicture.png", ContentFile(image_data), save=False)
+        is_default = not self.profile_picture or self.profile_picture.name == default_profile_pic()
+
         super().save(*args, **kwargs)
+
+        if not is_default:
+            crop_image_to_square(self.profile_picture)
