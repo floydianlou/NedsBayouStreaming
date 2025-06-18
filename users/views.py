@@ -183,18 +183,37 @@ def search_results_view(request):
         songs_qs = songs_qs.filter(artist__genres__in=selected_genres)
 
     if top_genres_ordered:
-        songs_top = songs_qs.filter(
+        songs_top_qs = songs_qs.filter(
             artist__genres__in=top_genres_ordered
         ).annotate(
             match_score=build_match_score('artist__genres', top_genres_ordered)
-        ).order_by('id', '-match_score', 'title').distinct('id')
+        ).order_by('-match_score', 'title')
 
-        songs_other = songs_qs.exclude(
+        seen_top = set()
+        songs_top = []
+        for song in songs_top_qs:
+            if song.id not in seen_top:
+                seen_top.add(song.id)
+                songs_top.append(song)
+
+        songs_other_qs = songs_qs.exclude(
             artist__genres__in=top_genres_ordered
-        ).order_by('id', 'title').distinct('id')
+        ).order_by('title')
+
+        seen_other = set()
+        songs_other = []
+        for song in songs_other_qs:
+            if song.id not in seen_top and song.id not in seen_other:
+                seen_other.add(song.id)
+                songs_other.append(song)
     else:
-        songs_top = Song.objects.none()
-        songs_other = songs_qs.order_by('title').distinct('id')
+        songs_top = []
+        seen = set()
+        songs_other = []
+        for song in songs_qs.order_by('title'):
+            if song.id not in seen:
+                seen.add(song.id)
+                songs_other.append(song)
 
     # === ARTISTS ===
     artists_qs = Artist.objects.filter(name__icontains=query)
@@ -202,18 +221,37 @@ def search_results_view(request):
         artists_qs = artists_qs.filter(genres__in=selected_genres)
 
     if top_genres_ordered:
-        artists_top = artists_qs.filter(
+        artists_top_qs = artists_qs.filter(
             genres__in=top_genres_ordered
         ).annotate(
             match_score=build_match_score('genres', top_genres_ordered)
-        ).order_by('id', '-match_score', 'name').distinct('id')
+        ).order_by('-match_score', 'name')
 
-        artists_other = artists_qs.exclude(
+        seen_top = set()
+        artists_top = []
+        for artist in artists_top_qs:
+            if artist.id not in seen_top:
+                seen_top.add(artist.id)
+                artists_top.append(artist)
+
+        artists_other_qs = artists_qs.exclude(
             genres__in=top_genres_ordered
-        ).order_by('id', 'name').distinct('id')
+        ).order_by('name')
+
+        seen_other = set()
+        artists_other = []
+        for artist in artists_other_qs:
+            if artist.id not in seen_top and artist.id not in seen_other:
+                seen_other.add(artist.id)
+                artists_other.append(artist)
     else:
-        artists_top = Artist.objects.none()
-        artists_other = artists_qs.order_by('name').distinct('id')
+        artists_top = []
+        seen = set()
+        artists_other = []
+        for artist in artists_qs.order_by('name'):
+            if artist.id not in seen:
+                seen.add(artist.id)
+                artists_other.append(artist)
 
     # === PLAYLISTS ===
     playlists_qs = Playlist.objects.annotate(song_count=Count('songs'))
@@ -248,11 +286,11 @@ def search_results_view(request):
         user.profile_picture_url = get_profile_picture_url(user)
 
     # === URLS for audio & cover ===
-    for song in list(songs_top) + list(songs_other):
+    for song in songs_top + songs_other:
         song.cover_url = get_song_cover_url(song)
         song.audio_url = get_song_audio_url(song)
 
-    for artist in list(artists_top) + list(artists_other):
+    for artist in artists_top + artists_other:
         artist.photo_url = get_artist_photo_url(artist)
 
     profile_picture_url = get_profile_picture_url(request.user) if request.user.is_authenticated else get_profile_picture_url(None)
