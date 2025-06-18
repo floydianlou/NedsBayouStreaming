@@ -1,13 +1,7 @@
 {% load cloudinary %}
 
 <div class="song-card">
-    {% if song.cover and song.cover.name %}
-        {% cloudinary song.cover.name width=150 height=150 crop="fill" as cover_url %}
-        <img src="{{ cover_url }}" alt="{{ song.title }}'s cover">
-    {% else %}
-        <img src="https://res.cloudinary.com/dliev5zuy/image/upload/v1750249400/default_cover_td9qhw.png"
-             alt="Default Song Cover">
-    {% endif %}
+    <img src="{{ song.cover_url }}" alt="{{ song.title }}'s cover">
 
     <div class="song-info">
         <h4>{{ song.title }}</h4>
@@ -18,7 +12,7 @@
         <div class="tools-container">
             <div class="song-audio">
                 <audio controls class="mini-audio-player">
-                    <source src="{{ song.audio_file.url }}" type="audio/mpeg">
+                    <source src="{{ song.audio_url }}" type="audio/mpeg">
                     Your browser does not support the audio element.
                 </audio>
             </div>

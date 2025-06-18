@@ -7,8 +7,6 @@ from django.db import models
 def default_audio_file():
     return 'song_audio/13_Heavydirtysoul_Instrumental.mp3'
 
-def default_cover():
-    return 'song_covers/default_cover.png'
 
 # GENRE MODEL
 class Genre(models.Model):
@@ -30,23 +28,20 @@ class Artist(models.Model):
     def __str__(self):
         return self.name
 
-# SONG MODEL (WITH IMAGE CROPPING)
+# SONG MODEL
 class Song(models.Model):
     title = models.CharField(max_length=100)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='songs')
-    audio_file = models.FileField(upload_to='song_audio/', default=default_audio_file)
-    cover = models.ImageField(upload_to='song_covers/', default=default_cover(), blank=True)
+    audio_file = CloudinaryField(
+        default="HDS_-_DEMO_ldyoty.mp3",
+        blank=True)
+    cover = CloudinaryField(
+        default="default_cover_td9qhw.png",
+        blank=True)
 
     def __str__(self):
         return f"{self.title} – {self.artist.name if self.artist else 'Unknown artist'}"
 
-    def save(self, *args, **kwargs):
-        if not self.cover:
-            self.cover = default_cover()
-
-        super().save(*args, **kwargs)
-
-        crop_image_to_square(self.cover, skip_keyword='default_cover.png')
 
 # PLAYLIST MODEL
 class Playlist(models.Model):

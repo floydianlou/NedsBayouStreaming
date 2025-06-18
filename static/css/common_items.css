@@ -196,12 +196,12 @@
     font-weight: bold;
 }
 
-.artist-card a {
+.artist-card a, .user-card a {
     text-decoration: none;
     color: #000;
 }
 
-.artist-card a:hover {
+.artist-card a:hover, .user-card a:hover {
     text-decoration: none;
 }
 

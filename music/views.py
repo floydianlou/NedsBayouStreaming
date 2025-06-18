@@ -7,12 +7,14 @@ from django.views.decorators.http import require_POST
 from django.db.models import Q, Count
 from django.views.generic import ListView, UpdateView
 
-from common_functions.utils import get_cover_url, get_artist_photo_url
+from common_functions.utils import get_cover_url, get_artist_photo_url, get_profile_picture_url, get_song_cover_url, \
+    get_song_audio_url
 from music.forms import PlaylistForm, PlaylistUpdateForm, GenreForm, ArtistAdminForm, SongForm
 from music.models import Song, Playlist, Artist, Recommendation, Genre
 from music.recommendations_utilities import update_recommendations, get_random_recommendations, get_random_songs, is_curator
 
 
+# UPDATED
 @login_required
 def create_playlist(request):
     if request.method == 'POST':
@@ -27,7 +29,16 @@ def create_playlist(request):
             return redirect('profile', username=request.user.username)
     else:
         form = PlaylistForm()
-    return render(request, 'create_playlist.html', {'form': form})
+
+    if request.user.is_authenticated:
+        profile_picture_url = get_profile_picture_url(request.user)
+    else:
+        profile_picture_url = get_profile_picture_url(None)
+
+    return render(request, 'create_playlist.html', {
+        'form': form,
+        'profile_picture_url': profile_picture_url,
+    })
 
 # UPDATED
 def playlist_detail(request, playlist_id):
@@ -60,10 +71,16 @@ def playlist_detail(request, playlist_id):
     else:
         form = None
 
+    if request.user.is_authenticated:
+        profile_picture_url = get_profile_picture_url(request.user)
+    else:
+        profile_picture_url = get_profile_picture_url(None)
+
     return render(request, 'playlist_detail.html', {
         'playlist': playlist,
         'is_owner': is_owner,
         'form': form,
+        'profile_picture_url': profile_picture_url,
     })
 
 @login_required
@@ -129,10 +146,24 @@ def artist_detail(request, artist_id):
     all_songs = artist.songs.all()
     highlights = random.sample(list(all_songs), min(len(all_songs), 5))
 
+    for song in all_songs:
+        song.cover_url = get_song_cover_url(song)
+        song.audio_url = get_song_audio_url(song)
+
+    for song in highlights:
+        song.cover_url = get_song_cover_url(song)
+        song.audio_url = get_song_audio_url(song)
+
+    if request.user.is_authenticated:
+        profile_picture_url = get_profile_picture_url(request.user)
+    else:
+        profile_picture_url = get_profile_picture_url(None)
+
     return render(request, 'artist_detail.html', {
         'artist': artist,
         'highlights': highlights,
         'all_songs': all_songs,
+        'profile_picture_url': profile_picture_url,
     })
 
 
@@ -260,22 +291,40 @@ def recommendations_view(request):
     if recs['random_artist']:
         recs['random_artist'].photo_url = get_artist_photo_url(recs['random_artist'])
 
+    if request.user.is_authenticated:
+        profile_picture_url = get_profile_picture_url(request.user)
+    else:
+        profile_picture_url = get_profile_picture_url(None)
+
     return render(request, 'recommendations.html', {
         'related_artists': recs['related_artists'],
         'recommended_songs': recs['recommended_songs'],
         'random_artist': recs['random_artist'],
         'random_songs': recs['random_songs'],
+        'profile_picture_url': profile_picture_url,
     })
 
 
 # LISTVIEW FOR REQUIREMENTS
+# UPDATED
 class SongListView(ListView):
     model = Song
     template_name = 'song_list.html'
     context_object_name = 'songs'
     ordering = ['artist__name', 'title']
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
 
+        if self.request.user.is_authenticated:
+            context['profile_picture_url'] = get_profile_picture_url(self.request.user)
+        else:
+            context['profile_picture_url'] = get_profile_picture_url(None)
+
+        return context
+
+
+# UPDATED
 @login_required
 @user_passes_test(is_curator)
 def curator_dashboard(request):
@@ -374,6 +423,11 @@ def curator_dashboard(request):
             messages.success(request, "Song deleted.")
             return redirect('curator_dashboard')
 
+    if request.user.is_authenticated:
+        profile_picture_url = get_profile_picture_url(request.user)
+    else:
+        profile_picture_url = get_profile_picture_url(None)
+
     context = {
         'genre_form': genre_form,
         'artist_form': artist_form,
@@ -381,6 +435,7 @@ def curator_dashboard(request):
         'genres': Genre.objects.all(),
         'artists': Artist.objects.all(),
         'songs': Song.objects.all(),
+        'profile_picture_url': profile_picture_url,
     }
     return render(request, 'curator_dashboard.html', context)
 

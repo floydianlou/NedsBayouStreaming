@@ -240,6 +240,11 @@ def search_results_view(request):
     for artist in artists_other:
         artist.photo_url = get_artist_photo_url(artist)
 
+    if request.user.is_authenticated:
+        profile_picture_url = get_profile_picture_url(request.user)
+    else:
+        profile_picture_url = get_profile_picture_url(None)
+
     is_personalized = bool(top_genres_ordered)
 
     context = {
@@ -255,6 +260,7 @@ def search_results_view(request):
         'selected_genre_names': genre_names,
         'selected_lengths': selected_lengths,
         'selected_min_likes': selected_min_likes,
+        'profile_picture_url': profile_picture_url,
     }
 
     return render(request, 'search_results.html', context)
@@ -266,7 +272,6 @@ from django.contrib.auth import get_user_model
 def migrate_and_create_admin(request):
 
     call_command("migrate")
-
 
     User = get_user_model()
     if not User.objects.filter(username="admin").exists():
