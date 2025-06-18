@@ -4,10 +4,10 @@
     <a href="{% url 'artist_detail' artist.id %}">
         {% if artist.photo %}
             {% cloudinary artist.photo.name width=100 height=100 crop="fill" as image_url %}
-                <img src="{{ image_url }}" alt="{{ artist.name }}">
-            {% endcloudinary %}
+            <img src="{{ image_url }}" alt="{{ artist.name }}">
         {% else %}
-            <img src="https://res.cloudinary.com/dliev5zuy/image/upload/v1750249305/default_artist_vtyuz5.png" alt="Default Artist">
+            <img src="https://res.cloudinary.com/dliev5zuy/image/upload/v1750249305/default_artist_vtyuz5.png"
+                 alt="Default Artist">
         {% endif %}
         <h4>{{ artist.name }}</h4>
     </a>

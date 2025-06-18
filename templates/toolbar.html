@@ -27,9 +27,8 @@
                 <img src="{% static 'icons/curatorIcon.png' %}" alt="Curator" width="20">
             {% endif %}
             {% if user.profile_picture and user.profile_picture.name %}
-                {% cloudinary user.profile_picture.name width=50 height=50 crop="fill" gravity=auto as profile_url %}
-                    <img src="{{ profile_url }}" alt="Profile Picture" class="profile-pic">
-                {% endcloudinary %}
+                {% cloudinary user.profile_picture.name width=50 height=50 crop="fill" gravity="auto" as profile_url %}
+                <img src="{{ profile_url }}" alt="Profile Picture" class="profile-pic">
             {% else %}
                 <img src="https://res.cloudinary.com/dliev5zuy/image/upload/v1750204693/defaultPicture_z9uqh8.png"
                      alt="Default Profile Picture" width="50" height="50" class="profile-pic">

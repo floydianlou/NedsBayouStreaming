@@ -2,12 +2,12 @@
 
 <div class="user-card">
     <a href="{% url 'profile' username=user.username %}">
-        {% if user.profile_picture %}
-            {% cloudinary user.profile_picture.name width=100 height=100 crop="fill" as profile_url %}
-                <img src="{{ profile_url }}" alt="Profile picture of {{ user.username }}">
-            {% endcloudinary %}
+        {% if user.profile_picture and user.profile_picture.name %}
+            {% cloudinary user.profile_picture.name width=100 height=100 crop="fill" gravity="auto" as profile_url %}
+            <img src="{{ profile_url }}" alt="Profile picture of {{ user.username }}">
         {% else %}
-            <img src="https://res.cloudinary.com/dliev5zuy/image/upload/v1750204693/defaultPicture_z9uqh8.png" alt="Default profile picture">
+            <img src="https://res.cloudinary.com/dliev5zuy/image/upload/v1750204693/defaultPicture_z9uqh8.png"
+                 alt="Default profile picture">
         {% endif %}
         <h4>{{ user.username }}</h4>
     </a>

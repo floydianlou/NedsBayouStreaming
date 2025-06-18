@@ -13,8 +13,7 @@
         <div class="artist-banner">
             {% if artist.photo %}
                 {% cloudinary artist.photo.name width=1280 height=720 crop="fill" gravity="auto" as artist_url %}
-                    <img src="{{ artist_url }}" alt="{{ artist.name }}">
-                {% endcloudinary %}
+                <img src="{{ artist_url }}" alt="{{ artist.name }}">
             {% else %}
                 <img src="https://res.cloudinary.com/dliev5zuy/image/upload/v1750249305/default_artist_vtyuz5.png"
                      alt="Default artist image">

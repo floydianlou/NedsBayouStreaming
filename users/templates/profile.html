@@ -9,10 +9,9 @@
 
 {% block content %}
     <div class="profile-container">
-        {% if user_profile.profile_picture %}
-            {% cloudinary user_profile.profile_picture.name width=800 height=800 crop="fill" as profile_url %}
-                <img src="{{ profile_url }}" alt="Profile Picture" class="pickypicture">
-            {% endcloudinary %}
+        {% if user_profile.profile_picture and user_profile.profile_picture.name %}
+            {% cloudinary user_profile.profile_picture.name width=800 height=800 crop="fill" gravity="auto" as profile_url %}
+            <img src="{{ profile_url }}" alt="Profile Picture" class="pickypicture">
         {% else %}
             <img src="https://res.cloudinary.com/dliev5zuy/image/upload/v1750204693/defaultPicture_z9uqh8.png"
                  alt="Default Profile Picture" class="pickypicture">
