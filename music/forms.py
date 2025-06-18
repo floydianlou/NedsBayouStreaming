@@ -1,3 +1,5 @@
+from PIL import Image
+from django.core.exceptions import ValidationError
 from .models import Playlist, Song, Artist, Genre
 from django import forms
 
@@ -17,6 +19,16 @@ class PlaylistForm(forms.ModelForm):
             }),
             'songs': forms.CheckboxSelectMultiple()
         }
+
+    def clean_cover(self):
+        image = self.cleaned_data.get('cover')
+        if image:
+            try:
+                img = Image.open(image)
+                img.verify()
+            except Exception:
+                raise ValidationError("Please upload a valid image file.")
+        return image
 
 
 
@@ -44,6 +56,16 @@ class PlaylistUpdateForm(forms.ModelForm):
         if self.instance:
             self.fields['songs'].initial = self.instance.songs.all()
 
+    def clean_cover(self):
+        image = self.cleaned_data.get('cover')
+        if image:
+            try:
+                img = Image.open(image)
+                img.verify()
+            except Exception:
+                raise ValidationError("Please upload a valid image file.")
+        return image
+
 
 class ArtistAdminForm(forms.ModelForm):
     class Meta:
@@ -57,6 +79,16 @@ class ArtistAdminForm(forms.ModelForm):
         if genres.count() > 3:
             raise forms.ValidationError("The maximum genres allowed is 3.")
         return genres
+
+    def clean_photo(self):
+        photo = self.cleaned_data.get('photo')
+        if photo:
+            try:
+                img = Image.open(photo)
+                img.verify()
+            except Exception:
+                raise ValidationError("Please upload a valid image file.")
+        return photo
 
 class GenreForm(forms.ModelForm):
     class Meta:
@@ -91,3 +123,13 @@ class SongForm(forms.ModelForm):
             raise forms.ValidationError("File is too big (max 20MB).")
 
         return file
+
+    def clean_cover(self):
+        image = self.cleaned_data.get('cover')
+        if image:
+            try:
+                img = Image.open(image)
+                img.verify()
+            except Exception:
+                raise ValidationError("Please upload a valid image file.")
+        return image
