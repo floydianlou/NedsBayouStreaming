@@ -1,5 +1,4 @@
 from cloudinary.models import CloudinaryField
-from common_functions.utils import crop_image_to_square
 from users.models import BayouUser
 from django.db import models
 
