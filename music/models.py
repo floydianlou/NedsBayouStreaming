@@ -60,7 +60,7 @@ class Song(models.Model):
 
         super().save(*args, **kwargs)
 
-        crop_image_to_square(self.cover, skip_filename='default_cover.png')
+        crop_image_to_square(self.cover, skip_keyword='default_cover.png')
 
 # PLAYLIST MODEL (WITH IMAGE CROPPING)
 class Playlist(models.Model):
@@ -82,7 +82,7 @@ class Playlist(models.Model):
             self.cover = default_playlist_cover()
 
         super().save(*args, **kwargs)
-        crop_image_to_square(self.cover, skip_filename='defaultPlaylistCover.png')
+        crop_image_to_square(self.cover, skip_keyword='defaultPlaylistCover.png')
 
 # RECOMMENDATION MODEL
 class Recommendation(models.Model):

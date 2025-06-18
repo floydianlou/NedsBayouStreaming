@@ -7,7 +7,7 @@ from django.core.files.base import ContentFile
 def crop_image_to_square(image_field, skip_keyword=None):
     try:
         if image_field and hasattr(image_field, 'file'):
-            if skip_keyword and skip_keyword in image_field.name:
+            if skip_keyword and skip_keyword in str(image_field):
                 return
 
             img = Image.open(image_field.file)
@@ -23,8 +23,9 @@ def crop_image_to_square(image_field, skip_keyword=None):
             img_cropped.save(buffer, format='JPEG')
             buffer.seek(0)
 
+            filename_only = Path(image_field.name).name
             image_field.save(
-                image_field.name,
+                filename_only,
                 ContentFile(buffer.read()),
                 save=False
             )
