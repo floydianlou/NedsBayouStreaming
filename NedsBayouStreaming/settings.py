@@ -19,11 +19,16 @@ import dj_database_url
 import environ
 
 
-env = environ.Env()
-environ.Env.read_env()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
+
+env = environ.Env()
+
+if os.path.exists(BASE_DIR / ".env.local"):
+    environ.Env.read_env(BASE_DIR / ".env.local")
+else:
+    environ.Env.read_env()
 
 
 # Quick-start development settings - unsuitable for production
@@ -164,7 +169,7 @@ AUTH_USER_MODEL = 'users.BayouUser'
 MEDIA_URL= '/media/'
 
 CLOUDINARY_STORAGE = {
-    'CLOUD_NAME': 'dliev5zuy',
-    'API_KEY':'427978424534537',
-    'API_SECRET': '6hkZwHzJHI8DqJMTv1tyi5ZNTHY',
+    'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
+    'API_KEY': env('CLOUDINARY_API_KEY'),
+    'API_SECRET': env('CLOUDINARY_API_SECRET'),
 }
