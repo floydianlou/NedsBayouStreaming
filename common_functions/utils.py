@@ -76,3 +76,15 @@ def get_profile_picture_url(user):
     if '/upload/' in url and 'f_auto' not in url:
            url = url.replace('/upload/', '/upload/f_auto/')
     return url
+
+def get_cover_url(cover_field):
+    default_url = "https://res.cloudinary.com/dliev5zuy/image/upload/f_auto,c_fill,g_auto,w_100,h_100/v1750248957/defaultPlaylistCover_elb8ew.jpg"
+
+    try:
+        url = cover_field.url
+    except:
+        return default_url
+
+    if '/upload/' in url:
+        return url.replace('/upload/', '/upload/f_auto,c_fill/')
+    return url

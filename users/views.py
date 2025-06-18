@@ -5,7 +5,7 @@ from django.db.models import Count, Case, When, Value, IntegerField, Q
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
-from common_functions.utils import get_profile_picture_url
+from common_functions.utils import get_profile_picture_url, get_cover_url
 from music.models import Song, Playlist, Artist, Recommendation, Genre
 from music.recommendations_utilities import update_recommendations
 from music.views import generate_recommendations
@@ -19,6 +19,8 @@ def home(request):
 
     # latest playlists created
     latest_playlists = Playlist.objects.order_by('-id')[:5]
+    for playlist in latest_playlists:
+        playlist.cover_url = get_cover_url(playlist.cover)
 
     # top songs at the moment
     top_songs = Song.objects.annotate(
