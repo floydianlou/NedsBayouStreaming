@@ -88,6 +88,9 @@ def profileView(request, username):
     playlists = user_profile.playlists.all()
     liked_songs = user_profile.liked_songs.select_related('artist').all()
 
+    for playlist in playlists:
+        playlist.cover_url = get_cover_url(playlist.cover)
+
     profile_picture_url = get_profile_picture_url(user_profile)
 
     if is_owner:
@@ -211,6 +214,8 @@ def search_results_view(request):
         playlists_qs = playlists_qs.filter(playlist_length_filter)
 
     playlists = playlists_qs.filter(name__icontains=query)
+    for playlist in playlists:
+        playlist.cover_url = get_cover_url(playlist.cover)
 
     # === USERS ===
     likes_params = request.GET.getlist('min_likes')

@@ -1,3 +1,5 @@
+from cloudinary.models import CloudinaryField
+
 from common_functions.utils import crop_image_to_square, crop_image_to_169
 from mutagen import File as MutagenFile
 from users.models import BayouUser
@@ -62,27 +64,19 @@ class Song(models.Model):
 
         crop_image_to_square(self.cover, skip_keyword='default_cover.png')
 
-# PLAYLIST MODEL (WITH IMAGE CROPPING)
+# PLAYLIST MODEL
 class Playlist(models.Model):
     name = models.CharField(max_length=100)
     description = models.TextField(blank=True)
     created_by = models.ForeignKey(BayouUser, on_delete=models.CASCADE, related_name='playlists')
-    cover = models.ImageField(
-        upload_to='playlist_covers/',
-        default=default_playlist_cover,
+    cover = CloudinaryField(
+        default="defaultPlaylistCover_elb8ew.jpg",
         blank=True
     )
     songs = models.ManyToManyField(Song, related_name="playlists", blank=True)
 
     def __str__(self):
         return self.name
-
-    def save(self, *args, **kwargs):
-        if not self.cover:
-            self.cover = default_playlist_cover()
-
-        super().save(*args, **kwargs)
-        crop_image_to_square(self.cover, skip_keyword='defaultPlaylistCover.png')
 
 # RECOMMENDATION MODEL
 class Recommendation(models.Model):

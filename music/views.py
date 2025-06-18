@@ -30,6 +30,7 @@ def create_playlist(request):
 
 def playlist_detail(request, playlist_id):
     playlist = get_object_or_404(Playlist, id=playlist_id)
+    playlist.cover_url = get_cover_url(playlist.cover)
     is_owner = request.user.is_authenticated and playlist.created_by == request.user
 
     if is_owner:
