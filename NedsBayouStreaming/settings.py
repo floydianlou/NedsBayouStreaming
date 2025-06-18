@@ -18,6 +18,17 @@ import cloudinary_storage
 import dj_database_url
 import environ
 
+print("📦 SETTINGS: sto leggendo DEFAULT_FILE_STORAGE...")
+
+CLOUDINARY_STORAGE = {
+    'CLOUD_NAME': 'dliev5zuy',
+    'API_KEY':'427978424534537',
+    'API_SECRET': '6hkZwHzJHI8DqJMTv1tyi5ZNTHY',
+}
+
+DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+
 env = environ.Env()
 environ.Env.read_env()
 
@@ -153,14 +164,10 @@ AUTH_USER_MODEL = 'users.BayouUser'
 
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': 'dliev5zuy',
-    'API_KEY': env('CLOUDINARY_API_KEY', default=''),
-    'API_SECRET': env('CLOUDINARY_API_SECRET', default=''),
+    'API_KEY':'427978424534537',
+    'API_SECRET': '6hkZwHzJHI8DqJMTv1tyi5ZNTHY',
 }
 
-DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
 
-print("📸 CLOUDINARY SETUP")
-print("CLOUD_NAME:", os.environ.get("CLOUDINARY_CLOUD_NAME"))
-print("API_KEY:", os.environ.get("CLOUDINARY_API_KEY"))
-print("API_SECRET:", os.environ.get("CLOUDINARY_API_SECRET"))
-print("DEFAULT_FILE_STORAGE:", DEFAULT_FILE_STORAGE)
+from django.core.files.storage import default_storage
+print("🚨 STORAGE CLASS IN DJANGO:", default_storage.__class__)
