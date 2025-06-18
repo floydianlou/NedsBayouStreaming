@@ -6,10 +6,6 @@ from phonenumber_field.modelfields import PhoneNumberField
 from common_functions.utils import crop_image_to_square
 from django.db import models
 
-from django.conf import settings
-from django.core.files.storage import get_storage_class
-print("📦 FILE STORAGE EFFETTIVO:", get_storage_class(settings.DEFAULT_FILE_STORAGE))
-
 def default_profile_pic():
     return 'profile_pics/defaultPicture.png'
 
