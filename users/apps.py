@@ -6,7 +6,4 @@ class UsersConfig(AppConfig):
     name = 'users'
 
     def ready(self):
-        print("✨ Ready called")
-        from django.contrib.auth import get_user_model
-        print("👀 User model:", get_user_model())
         import users.signals

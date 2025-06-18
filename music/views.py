@@ -71,6 +71,10 @@ def playlist_detail(request, playlist_id):
     else:
         form = None
 
+    for song in playlist.songs.all():
+        song.cover_url = get_song_cover_url(song)
+        song.audio_url = get_song_audio_url(song)
+
     if request.user.is_authenticated:
         profile_picture_url = get_profile_picture_url(request.user)
     else:
@@ -291,6 +295,14 @@ def recommendations_view(request):
     if recs['random_artist']:
         recs['random_artist'].photo_url = get_artist_photo_url(recs['random_artist'])
 
+    for song in recs['recommended_songs']:
+        song.cover_url = get_song_cover_url(song)
+        song.audio_url = get_song_audio_url(song)
+
+    for song in recs['random_songs']:
+        song.cover_url = get_song_cover_url(song)
+        song.audio_url = get_song_audio_url(song)
+
     if request.user.is_authenticated:
         profile_picture_url = get_profile_picture_url(request.user)
     else:
@@ -315,6 +327,10 @@ class SongListView(ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
+
+        for song in context['songs']:
+            song.cover_url = get_song_cover_url(song)
+            song.audio_url = get_song_audio_url(song)
 
         if self.request.user.is_authenticated:
             context['profile_picture_url'] = get_profile_picture_url(self.request.user)

@@ -1,0 +1,49 @@
+.title h1 {
+    font-family: 'Belwe Bold BT', sans-serif;
+    color: white;
+    font-size: 45px;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 0;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.title p {
+    font-family: 'Belwe Bold BT', sans-serif;
+    color: #e4f4f2;
+    font-size: 20px;
+    font-weight: 700;
+    text-align: center;
+}
+
+.container {
+  background-color: black;
+}
+
+footer {
+  margin-top: 0 !important;
+}
+
+h2 {
+    color: white;
+    padding-left: 30px;
+    font-family: 'Belwe Bold BT', sans-serif;
+    font-size: 28px;
+    font-weight: 800;
+}
+
+h2 a  {
+    color: white;
+    text-decoration: none;
+}
+
+.song-grid {
+    padding-left: 40px;
+    padding-right: 40px;
+}

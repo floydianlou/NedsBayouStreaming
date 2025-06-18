@@ -2,11 +2,6 @@ from cloudinary.models import CloudinaryField
 from users.models import BayouUser
 from django.db import models
 
-# DEFAULT COVERS FOR SONG, PLAYLIST AND ARTIST
-def default_audio_file():
-    return 'song_audio/13_Heavydirtysoul_Instrumental.mp3'
-
-
 # GENRE MODEL
 class Genre(models.Model):
     name = models.CharField(max_length=50, unique=True)

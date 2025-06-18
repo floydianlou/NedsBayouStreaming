@@ -4,8 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Case, When, Value, IntegerField, Q
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-
-from common_functions.utils import get_profile_picture_url, get_cover_url, get_artist_photo_url
+from common_functions.utils import get_profile_picture_url, get_cover_url, get_artist_photo_url, get_song_cover_url, \
+    get_song_audio_url
 from music.models import Song, Playlist, Artist, Recommendation, Genre
 from music.recommendations_utilities import update_recommendations
 from music.views import generate_recommendations
@@ -16,6 +16,9 @@ from .models import BayouUser
 def home(request):
     # 8 random songs for catalogue preview
     songs = Song.objects.order_by('?')[:8]
+    for song in songs:
+        song.cover_url = get_song_cover_url(song)
+        song.audio_url = get_song_audio_url(song)
 
     # latest playlists created
     latest_playlists = Playlist.objects.order_by('-id')[:5]
@@ -26,16 +29,21 @@ def home(request):
     top_songs = Song.objects.annotate(
         times_added=Count('playlists')
     ).order_by('-times_added')[:5]
+    for song in top_songs:
+        song.cover_url = get_song_cover_url(song)
+        song.audio_url = get_song_audio_url(song)
 
     # recommended preview
     suggestions = generate_recommendations(request.user)
     preview_artist = suggestions["related_artists"][0] if suggestions["related_artists"] else None
     preview_songs = suggestions["recommended_songs"][:3] if suggestions["recommended_songs"] else []
 
+    for song in preview_songs:
+        song.cover_url = get_song_cover_url(song)
+        song.audio_url = get_song_audio_url(song)
+
     if preview_artist:
         preview_artist.photo_url = get_artist_photo_url(preview_artist)
-
-    default_url = "https://res.cloudinary.com/dliev5zuy/image/upload/v1750204693/defaultPicture_z9uqh8.png"
 
     if request.user.is_authenticated:
         profile_picture_url = get_profile_picture_url(request.user)
@@ -90,6 +98,10 @@ def profileView(request, username):
 
     playlists = user_profile.playlists.all()
     liked_songs = user_profile.liked_songs.select_related('artist').all()
+
+    for song in liked_songs:
+        song.cover_url = get_song_cover_url(song)
+        song.audio_url = get_song_audio_url(song)
 
     for playlist in playlists:
         playlist.cover_url = get_cover_url(playlist.cover)
@@ -233,6 +245,14 @@ def search_results_view(request):
     users = users_qs
     for user in users:
         user.profile_picture_url = get_profile_picture_url(user)
+
+    for song in songs_top:
+        song.cover_url = get_song_cover_url(song)
+        song.audio_url = get_song_audio_url(song)
+
+    for song in songs_other:
+        song.cover_url = get_song_cover_url(song)
+        song.audio_url = get_song_audio_url(song)
 
     for artist in artists_top:
         artist.photo_url = get_artist_photo_url(artist)

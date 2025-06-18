@@ -1,0 +1,156 @@
+.playlist-header {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:  space-between;
+    margin: 20px 40px 30px 20px;
+}
+
+.playlist-left {
+    display: flex;
+    flex-direction: row;
+    gap: 30px;
+    align-items: center;
+}
+
+.playlist-header img {
+    width: 220px;
+    height: 220px;
+    object-fit: cover;
+    border-radius: 12px;
+    box-shadow: 0 0 8px rgba(98, 185, 175, 0.3);
+}
+
+.playlist-header-info h1 {
+    font-family: 'Belwe Bold BT', sans-serif;
+    color: #0c5460;
+    font-size: 35px;
+    font-weight: 900;
+}
+
+.playlist-header-info p {
+    color: black;
+    font-size: 18px;
+    font-weight: 600;
+}
+
+.edit-btns {
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+    align-items: center;
+}
+
+.edit, .delete {
+    width: 90px;
+    height: 45px;
+    text-align: center;
+    background-color: #3a837b;
+    color: white;
+    padding: 10px 0;
+    border-radius: 12px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.edit:hover, .delete:hover {
+    cursor: pointer;
+    background-color: #03363d;
+    transform: scale(1.02);
+}
+
+.song-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    padding: 20px 0;
+}
+
+.edit-playlist-form {
+    background-color: #e4f4f2;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0, 0, 0, 0.1);
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.edit-playlist-form label {
+    font-size: 18px;
+    font-weight: bold;
+    color: #0c5460;
+    margin-bottom: 5px;
+}
+
+.edit-playlist-form input,
+.edit-playlist-form textarea,
+.edit-playlist-form select {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 14px;
+    box-sizing: border-box;
+}
+
+.song-checkboxes ul {
+    list-style: none;
+    margin: 0;
+    padding: 10px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    background: #e6f7f5;
+    border-radius: 8px;
+    max-height: 300px;
+    overflow-y: auto;
+}
+
+.song-checkboxes li label {
+    display: flex;
+    align-items: center;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    padding: 8px 10px;
+    transition: background-color 0.2s ease;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: normal;
+}
+
+.song-checkboxes li label:hover {
+    background-color: #e6f4f3;
+}
+
+.song-checkboxes li label input[type="checkbox"] {
+    margin-right: 10px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.save-btn {
+    background-color: #62b9af;
+    color: white;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    align-self: center;
+    margin-top: 10px;
+}
+
+.save-btn:hover {
+    background-color: #4da89d;
+    transform: scale(1.02);
+}

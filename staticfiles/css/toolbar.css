@@ -59,6 +59,10 @@ body {
 }
 
 .profile-pic {
+    height: 50px;
+    width: 50px;
+    object-fit:  cover;
+    object-position: center center;
     border-radius: 50%;
     border: 2px solid white;
     box-shadow: 0 2px 15px #62b9af;

@@ -1,0 +1,191 @@
+.home-wrapper {
+  display: flex;
+  gap: 20px;
+  padding: 30px;
+}
+
+.home-title {
+    padding-top: 10px;
+    padding-bottom: 0;
+    padding-right: 30px;
+    padding-left: 30px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.home-title h1 {
+    font-family: 'Belwe Bold BT', sans-serif;
+    font-size: 40px;
+    font-weight: 900;
+    color: black;
+}
+
+
+.home-sidebar {
+  flex: 1;
+  background-color: #c2e6e1;
+    padding-top: 2px;
+  padding-left: 10px;
+    padding-right: 20px;
+  border-radius: 15px;
+  box-shadow: 0 0 10px #4da89f;
+}
+
+.home-main-content {
+  flex: 2;
+}
+
+.latest-playlists {
+    padding-left: 5px;
+}
+
+h3 {
+  font-size: 23px;
+  font-weight: 900;
+  color: black;
+    font-family: 'Belwe Bold BT', sans-serif;
+}
+
+.playlist-snippet,
+.song-snippet {
+  margin-bottom: 15px;
+  font-size: 17px;
+}
+
+.playlist-snippet a {
+    padding-bottom: 5px;
+    padding-top: 5px;
+  text-decoration: none;
+  color: #000000;
+  font-weight: 900;
+}
+
+.playlist-snippet a:hover {
+  text-decoration: underline;
+}
+
+.playlist-cover-info {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.playlist-cover {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 1px solid #ccc;
+  transition: transform 0.2s ease;
+}
+
+.playlist-cover:hover {
+  transform: scale(1.05);
+}
+
+.playlist-link {
+  text-decoration: none;
+  color: black;
+}
+
+.playlist-link:hover {
+    transform: scale(1.05);
+  text-decoration: none;
+}
+
+.suggested-block, .suggested-block2 {
+  background-color: #0c5460;
+  border-left: 5px solid #3a837b;
+  padding: 20px;
+  border-radius: 15px;
+  margin-bottom: 30px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+}
+
+.suggested-block2 {
+    margin-bottom: 0;
+}
+
+.suggested-block h3, .suggested-block2 h3 {
+  margin-top: 0;
+  color: white;
+}
+
+.suggested-row {
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 20px;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.suggested-block .btn, .suggested-block2 .btn {
+  display: inline-block;
+  margin-top: 10px;
+  padding: 6px 12px;
+  background-color: white;
+  color: black;
+  text-decoration: none;
+  border-radius: 6px;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease;
+}
+
+.suggested-block .btn:hover, .suggested-block2 .btn:hover {
+  background-color: #aaaaaa;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    max-width: 900px;
+    max-height: 60px;
+    background-color: 	#98d5ce;
+    border: 2px solid #4da89f;
+    border-radius: 25px;
+    box-shadow: 2px 2px 5px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s ease;
+}
+
+.search-bar:hover {
+    box-shadow: 4px 4px 10px rgba(0,0,0,0.1);
+}
+
+.search-bar input[type="text"] {
+    flex: 1;
+    border: none;
+    outline: none;
+    padding: 12px 16px;
+    border-radius: 25px;
+    font-size: 16px;
+    background-color: transparent;
+    color: white;
+}
+
+.search-bar input[type="text"]::placeholder {
+    color: white;
+}
+
+.search-bar button {
+    background-color: #3a837b;
+    border: none;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    margin: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 18px;
+    transition: background-color 0.2s ease;
+}
+
+.search-bar button:hover {
+    background-color: #0c5460;
+}

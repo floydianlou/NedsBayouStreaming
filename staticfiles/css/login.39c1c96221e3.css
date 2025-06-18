@@ -1,0 +1,69 @@
+main h1 {
+    max-width: 400px;
+    text-align: center;
+    margin: 50px auto 20px;
+    color: #2aa198;
+    font-size: 2em;
+}
+
+main .formcontainer {
+    max-width: 400px;
+    margin-left: auto;
+    margin-right: auto;
+    background-color: white;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+main form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+main label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    text-align: left;
+}
+
+main input {
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+main button {
+    padding: 12px;
+    font-size: 1em;
+    background-color: #2aa198;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+main button:hover {
+    background-color: #238b81;
+}
+
+main p {
+    margin-top: 15px;
+    font-size: 0.9em;
+}
+
+main p a {
+    color: #2aa198;
+    text-decoration: none;
+}
+
+main p a:hover {
+    text-decoration: underline;
+}

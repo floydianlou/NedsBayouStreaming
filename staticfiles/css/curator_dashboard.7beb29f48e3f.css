@@ -1,0 +1,197 @@
+.curator-wrapper h1 {
+    color: #0c5460;
+    font-size: 40px;
+    font-weight: 900;
+    font-family: 'Belwe Bold BT', sans-serif;
+    text-align: center;
+}
+
+.curator-wrapper h2 {
+    color: #0c5460;
+    margin-bottom: 20px;
+    font-size: 28px;
+    font-weight: 700;
+    font-family: 'Belwe Bold BT', sans-serif;
+    text-align: center;
+}
+
+.curator-wrapper .curator-form-box {
+    flex: 1;
+    max-width: 400px;
+    background-color: #e4f4f2;
+    border-radius: 12px;
+    box-shadow: 0 0 10px #3a837b;
+    padding: 20px;
+}
+
+.curator-wrapper .curator-form-box h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 30px;
+    text-align: center;
+}
+
+.curator-wrapper .curator-form-box form {
+    align-self: stretch;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+}
+
+.curator-wrapper .curator-form-box label {
+    font-weight: bold;
+    color: black;
+    font-size: 15px;
+}
+
+.curator-wrapper .curator-form-box input[type="text"],
+.curator-wrapper .curator-form-box input[type="file"],
+.curator-wrapper .curator-form-box input[type="number"],
+.curator-wrapper .curator-form-box input[type="duration"],
+.curator-wrapper .curator-form-box textarea,
+.curator-wrapper .curator-form-box select {
+    width: 85%;
+    padding: 8px;
+    border: 1px solid #b4e2dd;
+    border-radius: 6px;
+    font-size: 14px;
+}
+
+.curator-wrapper .curator-form-box .checkbox {
+    margin-left: 10px;
+}
+
+.curator-wrapper .curator-form-box button {
+    background-color: #62b9af;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.curator-wrapper .curator-form-box button:hover {
+    background-color: #4a958d;
+}
+
+.curator-wrapper .messages {
+    margin-bottom: 15px;
+}
+
+.curator-wrapper .message {
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-weight: bold;
+    margin-bottom: 10px;
+    border: 1px solid;
+    transition: opacity 0.5s ease;
+}
+
+.curator-wrapper .message.success {
+    background-color: #e0f7f5;
+    color: #155f5b;
+    border-color: #62b9af;
+}
+
+.curator-wrapper .message.info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+    border-color: #bee5eb;
+}
+
+.curator-wrapper .message.warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border-color: #ffeeba;
+}
+
+.curator-wrapper .message.error {
+    background-color: #e4f4f2;
+    color: #0c5460;
+    border-color: #0c5460;
+}
+
+.curator-wrapper .dashboard-columns {
+    display: flex;
+    justify-content: space-around;
+    gap: 35px;
+    padding: 20px 60px;
+    flex-wrap: wrap;
+}
+
+.curator-wrapper .dashboard-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+    gap: 20px;
+}
+
+.curator-wrapper .curator-list-box table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 10px;
+    font-size: 14px;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.curator-wrapper .curator-list-box th,
+.curator-wrapper .curator-list-box td {
+    border: 1px solid #b4e2dd;
+    padding: 10px;
+    text-align: center;
+}
+
+.curator-wrapper .curator-list-box th {
+    background-color: #d4f3f0;
+    color: #0c5460;
+    font-size: 15px;
+    font-family: 'Belwe Bold BT', sans-serif;
+    font-weight: bold;
+}
+
+.curator-wrapper .curator-list-box tr:nth-child(even) {
+    background-color: #f7fffe;
+}
+
+.curator-wrapper .curator-list-box tr:hover {
+    background-color: #e4f4f2;
+    transition: background-color 0.3s ease;
+}
+
+.curator-wrapper .curator-list-box button {
+    background: none;
+    border: none;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 4px;
+}
+
+.curator-wrapper .curator-list-box a {
+    text-decoration: none;
+    font-size: 16px;
+    margin-right: 8px;
+}
+
+.curator-wrapper .curator-list-box a:hover,
+.curator-wrapper .curator-list-box button:hover {
+    transform: scale(1.1);
+    transition: transform 0.2s ease;
+}
+
+.curator-wrapper .curator-list-box i {
+    font-size: 16px;
+    color: #0c5460;
+    margin: 0 4px;
+    transition: transform 0.2s ease;
+}
+
+.curator-wrapper .curator-list-box i:hover {
+    transform: scale(1.2);
+    color: #155f5b;
+}
