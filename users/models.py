@@ -6,7 +6,7 @@ from common_functions.utils import crop_image_to_square
 from django.db import models
 
 def default_profile_pic():
-    return 'https://res.cloudinary.com/dliev5zuy/image/upload/v1750204693/defaultPicture_z9uqh8.png'
+    return 'profile_pics/defaultPicture.png'
 
 class BayouUser(AbstractUser):
     email = models.EmailField(unique=True)
@@ -22,11 +22,3 @@ class BayouUser(AbstractUser):
 
     def __str__(self):
         return self.username
-
-    def save(self, *args, **kwargs):
-            if not self.profile_picture:
-                self.profile_picture = default_profile_pic()
-            super().save(*args, **kwargs)
-
-
-       # crop_image_to_square(self.profile_picture, skip_filename='defaultPicture.png')
