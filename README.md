@@ -5,20 +5,20 @@ The website takes inspiration from all the currently famous streaming platforms 
 On Ned's Bayou you automatically start with a Listener role, which can do all previously listed activities; if you're not logged in, you'll still be able to browse the website and see other people's profiles and playlist creations, but you won't be able to like songs or create your own playlists.
 By using the Django Administration Panel, some accounts can also cover a Curator role and access the "Curator Dashboard" to add, edit or delete all songs, artists and genres.
 
-> All songs use the same track as to not violate any copyright laws. I used an instrumental version of [Heavydirtysoul by Twenty One Pilots](https://www.youtube.com/watch?v=lzXRdS9cynQ) which I found for free on multiple Reddit threads and online.
+> All songs use the same tracks as to not violate any copyright laws. I used an instrumental version of [Heavydirtysoul by Twenty One Pilots](https://www.youtube.com/watch?v=lzXRdS9cynQ) and an instrumental version of [Jumpsuit by Twenty One Pilots](https://www.youtube.com/watch?v=UOUBW8bkjQ4) which I found for free on multiple Reddit threads and online.
 
 ## WEBSITE FUNCTIONALITIES
 **Ned's Bayou** offers the following functionalities, listed in no particular order:
 
 - **Creating a personalised account** with a profile picture, a small bio, a possible favorite artist and an international phone number;
-- Viewing your profile, editing some of the associated data, viewing and managing your likes and your playlist creations;
-- Viewing other people's profiles and playlists;
-- Browsing the app's full catalogue sorted by artist, searching for a specific song or artist and viewing personalised recommendations;
-- Viewing an artist page, their provided biography, their entire music catalogue on the app and some randomly selected highlights;
-- Seeing the top five most used songs in playlists at the moment and the latest playlist creations;
-- Searching for terms and filtering by genre, playlist length or user likes to find what you are really looking for;
-- Playing a song from the song player, liking it or adding it with the quick add feature to a playlist you already created;
-- Creating a playlist from scratch, with customising options like a title, a description and a playlist cover.
+- **Viewing your profile**, editing some of the associated data, viewing and managing your likes and your playlist creations;
+- Viewing **other people's profiles** and playlists;
+- Browsing the app's **full catalogue sorted by artist**, **searching** for a specific song or artist and viewing **personalised recommendations**;
+- Viewing an **artist page**, their provided biography, their entire music catalogue on the app and some randomly selected highlights;
+- Seeing the **top five most used songs** in playlists at the moment and the **latest playlist creations**;
+- Searching for terms and **filtering by genre, playlist length or user likes** to find what you are really looking for;
+- Playing a song from the song player, **liking it or adding it with the quick add** feature to a playlist you already created;
+- **Creating a playlist** from scratch, with customising options like a title, a description and a playlist cover.
 
 *For Curators only:*
 - Adding, editing or deleting a music genre, with a unique name and an optional description (**NOTE: deleting a genre will result in the loss of all artists with that one single genre associated**);
