@@ -6,6 +6,8 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.db.models import Q, Count
 from django.views.generic import ListView, UpdateView
+
+from common_functions.utils import get_cover_url
 from music.forms import PlaylistForm, PlaylistUpdateForm, GenreForm, ArtistAdminForm, SongForm
 from music.models import Song, Playlist, Artist, Recommendation, Genre
 from music.recommendations_utilities import update_recommendations, get_random_recommendations, get_random_songs, is_curator
