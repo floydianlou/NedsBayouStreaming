@@ -119,6 +119,7 @@ def profileView(request, username):
         'form': form,
         'playlists': playlists,
         'liked_songs': liked_songs,
+        'profile_picture_url': profile_picture_url,
     })
 
 @login_required
