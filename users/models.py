@@ -12,7 +12,7 @@ from django.db import models
 class BayouUser(AbstractUser):
     email = models.EmailField(unique=True)
     profile_picture = CloudinaryField(
-        default='defaultPicture_z9uqh8',
+        default='defaultPicture_z9uqh8.png',
         blank=True
     )
     short_bio = models.TextField(blank=True)

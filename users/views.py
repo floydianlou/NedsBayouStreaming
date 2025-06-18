@@ -76,6 +76,23 @@ def profileView(request, username):
     playlists = user_profile.playlists.all()
     liked_songs = user_profile.liked_songs.select_related('artist').all()
 
+    default_url = "https://res.cloudinary.com/dliev5zuy/image/upload/v1750204693/defaultPicture_z9uqh8.png"
+
+    try:
+        original_url = user_profile.profile_picture.url
+    except:
+        original_url = default_url
+
+    if not original_url.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')):
+        original_url += '.png'
+
+    if '/upload/' in original_url:
+        profile_picture_url = original_url.replace(
+            '/upload/', '/upload/ar_1:1,c_auto,g_auto,w_300,r_max/'
+        )
+    else:
+        profile_picture_url = original_url
+
     if is_owner:
         if request.method == 'POST':
             old_favorite = user_profile.favorite_artist
