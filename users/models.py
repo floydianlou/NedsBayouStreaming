@@ -12,7 +12,6 @@ from django.db import models
 class BayouUser(AbstractUser):
     email = models.EmailField(unique=True)
     profile_picture = CloudinaryField(
-        upload_to='profile_pics/',
         default='defaultPicture_z9uqh8',
         blank=True
     )
