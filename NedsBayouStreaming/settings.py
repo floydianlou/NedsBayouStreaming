@@ -32,7 +32,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-&m0$dtmrj9p9hp#1+4q!)n0*)ut3=5pc66cm$l)o6*+buuz2y7'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = env('DEBUG', default=True)
 
 ALLOWED_HOSTS = ['*']
 
@@ -158,3 +158,9 @@ CLOUDINARY_STORAGE = {
 }
 
 DEFAULT_FILE_STORAGE = 'cloudinary_storage.storage.MediaCloudinaryStorage'
+
+print("📸 CLOUDINARY SETUP")
+print("CLOUD_NAME:", os.environ.get("CLOUDINARY_CLOUD_NAME"))
+print("API_KEY:", os.environ.get("CLOUDINARY_API_KEY"))
+print("API_SECRET:", os.environ.get("CLOUDINARY_API_SECRET"))
+print("DEFAULT_FILE_STORAGE:", DEFAULT_FILE_STORAGE)
