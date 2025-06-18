@@ -32,6 +32,7 @@ class Song(models.Model):
     title = models.CharField(max_length=100)
     artist = models.ForeignKey(Artist, on_delete=models.CASCADE, related_name='songs')
     audio_file = CloudinaryField(
+        resource_type='video',
         default="HDS_-_DEMO_ldyoty.mp3",
         blank=True)
     cover = CloudinaryField(
