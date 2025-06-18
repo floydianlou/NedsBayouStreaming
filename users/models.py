@@ -2,21 +2,18 @@ import os
 from urllib.request import urlopen
 
 from PIL import Image
-from cloudinary_storage.storage import MediaCloudinaryStorage
+from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import AbstractUser
 from django.core.files.base import ContentFile
 from phonenumber_field.modelfields import PhoneNumberField
 from common_functions.utils import crop_image_to_square
 from django.db import models
 
-def default_profile_pic():
-    return 'profile_pics/defaultPicture.png'
-
 class BayouUser(AbstractUser):
     email = models.EmailField(unique=True)
-    profile_picture = models.ImageField(
+    profile_picture = CloudinaryField(
         upload_to='profile_pics/',
-        default=default_profile_pic,
+        default='defaultPicture_z9uqh8',
         blank=True
     )
     short_bio = models.TextField(blank=True)
@@ -28,9 +25,4 @@ class BayouUser(AbstractUser):
         return self.username
 
     def save(self, *args, **kwargs):
-        is_default = not self.profile_picture or self.profile_picture.name == default_profile_pic()
-
         super().save(*args, **kwargs)
-
-        if not is_default:
-            crop_image_to_square(self.profile_picture)

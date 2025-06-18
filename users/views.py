@@ -76,6 +76,14 @@ def profileView(request, username):
     playlists = user_profile.playlists.all()
     liked_songs = user_profile.liked_songs.select_related('artist').all()
 
+    original_url = user_profile.profile_picture.url if user_profile.profile_picture else ''
+    if '/upload/' in original_url:
+        profile_picture_url = original_url.replace(
+            '/upload/', '/upload/ar_1:1,c_auto,g_auto,w_500/r_max/'
+        )
+    else:
+        profile_picture_url = original_url
+
     if is_owner:
         if request.method == 'POST':
             old_favorite = user_profile.favorite_artist

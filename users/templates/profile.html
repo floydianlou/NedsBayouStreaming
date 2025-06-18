@@ -1,21 +1,16 @@
 {% extends 'toolbar.html' %}
 {% load static %}
+{% load cloudinary %}
 {% block extrahead %}
-    {% load cloudinary %}
     <link rel="stylesheet" href="{% static 'css/common_items.css' %}">
     <link rel="stylesheet" href="{% static 'css/profile.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
 {% endblock %}
 
 {% block content %}
-    <div class="profile-container">
-        {% if user_profile.profile_picture and user_profile.profile_picture.name %}
-            {% cloudinary user_profile.profile_picture.public_id width=800 height=800 crop="fill" gravity="auto" as profile_url %}
-            <img src="{{ profile_url }}" alt="Profile Picture" class="pickypicture">
-        {% else %}
-            <img src="https://res.cloudinary.com/dliev5zuy/image/upload/v1750204693/defaultPicture_z9uqh8.png"
-                 alt="Default Profile Picture" class="pickypicture">
-        {% endif %}
+<div class="profile-container">
+        <img src="{{ profile_picture_url }}" alt="Profile Picture" class="pickypicture">
+
         <div class="profile-info">
             <h1>{{ user_profile.username }}'s profile</h1>
 
