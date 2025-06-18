@@ -1,12 +1,6 @@
-import os
-from urllib.request import urlopen
-
-from PIL import Image
 from cloudinary.models import CloudinaryField
 from django.contrib.auth.models import AbstractUser
-from django.core.files.base import ContentFile
 from phonenumber_field.modelfields import PhoneNumberField
-from common_functions.utils import crop_image_to_square
 from django.db import models
 
 class BayouUser(AbstractUser):

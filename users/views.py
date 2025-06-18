@@ -4,6 +4,8 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Case, When, Value, IntegerField, Q
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
+
+from common_functions.utils import get_profile_picture_url
 from music.models import Song, Playlist, Artist, Recommendation, Genre
 from music.recommendations_utilities import update_recommendations
 from music.views import generate_recommendations
@@ -28,12 +30,20 @@ def home(request):
     preview_artist = suggestions["related_artists"][0] if suggestions["related_artists"] else None
     preview_songs = suggestions["recommended_songs"][:3] if suggestions["recommended_songs"] else []
 
+    default_url = "https://res.cloudinary.com/dliev5zuy/image/upload/v1750204693/defaultPicture_z9uqh8.png"
+
+    if request.user.is_authenticated:
+        profile_picture_url = get_profile_picture_url(request.user)
+    else:
+        profile_picture_url = get_profile_picture_url(None)
+
     return render(request, 'home.html', {
         'songs': songs,
         'latest_playlists': latest_playlists,
         'top_songs': top_songs,
         'preview_artist': preview_artist,
         'preview_songs': preview_songs,
+        'profile_picture_url': profile_picture_url,
     })
 
 def register(request):
@@ -76,22 +86,7 @@ def profileView(request, username):
     playlists = user_profile.playlists.all()
     liked_songs = user_profile.liked_songs.select_related('artist').all()
 
-    default_url = "https://res.cloudinary.com/dliev5zuy/image/upload/v1750204693/defaultPicture_z9uqh8.png"
-
-    try:
-        original_url = user_profile.profile_picture.url
-    except:
-        original_url = default_url
-
-    if not original_url.lower().endswith(('.png', '.jpg', '.jpeg', '.webp')):
-        original_url += '.png'
-
-    if '/upload/' in original_url:
-        profile_picture_url = original_url.replace(
-            '/upload/', '/upload/ar_1:1,c_auto,g_auto,w_300,r_max/'
-        )
-    else:
-        profile_picture_url = original_url
+    profile_picture_url = get_profile_picture_url(user_profile)
 
     if is_owner:
         if request.method == 'POST':

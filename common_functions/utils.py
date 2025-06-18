@@ -65,3 +65,14 @@ def crop_image_to_169(image_field, skip_filename=None):
             img_cropped.save(image_field.path)
     except Exception as e:
         print("Error cropping image:", e)
+
+def get_profile_picture_url(user):
+    default_url = "https://res.cloudinary.com/dliev5zuy/image/upload/f_auto/v1750204693/defaultPicture_z9uqh8"
+
+    try:
+        url = user.profile_picture.url
+    except Exception:
+        url = default_url
+    if '/upload/' in url and 'f_auto' not in url:
+           url = url.replace('/upload/', '/upload/f_auto/')
+    return url
