@@ -1,5 +1,6 @@
 {% extends 'toolbar.html' %}
 {% load static %}
+{%  load cloudinary %}
 
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'css/common_items.css' %}">
@@ -10,7 +11,14 @@
 {% block content %}
     <div class="container">
         <div class="artist-banner">
-            <img src="{{ artist.photo.url }}" alt="{{ artist.name }}">
+            {% if artist.photo %}
+                {% cloudinary artist.photo.name width=1280 height=720 crop="fill" gravity="auto" as artist_url %}
+                    <img src="{{ artist_url }}" alt="{{ artist.name }}">
+                {% endcloudinary %}
+            {% else %}
+                <img src="https://res.cloudinary.com/dliev5zuy/image/upload/v1750249305/default_artist_vtyuz5.png"
+                     alt="Default artist image">
+            {% endif %}
             <div class="banner-overlay">
                 <h1>{{ artist.name }}</h1>
             </div>

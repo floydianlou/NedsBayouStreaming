@@ -1,4 +1,5 @@
 {% extends 'toolbar.html' %}
+{% load cloudinary %}
 {% load static %}
 
 {% block extrahead %}
@@ -11,7 +12,13 @@
 {% block content %}
     <div class="playlist-header">
         <div class="playlist-left">
-            <img src="{{ playlist.cover.url }}" alt="{{ playlist.name }}'s cover">
+            {% if playlist.cover %}
+            {% cloudinary playlist.cover.name width=250 height=250 crop="fill" as cover_url %}
+                <img src="{{ cover_url }}" alt="Cover of {{ playlist.name }}">
+            {% endcloudinary %}
+        {% else %}
+            <img src="https://res.cloudinary.com/dliev5zuy/image/upload/v1750248957/defaultPlaylistCover_elb8ew.jpg" alt="Default Cover">
+        {% endif %}
             <div class="playlist-header-info">
                 <h1>{{ playlist.name }}</h1>
                 {% if playlist.description %}
