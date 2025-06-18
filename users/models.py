@@ -29,7 +29,7 @@ class BayouUser(AbstractUser):
 
     def save(self, *args, **kwargs):
         if not self.profile_picture:
-            default_url = "https://res.cloudinary.com/dliev5zuy/image/upload/v1750204693/defaultPicture.png"
+            default_url = "https://res.cloudinary.com/dliev5zuy/image/upload/v1750204693/defaultPicture_z9uqh8.png"
             response = urlopen(default_url)
             image_data = response.read()
             self.profile_picture.save("defaultPicture.png", ContentFile(image_data), save=False)
