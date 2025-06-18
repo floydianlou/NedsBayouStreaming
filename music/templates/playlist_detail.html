@@ -39,9 +39,9 @@
     </div>
 
     <div id="song-list">
-        {% if playlist.songs.exists %}
+        {% if songs %}
             <div class="song-grid">
-                {% for song in playlist.songs.all %}
+                {% for song in songs %}
                     {% include "song_card.html" with song=song %}
                 {% endfor %}
             </div>

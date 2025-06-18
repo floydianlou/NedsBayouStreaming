@@ -163,69 +163,65 @@ def build_match_score(field, top_genres):
 
 def search_results_view(request):
     query = request.GET.get('q', '')
-
     genre_names = request.GET.getlist('genre')
-
-    genres = Genre.objects.all()
     selected_genres = Genre.objects.filter(name__in=genre_names) if genre_names else []
+    genres = Genre.objects.all()
 
     length_params = request.GET.getlist('length')
     selected_lengths = length_params
 
     top_genres_ordered = []
-
     if request.user.is_authenticated:
         top_recommendations = Recommendation.objects.filter(
             user=request.user, score__gt=0
         ).order_by('-score')[:3]
-
         top_genres_ordered = [rec.genre for rec in top_recommendations]
 
-    # === SONGS + FILTER ===
+    # === SONGS ===
     songs_qs = Song.objects.filter(title__icontains=query)
     if selected_genres:
         songs_qs = songs_qs.filter(artist__genres__in=selected_genres)
 
-    songs_qs = songs_qs.distinct()
-
     if top_genres_ordered:
-        songs_top = songs_qs.filter(artist__genres__in=top_genres_ordered).annotate(
+        songs_top = songs_qs.filter(
+            artist__genres__in=top_genres_ordered
+        ).annotate(
             match_score=build_match_score('artist__genres', top_genres_ordered)
-        ).order_by('-match_score', 'title').distinct()
+        ).order_by('-match_score', 'title').distinct('id')
 
-        songs_other = songs_qs.exclude(artist__genres__in=top_genres_ordered).order_by('title')
+        songs_other = songs_qs.exclude(
+            artist__genres__in=top_genres_ordered
+        ).order_by('title').distinct('id')
     else:
         songs_top = Song.objects.none()
-        songs_other = songs_qs.order_by('title').distinct()
+        songs_other = songs_qs.order_by('title').distinct('id')
 
     # === ARTISTS ===
     artists_qs = Artist.objects.filter(name__icontains=query)
     if selected_genres:
         artists_qs = artists_qs.filter(genres__in=selected_genres)
 
-    artists_qs = artists_qs.distinct()
-
     if top_genres_ordered:
-        artists_top = artists_qs.filter(genres__in=top_genres_ordered).annotate(
+        artists_top = artists_qs.filter(
+            genres__in=top_genres_ordered
+        ).annotate(
             match_score=build_match_score('genres', top_genres_ordered)
-        ).order_by('-match_score', 'name').distinct()
+        ).order_by('-match_score', 'name').distinct('id')
 
-        artists_other = artists_qs.exclude(genres__in=top_genres_ordered).order_by('name').distinct()
+        artists_other = artists_qs.exclude(
+            genres__in=top_genres_ordered
+        ).order_by('name').distinct('id')
     else:
         artists_top = Artist.objects.none()
-        artists_other = artists_qs.order_by('name').distinct()
+        artists_other = artists_qs.order_by('name').distinct('id')
 
-    # === PLAYLIST & USER ===
-
+    # === PLAYLISTS ===
     playlists_qs = Playlist.objects.annotate(song_count=Count('songs'))
     playlist_length_filter = Q()
-
     if 'short' in selected_lengths:
         playlist_length_filter |= Q(song_count__lte=5)
-
     if 'medium' in selected_lengths:
         playlist_length_filter |= Q(song_count__gte=6, song_count__lte=15)
-
     if 'long' in selected_lengths:
         playlist_length_filter |= Q(song_count__gte=16)
 
@@ -240,8 +236,9 @@ def search_results_view(request):
     likes_params = request.GET.getlist('min_likes')
     selected_min_likes = [int(val) for val in likes_params if val.isdigit()]
 
-    users_qs = BayouUser.objects.filter(username__icontains=query).annotate(like_count=Count('liked_songs'))
-
+    users_qs = BayouUser.objects.filter(username__icontains=query).annotate(
+        like_count=Count('liked_songs')
+    )
     if selected_min_likes:
         max_selected = max(selected_min_likes)
         users_qs = users_qs.filter(like_count__gte=max_selected)
@@ -250,28 +247,17 @@ def search_results_view(request):
     for user in users:
         user.profile_picture_url = get_profile_picture_url(user)
 
-    for song in songs_top:
+    # === URLS for audio & cover ===
+    for song in list(songs_top) + list(songs_other):
         song.cover_url = get_song_cover_url(song)
         song.audio_url = get_song_audio_url(song)
 
-    for song in songs_other:
-        song.cover_url = get_song_cover_url(song)
-        song.audio_url = get_song_audio_url(song)
-
-    for artist in artists_top:
+    for artist in list(artists_top) + list(artists_other):
         artist.photo_url = get_artist_photo_url(artist)
 
-    for artist in artists_other:
-        artist.photo_url = get_artist_photo_url(artist)
+    profile_picture_url = get_profile_picture_url(request.user) if request.user.is_authenticated else get_profile_picture_url(None)
 
-    if request.user.is_authenticated:
-        profile_picture_url = get_profile_picture_url(request.user)
-    else:
-        profile_picture_url = get_profile_picture_url(None)
-
-    is_personalized = bool(top_genres_ordered)
-
-    context = {
+    return render(request, 'search_results.html', {
         'query': query,
         'songs_top': songs_top,
         'songs_other': songs_other,
@@ -279,15 +265,13 @@ def search_results_view(request):
         'artists_other': artists_other,
         'playlists': playlists,
         'users': users,
-        'is_personalized': is_personalized,
+        'is_personalized': bool(top_genres_ordered),
         'genres': genres,
         'selected_genre_names': genre_names,
         'selected_lengths': selected_lengths,
         'selected_min_likes': selected_min_likes,
         'profile_picture_url': profile_picture_url,
-    }
-
-    return render(request, 'search_results.html', context)
+    })
 
 from django.http import HttpResponse
 from django.core.management import call_command
