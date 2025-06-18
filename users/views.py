@@ -186,30 +186,34 @@ def search_results_view(request):
     if selected_genres:
         songs_qs = songs_qs.filter(artist__genres__in=selected_genres)
 
-    if top_genres_ordered:
+    songs_qs = songs_qs.distinct()
 
+    if top_genres_ordered:
         songs_top = songs_qs.filter(artist__genres__in=top_genres_ordered).annotate(
             match_score=build_match_score('artist__genres', top_genres_ordered)
-        ).distinct().order_by('-match_score', 'title')
+        ).order_by('-match_score', 'title').distinct()
 
         songs_other = songs_qs.exclude(artist__genres__in=top_genres_ordered).order_by('title')
     else:
         songs_top = Song.objects.none()
-        songs_other = songs_qs.order_by('title')
+        songs_other = songs_qs.order_by('title').distinct()
 
     # === ARTISTS ===
     artists_qs = Artist.objects.filter(name__icontains=query)
     if selected_genres:
         artists_qs = artists_qs.filter(genres__in=selected_genres)
 
+    artists_qs = artists_qs.distinct()
+
     if top_genres_ordered:
         artists_top = artists_qs.filter(genres__in=top_genres_ordered).annotate(
             match_score=build_match_score('genres', top_genres_ordered)
-        ).distinct().order_by('-match_score', 'name')
-        artists_other = artists_qs.exclude(genres__in=top_genres_ordered).distinct().order_by('name')
+        ).order_by('-match_score', 'name').distinct()
+
+        artists_other = artists_qs.exclude(genres__in=top_genres_ordered).order_by('name').distinct()
     else:
         artists_top = Artist.objects.none()
-        artists_other = artists_qs.distinct().order_by('name')
+        artists_other = artists_qs.order_by('name').distinct()
 
     # === PLAYLIST & USER ===
 

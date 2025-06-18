@@ -71,9 +71,12 @@ def playlist_detail(request, playlist_id):
     else:
         form = None
 
+    playlist_songs = []
+
     for song in playlist.songs.all():
         song.cover_url = get_song_cover_url(song)
         song.audio_url = get_song_audio_url(song)
+        playlist_songs.append(song)
 
     if request.user.is_authenticated:
         profile_picture_url = get_profile_picture_url(request.user)
@@ -82,6 +85,7 @@ def playlist_detail(request, playlist_id):
 
     return render(request, 'playlist_detail.html', {
         'playlist': playlist,
+        'songs': playlist_songs,
         'is_owner': is_owner,
         'form': form,
         'profile_picture_url': profile_picture_url,
