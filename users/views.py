@@ -5,7 +5,7 @@ from django.db.models import Count, Case, When, Value, IntegerField, Q
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
 
-from common_functions.utils import get_profile_picture_url, get_cover_url
+from common_functions.utils import get_profile_picture_url, get_cover_url, get_artist_photo_url
 from music.models import Song, Playlist, Artist, Recommendation, Genre
 from music.recommendations_utilities import update_recommendations
 from music.views import generate_recommendations
@@ -31,6 +31,9 @@ def home(request):
     suggestions = generate_recommendations(request.user)
     preview_artist = suggestions["related_artists"][0] if suggestions["related_artists"] else None
     preview_songs = suggestions["recommended_songs"][:3] if suggestions["recommended_songs"] else []
+
+    if preview_artist:
+        preview_artist.photo_url = get_artist_photo_url(preview_artist)
 
     default_url = "https://res.cloudinary.com/dliev5zuy/image/upload/v1750204693/defaultPicture_z9uqh8.png"
 
@@ -228,6 +231,14 @@ def search_results_view(request):
         users_qs = users_qs.filter(like_count__gte=max_selected)
 
     users = users_qs
+    for user in users:
+        user.profile_picture_url = get_profile_picture_url(user)
+
+    for artist in artists_top:
+        artist.photo_url = get_artist_photo_url(artist)
+
+    for artist in artists_other:
+        artist.photo_url = get_artist_photo_url(artist)
 
     is_personalized = bool(top_genres_ordered)
 

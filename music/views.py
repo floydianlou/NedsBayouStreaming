@@ -7,7 +7,7 @@ from django.views.decorators.http import require_POST
 from django.db.models import Q, Count
 from django.views.generic import ListView, UpdateView
 
-from common_functions.utils import get_cover_url
+from common_functions.utils import get_cover_url, get_artist_photo_url
 from music.forms import PlaylistForm, PlaylistUpdateForm, GenreForm, ArtistAdminForm, SongForm
 from music.models import Song, Playlist, Artist, Recommendation, Genre
 from music.recommendations_utilities import update_recommendations, get_random_recommendations, get_random_songs, is_curator
@@ -29,7 +29,7 @@ def create_playlist(request):
         form = PlaylistForm()
     return render(request, 'create_playlist.html', {'form': form})
 
-
+# UPDATED
 def playlist_detail(request, playlist_id):
     playlist = get_object_or_404(Playlist, id=playlist_id)
     playlist.cover_url = get_cover_url(playlist.cover)
@@ -125,6 +125,7 @@ def add_song_to_playlist(request):
 
 def artist_detail(request, artist_id):
     artist = get_object_or_404(Artist, id=artist_id)
+    artist.photo_url = get_artist_photo_url(artist)
     all_songs = artist.songs.all()
     highlights = random.sample(list(all_songs), min(len(all_songs), 5))
 
@@ -249,8 +250,15 @@ def generate_recommendations(user):
         "random_songs": random_songs
     }
 
+# UPDATED
 def recommendations_view(request):
     recs = generate_recommendations(request.user)
+
+    for artist in recs['related_artists']:
+        artist.photo_url = get_artist_photo_url(artist)
+
+    if recs['random_artist']:
+        recs['random_artist'].photo_url = get_artist_photo_url(recs['random_artist'])
 
     return render(request, 'recommendations.html', {
         'related_artists': recs['related_artists'],

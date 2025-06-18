@@ -88,3 +88,14 @@ def get_cover_url(cover_field):
     if '/upload/' in url:
         return url.replace('/upload/', '/upload/f_auto,c_fill/')
     return url
+
+def get_artist_photo_url(artist):
+    default_url = "https://res.cloudinary.com/dliev5zuy/image/upload/v1750249305/default_artist_vtyuz5.png"
+
+    try:
+        url = artist.photo.url
+    except Exception:
+        url = default_url
+    if '/upload/' in url and 'f_auto' not in url:
+        url = url.replace('/upload/', '/upload/f_auto/')
+    return url
