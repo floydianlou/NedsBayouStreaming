@@ -1,4 +1,4 @@
-# *NED'S BAYOU - MUSIC STREAMING SERVICE*
+# *[NED'S BAYOU - MUSIC STREAMING SERVICE](https://nedsbayoustreaming-production.up.railway.app/)*
 
 **Ned's Bayou** is a simulated music streaming service made with Django for a [University project](https://www.ing-inl.unifi.it/vp-130-terzo-anno.html#).
 The website takes inspiration from all the currently famous streaming platforms for styling and main functionalities and tries to replicate the most common features: making, creating and editing an account, liking songs, creating playlists and browsing a catalogue either by seeing personalised recommendations, a full list of songs or by searching a term on the search bar.
@@ -49,7 +49,7 @@ All scores are stored in a model that links each user to each genre, making them
 On the **Search Results** page, the website offers a few filters to sort through query results: you can always choose a tab between *Songs*, *Artists*, *Playlists* and *Users*, on which you will also find a **Genre filtering** when looking at the first two tabs, a **Playlist length** filter for the third one and a **Number of likes** feature for the last one.
 
 ### IMAGE AND AUDIO MANAGEMENT
-On **Ned's Bayou**, the user is able to choose between personalising their profile and playlists or to leave a default cover and default profile picture. Removing an added picture will at any time change it to the default one. For *Curators*, an artist or song pictures can be left blank and will be replaced by the default ones; to be coherent, the only space that can not be left blank is the audio file for a song, since it'd be counterproductive to add a song with a default audio file on a streaming platform!
+On **Ned's Bayou**, the user is able to choose between personalising their profile and playlists or to leave a default cover and default profile picture. Removing an added picture will at any time change it to the default one. For *Curators*, an artist or song pictures can be left blank and will be replaced by the default ones; to be coherent, the only space that can not be left blank is the audio file for a song, since it'd be counterproductive to add a song with a default audio file on a streaming platform! All images are managed by Cloudinary, both on production side and on Railway.
 
 ___________
 ## HOW TO USE NED'S BAYOU
@@ -70,16 +70,22 @@ When the Curator edits an element, the editing form will appear at the top of th
 2. **Deleting an artist** will result in all songs associated with that artist to be deleted (hence the score deduction), and 5 more points deducted from scores of all users who had that artist as their favorite;
 3. **Deleting a genre** will result in all Recommendations rows associated to be deleted and in all artists which only have that single genre associated to be deleted (and scores will disappear).
 
-> On the db.sqlite3 database provided I left one Curator account with the following credentials, as to allow testing of the Curator Dashboard:
+> On the db.sqlite3 database provided and on the PostGres one online I left one Curator account with the following credentials, as to allow testing of the Curator Dashboard:
  
 _**Username: alice
-Password: alice
+Password: strongPassword012
 Can also access /admin of Django Administration.**_
+
+> Another account to test things (Listener role):
+
+_**Username: iamclancy
+Password: testAccount1234
+Can not access /admin of Django Administration.**_
+
+The web app can be used in two ways: I uploaded the app on Railway at _**[this link](https://nedsbayoustreaming-production.up.railway.app/)**_ and set it up with an online PostgreSQL database which mirrors the SQLite one on the production side. In case something does not work or the website is down, you can also download this repository and set it up by using the **requirements.txt** file provided with all libraries I have intalled for the project. I set up the **settings.py** file as to choose the default database from production, while I set up Railway to deactivate the usage of SQLite.
 
 ___________
 ### FINAL NOTES AND INDICATIONS
 This website was created for a University project (as stated above) and its style is heavily inspired by [Ned Bayou LTD](https://europe.nedbayou.com/gb/), a website for merch by Twenty One Pilots. I would like to clarify that all the icons and images I am using are used for a fake website that will be up for a limited amount of time and are used for personal use only (with no income to the website or me). 
 All artists and songs featured in this project are among my favorite of all time and all mentions, pictures and icons used are just a tribute to them, coming from my heart.
 No copyright or company associated with this website!
-
-This project is on the heavy side (~450MB) because of all the audio and images associated with all the songs in the database. I thought to populate the database a bit to show all the recommendation algorithms possibilities.
