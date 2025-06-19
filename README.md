@@ -1,3 +1,5 @@
+![](https://res.cloudinary.com/dliev5zuy/image/upload/v1750292850/cover_gkl09f.png)
+
 # *[NED'S BAYOU - MUSIC STREAMING SERVICE](https://nedsbayoustreaming-production.up.railway.app/)*
 
 **Ned's Bayou** is a simulated music streaming service made with Django for a [University project](https://www.ing-inl.unifi.it/vp-130-terzo-anno.html#).
