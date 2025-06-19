@@ -63,6 +63,7 @@
                 {{ form.description }}
 
                 <label for="{{ form.cover.id_for_label }}">Playlist cover:</label>
+                {{ form.cover.errors }}
                 {{ form.cover }}
 
                 <label for="{{ form.songs.id_for_label }}">Choose songs:</label>

@@ -106,7 +106,8 @@ def profileView(request, username):
     for playlist in playlists:
         playlist.cover_url = get_cover_url(playlist.cover)
 
-    profile_picture_url = get_profile_picture_url(user_profile)
+    profile_picture_url = get_profile_picture_url(request.user) if request.user.is_authenticated else None
+    visited_profile_picture_url = get_profile_picture_url(user_profile)
 
     if is_owner:
         if request.method == 'POST':
@@ -135,6 +136,7 @@ def profileView(request, username):
         'playlists': playlists,
         'liked_songs': liked_songs,
         'profile_picture_url': profile_picture_url,
+        'visited_profile_picture_url': visited_profile_picture_url,
     })
 
 @login_required

@@ -9,6 +9,7 @@
 <h1>Make a new playlist</h1>
 
     <div class="formcontainer">
+
         <form class="playlist-form" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
@@ -19,7 +20,9 @@
             {{ form.description }}
 
             <label for="{{ form.cover.id_for_label }}">Playlist cover:</label>
+            {{ form.cover.errors }}
             {{ form.cover }}
+
 
             <label for="{{ form.songs.id_for_label }}">Choose which songs to add:</label>
             <div class="song-checkboxes">
