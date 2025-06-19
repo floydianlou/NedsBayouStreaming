@@ -1,7 +1,8 @@
 from PIL import Image
-from django.core.exceptions import ValidationError
-from .models import Playlist, Song, Artist, Genre
 from django import forms
+from django.core.exceptions import ValidationError
+from .models import *
+
 
 class PlaylistForm(forms.ModelForm):
     class Meta:
@@ -31,7 +32,7 @@ class PlaylistForm(forms.ModelForm):
         return image
 
 
-
+# error does not make update form unusable, it just does not recognize the queryset
 class PlaylistUpdateForm(forms.ModelForm):
     songs = forms.ModelMultipleChoiceField(
         queryset=Song.objects.all(),
@@ -115,13 +116,11 @@ class SongForm(forms.ModelForm):
 
         if not file:
             raise forms.ValidationError("You can't submit a song without an audio file.")
-
         if not hasattr(file, 'content_type') or not file.content_type.startswith('audio'):
             raise forms.ValidationError("You can't submit a song without an audio file.")
 
         if file.size > 20 * 1024 * 1024:
             raise forms.ValidationError("File is too big (max 20MB).")
-
         return file
 
     def clean_cover(self):

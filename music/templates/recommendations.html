@@ -1,6 +1,7 @@
+<!-- RECOMMENDATIONS FULL VIEW -->
+
 {% extends 'toolbar.html' %}
 {% load static %}
-
 {% block extrahead %}
   <link rel="stylesheet" href="{% static 'css/recommendations.css' %}">
     <link rel="stylesheet" href="{% static 'css/common_items.css' %}">
@@ -29,7 +30,6 @@
         {% for song in random_songs %}
             {% include "song_card.html" with song=song %}
         {% endfor %}
-
     </div>
 
     <div id="quickAddModal" class="modal hidden">

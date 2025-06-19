@@ -1,3 +1,5 @@
+<!-- CREATE A PLAYLIST FORM -->
+
 {% extends 'toolbar.html' %}
 {% load static %}
 
@@ -7,9 +9,7 @@
 
 {% block content %}
 <h1>Make a new playlist</h1>
-
     <div class="formcontainer">
-
         <form class="playlist-form" method="POST" enctype="multipart/form-data">
             {% csrf_token %}
 
@@ -23,7 +23,6 @@
             {{ form.cover.errors }}
             {{ form.cover }}
 
-
             <label for="{{ form.songs.id_for_label }}">Choose which songs to add:</label>
             <div class="song-checkboxes">
                 {{ form.songs }}
@@ -31,6 +30,5 @@
 
             <button type="submit" class="btn ned">Create</button>
         </form>
-
     </div>
 {% endblock %}

@@ -18,8 +18,6 @@ import cloudinary_storage
 import dj_database_url
 import environ
 
-
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -91,7 +89,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'NedsBayouStreaming.wsgi.application'
 
 
-# Database
+# Database(s)
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
 if os.environ.get('USE_SQLITE') == 'True':
@@ -144,6 +142,8 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.2/howto/static-files/
 
+# WHITENOISE SETUP
+
 STATIC_URL = '/static/'
 
 STATIC_ROOT = BASE_DIR / "staticfiles"
@@ -168,6 +168,7 @@ AUTH_USER_MODEL = 'users.BayouUser'
 
 MEDIA_URL= '/media/'
 
+# CLOUDINARY SETUP
 CLOUDINARY_STORAGE = {
     'CLOUD_NAME': env('CLOUDINARY_CLOUD_NAME'),
     'API_KEY': env('CLOUDINARY_API_KEY'),

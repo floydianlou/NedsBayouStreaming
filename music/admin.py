@@ -1,6 +1,6 @@
 from django.contrib import admin
 from .forms import ArtistAdminForm
-from .models import Genre, Artist, Song, Playlist, Recommendation
+from .models import *
 
 admin.site.register(Genre)
 admin.site.register(Artist)

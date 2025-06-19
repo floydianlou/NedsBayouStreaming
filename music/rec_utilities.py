@@ -1,5 +1,4 @@
 import random
-
 from music.models import Recommendation, Artist, Song
 
 
@@ -9,6 +8,7 @@ def update_recommendations(user, artist, delta=0):
             rec, created = Recommendation.objects.get_or_create(user=user, genre=genre)
             rec.score += delta
             rec.save()
+
 
 def get_random_recommendations(user):
     print("Returning random recommendations.")
@@ -25,6 +25,7 @@ def get_random_recommendations(user):
         "random_artist": random_artists[2] if len(random_artists) > 2 else None,
         "random_songs": random_songs[5:7]
     }
+
 
 def get_random_songs(user, count, exclude_song_ids=None):
     print(f"-- Using {count} random recommendations.)")
@@ -62,5 +63,6 @@ def get_random_songs(user, count, exclude_song_ids=None):
 
     return selected_songs
 
+# added here not to create another file
 def is_curator(user):
     return user.groups.filter(name='Curator').exists()

@@ -1,6 +1,7 @@
+<!-- TEMPLATE USING CLASS GENERICS FOR SONG LISTING -->
+
 {% extends 'toolbar.html' %}
 {% load static %}
-
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'css/common_items.css' %}">
     <link rel="stylesheet" href="{% static 'css/song_list.css' %}">
@@ -16,8 +17,7 @@
 
         {% regroup songs by artist as artist_list %}
         {% for artist_group in artist_list %}
-            <h2>Songs by
-                <a href="{% url 'artist_detail' artist_group.grouper.id %}">{{ artist_group.grouper.name }}</a>
+            <h2>Songs by<a href="{% url 'artist_detail' artist_group.grouper.id %}">{{ artist_group.grouper.name }}</a>
             </h2>
             <div class="song-grid">
                 {% for song in artist_group.list %}
@@ -29,13 +29,13 @@
     </div>
 
 
-<div id="quickAddModal" class="modal hidden">
+    <div id="quickAddModal" class="modal hidden">
         <div class="modal-content">
             <h2>Add this song to one of your playlists</h2>
             <ul id="playlistList">
             </ul>
         </div>
-</div>
+    </div>
 {% endblock %}
 
 {% block scripts %}

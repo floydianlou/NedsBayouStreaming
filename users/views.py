@@ -4,10 +4,9 @@ from django.contrib.auth.decorators import login_required
 from django.db.models import Count, Case, When, Value, IntegerField, Q
 from django.http import JsonResponse
 from django.shortcuts import render, get_object_or_404, redirect
-from common_functions.utils import get_profile_picture_url, get_cover_url, get_artist_photo_url, get_song_cover_url, \
-    get_song_audio_url
-from music.models import Song, Playlist, Artist, Recommendation, Genre
-from music.recommendations_utilities import update_recommendations
+from utilities.utils import *
+from music.models import *
+from music.rec_utilities import update_recommendations
 from music.views import generate_recommendations
 from .forms import BayouUserCreationForm, CustomLoginForm, BayouUserUpdateForm
 from .models import BayouUser
@@ -116,7 +115,7 @@ def profileView(request, username):
             if form.is_valid():
                 form.save()
 
-                # if favorite artist has changed, update recommendations accordingly
+                # if favorite artist has changed, updates recommendations accordingly
                 if user_profile.favorite_artist != old_favorite:
                     if old_favorite:
                         update_recommendations(user_profile, artist=old_favorite, delta=-5)
@@ -287,7 +286,6 @@ def search_results_view(request):
     for user in users:
         user.profile_picture_url = get_profile_picture_url(user)
 
-    # === URLS for audio & cover ===
     for song in songs_top + songs_other:
         song.cover_url = get_song_cover_url(song)
         song.audio_url = get_song_audio_url(song)
@@ -313,6 +311,7 @@ def search_results_view(request):
         'profile_picture_url': profile_picture_url,
     })
 
+# FUNCTION WHEN DEPLOYING TO MIGRATE AND GENERATE SUPERUSER
 from django.http import HttpResponse
 from django.core.management import call_command
 from django.contrib.auth import get_user_model

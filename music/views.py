@@ -1,20 +1,16 @@
+import json, random
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required, user_passes_test
-import json, random
 from django.http import JsonResponse
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
 from django.db.models import Q, Count
-from django.views.generic import ListView, UpdateView
+from django.views.generic import ListView
+from utilities.utils import *
+from music.forms import *
+from music.models import *
+from music.rec_utilities import *
 
-from common_functions.utils import get_cover_url, get_artist_photo_url, get_profile_picture_url, get_song_cover_url, \
-    get_song_audio_url
-from music.forms import PlaylistForm, PlaylistUpdateForm, GenreForm, ArtistAdminForm, SongForm
-from music.models import Song, Playlist, Artist, Recommendation, Genre
-from music.recommendations_utilities import update_recommendations, get_random_recommendations, get_random_songs, is_curator
-
-
-# UPDATED
 @login_required
 def create_playlist(request):
     if request.method == 'POST':
@@ -40,7 +36,6 @@ def create_playlist(request):
         'profile_picture_url': profile_picture_url,
     })
 
-# UPDATED
 def playlist_detail(request, playlist_id):
     playlist = get_object_or_404(Playlist, id=playlist_id)
     playlist.cover_url = get_cover_url(playlist.cover)
@@ -50,6 +45,7 @@ def playlist_detail(request, playlist_id):
         if request.method == 'POST':
             form = PlaylistUpdateForm(request.POST, request.FILES, instance=playlist)
             if form.is_valid():
+
                 # updates recommendation data removing points for removed songs and adding for new songs
                 old_songs = set(playlist.songs.all())
                 new_songs = set(form.cleaned_data['songs'])
@@ -104,6 +100,7 @@ def delete_playlist(request, pk):
         return redirect('playlist_detail', pk=pk)
 
 
+# to see user's playlists to add songs (quickadd)
 def get_user_playlists(request):
     if request.user.is_authenticated:
         song_id = request.GET.get("song_id")
@@ -124,6 +121,7 @@ def get_user_playlists(request):
 
     else:
         return JsonResponse({"error": "Not logged in !!"}, status=401)
+
 
 @require_POST
 @login_required
@@ -253,7 +251,6 @@ def generate_recommendations(user):
         print(f"Need to fill {missing} more song(s).")
         recommended_songs.extend(get_random_songs(user, missing, exclude_song_ids=[s.id for s in recommended_songs]))
 
-
     # --- RANDOM PART ---
     # select 1 random artist not already in the related artists list
     excluded_artist_ids = [a.id for a in selected_related_artists]
@@ -289,7 +286,6 @@ def generate_recommendations(user):
         "random_songs": random_songs
     }
 
-# UPDATED
 def recommendations_view(request):
     recs = generate_recommendations(request.user)
 
@@ -321,8 +317,7 @@ def recommendations_view(request):
     })
 
 
-# LISTVIEW FOR REQUIREMENTS
-# UPDATED
+# LISTVIEW FOR REQUIREMENTS + URL CATCH
 class SongListView(ListView):
     model = Song
     template_name = 'song_list.html'
@@ -344,7 +339,7 @@ class SongListView(ListView):
         return context
 
 
-# UPDATED
+# DASHBOARD ONLY FOR CURATORS
 @login_required
 @user_passes_test(is_curator)
 def curator_dashboard(request):
@@ -430,7 +425,7 @@ def curator_dashboard(request):
 
             genre.delete()
 
-            messages.success(request, f"Genre '{genre.name}' deleted along with {artists_to_delete.count()} artist(s).")
+            messages.success(request, f"Genre {genre.name} deleted along with {artists_to_delete.count()} related artist(s).")
             return redirect('curator_dashboard')
 
         elif 'delete_artist' in request.POST:

@@ -1,5 +1,3 @@
-{% load cloudinary %}
-
 <div class="playlist-card">
     <a href="{% url 'playlist_detail' playlist.id %}">
         <img class="playlist-cover" src="{{ playlist.cover_url }}" alt="{{ playlist.name }}'s cover">

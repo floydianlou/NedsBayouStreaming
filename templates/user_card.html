@@ -1,5 +1,3 @@
-{% load cloudinary %}
-
 <div class="user-card">
     <a href="{% url 'profile' username=user.username %}">
         <img src="{{ user.profile_picture_url }}" alt="Profile picture of {{ user.username }}">

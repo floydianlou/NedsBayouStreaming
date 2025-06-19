@@ -1,24 +1,23 @@
-{% extends 'toolbar.html' %}
-{% load cloudinary %}
-{% load static %}
+<!-- PLAYLIST DETAILS -->
 
+{% extends 'toolbar.html' %}
+{% load static %}
 {% block extrahead %}
     <link rel="stylesheet" href="{% static 'css/playlist_detail.css' %}">
     <link rel="stylesheet" href="{% static 'css/common_items.css' %}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
-
 {% endblock %}
 
 {% block content %}
     <div class="playlist-header">
         <div class="playlist-left">
-            <img src="{{ playlist.cover_url }}" alt="Cover of {{ playlist.name }}">
+            <img src="{{ playlist.cover_url }}" alt="{{ playlist.name }}'s cover">
             <div class="playlist-header-info">
                 <h1>{{ playlist.name }}</h1>
                 {% if playlist.description %}
                     <p>{{ playlist.description }}</p>
                 {% else %}
-                    <p><em>This playlist has no description.</em></p>
+                    <p><em>No description provided by creator.</em></p>
                 {% endif %}
 
                 {% if is_owner %}
@@ -67,9 +66,7 @@
                 {{ form.cover }}
 
                 <label for="{{ form.songs.id_for_label }}">Choose songs:</label>
-                <div class="song-checkboxes">
-                    {{ form.songs }}
-                </div>
+                <div class="song-checkboxes">{{ form.songs }}</div>
 
                 <button type="submit" class="btn">SAVE</button>
             </form>
@@ -88,11 +85,9 @@
 {% endblock %}
 
 {% block scripts %}
-
     <script src="{% static 'js/quickadd.js' %}"></script>
     <script src="{% static 'js/utilities.js' %}"></script>
     <script src="{% static 'js/like.js' %}"></script>
-
     <script>
         function toggleEdit() {
             const form = document.getElementById('edit-form');
@@ -106,6 +101,5 @@
             button.innerText = showing ? 'EDIT' : 'BACK';
         }
     </script>
-
 {% endblock %}
 

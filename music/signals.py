@@ -2,7 +2,7 @@ from django.db.models.signals import pre_delete
 from django.dispatch import receiver
 from .models import Song, Artist
 from users.models import BayouUser
-from music.recommendations_utilities import update_recommendations
+from music.rec_utilities import update_recommendations
 
 # SIGNAL BEFORE DELETING A SONG FROM DATABASE TO UPDATE ALL USER RECOMMENDATIONS!!
 @receiver(pre_delete, sender=Song)

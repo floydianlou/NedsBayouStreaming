@@ -1,5 +1,3 @@
-{% load cloudinary %}
-
 <div class="artist-card">
     <a href="{% url 'artist_detail' artist.id %}">
         <img src="{{ artist.photo_url }}" alt="Photo of {{ artist.name }}">

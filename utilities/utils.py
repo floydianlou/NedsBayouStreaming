@@ -1,3 +1,5 @@
+# URL ADAPTING FUNCTIONS FOR ALL MODELS WHICH FEATURE A MEDIA FILE
+
 def get_profile_picture_url(user):
     default_url = "https://res.cloudinary.com/dliev5zuy/image/upload/f_auto/v1750204693/defaultPicture_z9uqh8"
 
